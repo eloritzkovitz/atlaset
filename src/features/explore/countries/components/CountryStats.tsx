@@ -13,41 +13,38 @@ import { getCountryNavigation } from "../utils/countryNavigation";
 import { ExploreHeader } from "../../core/components/ExploreHeader";
 import { WikipediaButton } from "../../core/components/WikipediaButton";
 import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
-import type { CountryNavigationScope } from "../../core/types";
+import type {
+  CountryNavigationScope,
+  ExploreCountryViewControls,
+} from "../../core/types";
 
-interface CountryStatsProps {
-  selectedRegion?: string;
-  setSelectedRegion: (region: string) => void;
-  selectedSubregion?: string;
-  setSelectedSubregion: (subregion: string) => void;
-  selectedShowSovereignOnly?: boolean;
-  search: string;
-  setSearch: (search: string) => void;
+interface CountryStatsProps extends ExploreCountryViewControls {
   selectedIsoCode?: string;
   setSelectedIsoCode: (isoCode: string | null) => void;
   countryNavigationScope?: CountryNavigationScope;
-  onShowAllCountries: () => void;
-  onShowSovereignOnly?: (v: boolean) => void;
   onSubregionChange?: (region: string, subregion: string) => void;
-  onResetFilters?: () => void;
   onBack?: () => void;
 }
 
 export function CountryStats({
+  search,
+  setSearch,
   selectedRegion,
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
-  selectedShowSovereignOnly,
-  search,
-  setSearch,
+  selectedSovereignOnly,
+  setSelectedSovereignOnly,
+  showVisitedOnly,
+  setShowVisitedOnly,
+  showTranscontinental,
+  setShowTranscontinental,
+  onShowAllCountries,
+  resetFilters,
   selectedIsoCode,
   setSelectedIsoCode,
   countryNavigationScope = "all",
-  onShowAllCountries,
-  onShowSovereignOnly,
   onSubregionChange,
-  onResetFilters,
   onBack,
 }: CountryStatsProps) {
   const location = useLocation();
@@ -66,15 +63,24 @@ export function CountryStats({
     "overview",
   );
 
-  const regionProps = {
+  const countrySectionProps = {
     selectedRegion: selectedRegion ?? "",
     setSelectedRegion,
     selectedSubregion: selectedSubregion ?? "",
     setSelectedSubregion,
+    selectedSovereignOnly,
+    setSelectedSovereignOnly,
+    showVisitedOnly,
+    setShowVisitedOnly,
+    showTranscontinental,
+    setShowTranscontinental,
     search,
     setSearch,
     selectedIsoCode: selectedIsoCode ?? null,
     setSelectedIsoCode,
+    onSubregionChange,
+    onShowAllCountries,
+    resetFilters,
   };
 
   const selectedCountry = selectedIsoCode
@@ -92,9 +98,12 @@ export function CountryStats({
       scope: countryNavigationScope,
       region: selectedRegion,
       subregion: selectedSubregion,
-      sovereignOnly: selectedShowSovereignOnly,
-      search,
+      showSovereignOnly: selectedSovereignOnly,
+      visitedCountryCodes,
+      showVisitedOnly,
+      showTranscontinental,
       navigationCountryIsoCodes: navigationState?.navigationCountryIsoCodes,
+      search,
     },
   );
 
@@ -177,12 +186,7 @@ export function CountryStats({
       <CountrySection
         countries={countries}
         visitedCountryCodes={visitedCountryCodes}
-        onSubregionChange={onSubregionChange}
-        onAllCountries={onShowAllCountries}
-        selectedShowSovereignOnly={selectedShowSovereignOnly}
-        onShowSovereignOnly={onShowSovereignOnly}
-        resetFilters={onResetFilters}
-        {...regionProps}
+        {...countrySectionProps}
       />
     );
   }

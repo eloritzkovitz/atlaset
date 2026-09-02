@@ -8,9 +8,12 @@ interface GetCountryNavigationParams {
   scope: CountryNavigationScope;
   region?: string;
   subregion?: string;
-  navigationCountryIsoCodes?: string[];
-  sovereignOnly?: boolean;
   search?: string;
+  showSovereignOnly?: boolean;
+  showVisitedOnly?: boolean;
+  visitedCountryCodes?: string[];
+  showTranscontinental?: boolean;
+  navigationCountryIsoCodes?: string[];
 }
 
 /**
@@ -20,8 +23,12 @@ interface GetCountryNavigationParams {
  * @param scope - The navigation scope: "all", "region", or "subregion".
  * @param region - The currently selected region (if scope is "region" or "subregion").
  * @param subregion - The currently selected subregion (if scope is "subregion").
- * @param sovereignOnly - Whether to filter for sovereign countries only.
  * @param search - Optional search string to filter countries.
+ * @param showSovereignOnly - Whether to filter for sovereign countries only.
+ * @param showVisitedOnly - Whether to show only visited countries.
+ * @param visitedCountryCodes - List of visited country ISO codes.
+ * @param showTranscontinental - Whether to show transcontinental countries.
+ * @param navigationCountryIsoCodes - Optional list of ISO codes to limit navigation to.
  * @returns An object with the previous and next countries, or undefined if not available.
  */
 export function getCountryNavigation({
@@ -30,9 +37,12 @@ export function getCountryNavigation({
   scope,
   region,
   subregion,
-  navigationCountryIsoCodes,
-  sovereignOnly = false,
   search = "",
+  showSovereignOnly = false,
+  showVisitedOnly,
+  showTranscontinental,
+  visitedCountryCodes,
+  navigationCountryIsoCodes,
 }: GetCountryNavigationParams) {
   const scopedCountries = navigationCountryIsoCodes
     ? countries.filter((country) =>
@@ -48,8 +58,14 @@ export function getCountryNavigation({
           scope !== "all" && region && region !== "all" ? region : undefined,
         selectedSubregion:
           scope === "subregion" && subregion ? subregion : undefined,
-        selectedSovereignty: sovereignOnly ? "sovereign" : "",
-      }).sort((a, b) => a.name.localeCompare(b.name));
+        selectedSovereignty: showSovereignOnly ? "sovereign" : "",
+        modifiers: showTranscontinental ? { tc: "include" } : undefined,
+      })
+        .filter(
+          (country) =>
+            !showVisitedOnly || visitedCountryCodes?.includes(country.isoCode),
+        )
+        .sort((a, b) => a.name.localeCompare(b.name));
 
   const index = navigationCountries.findIndex(
     (country) => country.isoCode === selectedIsoCode,

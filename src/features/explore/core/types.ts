@@ -25,3 +25,21 @@ export type ExploreBreadcrumbOptions = {
   selectedAchievement: string | null;
   countryNavigationOrigin?: CountryNavigationOrigin;
 };
+
+/** Represents the controls for the explore countries view. */
+export interface ExploreCountryViewControls {
+  search: string;
+  setSearch: (search: string) => void;
+  selectedRegion: string;
+  setSelectedRegion: (region: string) => void;
+  selectedSubregion: string;
+  setSelectedSubregion: (subregion: string) => void;
+  selectedSovereignOnly: boolean;
+  setSelectedSovereignOnly: (value: boolean) => void;
+  showVisitedOnly: boolean;
+  setShowVisitedOnly: (value: boolean) => void;
+  showTranscontinental: boolean;
+  setShowTranscontinental: (value: boolean) => void;
+  onShowAllCountries?: () => void;
+  resetFilters?: () => void;
+}

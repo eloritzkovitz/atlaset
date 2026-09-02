@@ -61,17 +61,7 @@ export default function ExplorePage() {
     selectedAchievement,
   } = useExploreRouteState();
 
-  const {
-    selectedRegion,
-    setSelectedRegion,
-    selectedSubregion,
-    setSelectedSubregion,
-    search,
-    setSearch,
-    selectedSovereignOnly,
-    setSelectedSovereignOnly,
-    resetFilters,
-  } = useExploreCountriesFilters();
+  const countryControls = useExploreCountriesFilters();
 
   const {
     countryNavigationScope,
@@ -92,8 +82,8 @@ export default function ExplorePage() {
   const breadcrumbs = getExploreBreadcrumbs({
     selectedPanel: selectedPanel ?? "",
     selectedCountry: selectedCountry?.name ?? null,
-    selectedRegion,
-    selectedSubregion,
+    selectedRegion: countryControls.selectedRegion,
+    selectedSubregion: countryControls.selectedSubregion,
     selectedLanguage: selectedLanguage?.name ?? null,
     selectedCurrency: selectedCurrency
       ? `${selectedCurrency.name} (${selectedCurrency.code})`
@@ -112,7 +102,7 @@ export default function ExplorePage() {
       return translateSubregionLabel(
         raw,
         subregionToRegion,
-        selectedRegion ?? undefined,
+        countryControls.selectedRegion ?? undefined,
         tCountries,
       );
     return raw;
@@ -144,7 +134,7 @@ export default function ExplorePage() {
       return translateSubregionLabel(
         routeSelectedSubregion,
         subregionToRegion,
-        selectedRegion ?? undefined,
+        countryControls.selectedRegion ?? undefined,
         tCountries,
       );
     }
@@ -167,19 +157,19 @@ export default function ExplorePage() {
 
   // Sync route state to filter state
   useEffect(() => {
-    if (routeSelectedRegion !== selectedRegion) {
-      setSelectedRegion(routeSelectedRegion ?? "");
+    if (routeSelectedRegion !== countryControls.selectedRegion) {
+      countryControls.setSelectedRegion(routeSelectedRegion ?? "");
     }
-    if (routeSelectedSubregion !== selectedSubregion) {
-      setSelectedSubregion(routeSelectedSubregion ?? "");
+    if (routeSelectedSubregion !== countryControls.selectedSubregion) {
+      countryControls.setSelectedSubregion(routeSelectedSubregion ?? "");
     }
   }, [
     routeSelectedRegion,
     routeSelectedSubregion,
-    selectedRegion,
-    selectedSubregion,
-    setSelectedRegion,
-    setSelectedSubregion,
+    countryControls.selectedRegion,
+    countryControls.selectedSubregion,
+    countryControls.setSelectedRegion,
+    countryControls.setSelectedSubregion,
   ]);
 
   // Loading and error states
@@ -221,19 +211,12 @@ export default function ExplorePage() {
             currencies={currencies}
             languages={languages}
             timezones={timezones}
-            selectedRegion={selectedRegion || ""}
+            {...countryControls}
             setSelectedRegion={navigateToRegion}
-            selectedSubregion={selectedSubregion || ""}
-            setSelectedSubregion={setSelectedSubregion}
-            search={search}
-            setSearch={setSearch}
-            selectedSovereignOnly={selectedSovereignOnly}
-            setSelectedSovereignOnly={setSelectedSovereignOnly}
             selectedIsoCode={selectedIsoCode || ""}
             setSelectedIsoCode={navigateToCountry}
             onShowAllCountries={navigateToAllCountries}
             onSubregionChange={navigateToSubregion}
-            onResetFilters={resetFilters}
             onBack={navigateBack}
             countryNavigationScope={countryNavigationScope}
           />

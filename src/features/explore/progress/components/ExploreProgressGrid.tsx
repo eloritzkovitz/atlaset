@@ -14,20 +14,20 @@ interface ExploreProgressGridProps {
   visitedCountries: number;
   totalCountries: number;
   regionStats: RegionStat[];
-  selectedShowSovereignOnly: boolean;
-  setSelectedShowSovereignOnly: (v: boolean) => void;
+  selectedSovereignOnly: boolean;
+  setSelectedSovereignOnly: (v: boolean) => void;
   setSelectedRegion: (region: string) => void;
   setSelectedSubregion: (subregion: string) => void;
   onSubregionChange?: (region: string, subregion: string) => void;
-  onShowAllCountries: () => void;
+  onShowAllCountries?: () => void;
 }
 
 export function ExploreProgressGrid({
   visitedCountries,
   totalCountries,
   regionStats,
-  selectedShowSovereignOnly,
-  setSelectedShowSovereignOnly,
+  selectedSovereignOnly,
+  setSelectedSovereignOnly,
   setSelectedRegion,
   setSelectedSubregion,
   onSubregionChange,
@@ -72,7 +72,7 @@ export function ExploreProgressGrid({
     <>
       <div className="mb-4 flex items-center justify-between flex-wrap gap-4">
         <SegmentedToggle
-          value={selectedShowSovereignOnly ? "sovereign" : "all"}
+          value={selectedSovereignOnly ? "sovereign" : "all"}
           options={[
             {
               value: "all",
@@ -83,7 +83,7 @@ export function ExploreProgressGrid({
               label: t("progress.toggles.sovereign", "Sovereign Only"),
             },
           ]}
-          onChange={(v) => setSelectedShowSovereignOnly(v === "sovereign")}
+          onChange={(v) => setSelectedSovereignOnly(v === "sovereign")}
           className="mb-0"
         />
 

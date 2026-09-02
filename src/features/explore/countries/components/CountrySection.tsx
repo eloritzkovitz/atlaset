@@ -22,25 +22,16 @@ import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
 import type { ViewMode } from "@types";
 import { canonicalKey } from "@utils";
+import type { ExploreCountryViewControls } from "@features/explore/core/types";
 
-interface CountrySectionProps {
+interface CountrySectionProps extends ExploreCountryViewControls {
   countries: Country[];
   visitedCountryCodes: string[];
   selectedIsoCode: string | null;
   setSelectedIsoCode: (isoCode: string | null) => void;
-  selectedRegion: string;
-  setSelectedRegion: (region: string) => void;
-  selectedSubregion: string;
-  setSelectedSubregion: (subregion: string) => void;
-  selectedShowSovereignOnly?: boolean;
-  search: string;
-  setSearch: (search: string) => void;
+  onSubregionChange?: (region: string, subregion: string) => void;
   initialView?: ViewMode;
   className?: string;
-  onAllCountries?: () => void;
-  onShowSovereignOnly?: (value: boolean) => void;
-  onSubregionChange?: (region: string, subregion: string) => void;
-  resetFilters?: () => void;
 }
 
 export function CountrySection({
@@ -48,19 +39,23 @@ export function CountrySection({
   visitedCountryCodes,
   selectedIsoCode,
   setSelectedIsoCode,
+  search,
+  setSearch,
   selectedRegion,
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
-  selectedShowSovereignOnly,
-  search,
-  setSearch,
+  selectedSovereignOnly,
+  setSelectedSovereignOnly,
+  showVisitedOnly,
+  setShowVisitedOnly,
+  showTranscontinental,
+  setShowTranscontinental,
+  onSubregionChange,
+  onShowAllCountries,
+  resetFilters,
   initialView = "grid",
   className = "",
-  onAllCountries,
-  onShowSovereignOnly,
-  onSubregionChange,
-  resetFilters,
 }: CountrySectionProps) {
   const { subregionsByRegion, subregionToRegion } = useCountryData();
   const { t: tAtlas } = useTranslation("atlas");
@@ -69,8 +64,6 @@ export function CountrySection({
   const { t: tExplore } = useTranslation("explore");
 
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
-  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
-  const [showTranscontinental, setShowTranscontinental] = useState(false);
 
   const normalizedRegion =
     selectedRegion && selectedRegion !== "all" ? selectedRegion : undefined;
@@ -132,21 +125,21 @@ export function CountrySection({
   function handleResetFilters() {
     resetFilters?.();
     setSortBy("name-asc");
-    onAllCountries?.();
+    onShowAllCountries?.();
   }
 
   // Handler to toggle sovereign-only filter
   const handleSovereignToggle = () =>
-    onShowSovereignOnly?.(!selectedShowSovereignOnly);
+    setSelectedSovereignOnly?.(!selectedSovereignOnly);
 
-  // Handler to toggle visited/all.
+  // Handler to toggle visited/all
   const handleVisitedToggle = () => {
-    setShowVisitedOnly((prev) => !prev);
+    setShowVisitedOnly(!showVisitedOnly);
   };
 
   // Handler to toggle transcontinental countries
   const handleTranscontinentalToggle = () => {
-    setShowTranscontinental((prev) => !prev);
+    setShowTranscontinental(!showTranscontinental);
   };
 
   // Filter countries based on search and selected filters
@@ -156,7 +149,7 @@ export function CountrySection({
         search,
         selectedRegion: normalizedRegion,
         selectedSubregion: normalizedSubregion,
-        selectedSovereignty: selectedShowSovereignOnly ? "sovereign" : "",
+        selectedSovereignty: selectedSovereignOnly ? "sovereign" : "",
         modifiers: showTranscontinental ? { tc: "include" } : undefined,
       }),
     [
@@ -165,7 +158,7 @@ export function CountrySection({
       normalizedRegion,
       normalizedSubregion,
       showTranscontinental,
-      selectedShowSovereignOnly,
+      selectedSovereignOnly,
     ],
   );
 
@@ -214,7 +207,7 @@ export function CountrySection({
                   if (region === "all") {
                     setSelectedRegion("all");
                     setSelectedSubregion("");
-                    onAllCountries?.();
+                    onShowAllCountries?.();
                   } else {
                     setSelectedRegion(region);
                     setSelectedSubregion("all");
@@ -273,13 +266,13 @@ export function CountrySection({
                     value: "sovereign",
                     icon: <FaFlag />,
                     label: tExplore("countries.showSovereignOnly"),
-                    ariaLabel: selectedShowSovereignOnly
+                    ariaLabel: selectedSovereignOnly
                       ? tExplore("countries.showAllCountries")
                       : tExplore("countries.showSovereignOnly"),
-                    title: selectedShowSovereignOnly
+                    title: selectedSovereignOnly
                       ? tExplore("countries.showAllCountries")
                       : tExplore("countries.showSovereignOnly"),
-                    checked: !!selectedShowSovereignOnly,
+                    checked: !!selectedSovereignOnly,
                     rounded: true,
                     onClick: handleSovereignToggle,
                   },
