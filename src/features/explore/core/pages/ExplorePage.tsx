@@ -166,6 +166,7 @@ export default function ExplorePage() {
   }, [
     routeSelectedRegion,
     routeSelectedSubregion,
+    countryControls,
     countryControls.selectedRegion,
     countryControls.selectedSubregion,
     countryControls.setSelectedRegion,

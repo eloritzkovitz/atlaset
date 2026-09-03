@@ -24,3 +24,5 @@ export function SettingsRoutes() {
     </Routes>
   );
 }
+
+export default SettingsRoutes;

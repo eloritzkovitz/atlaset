@@ -1,5 +1,5 @@
 import i18n from "i18next";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { ACTIONS, type Action } from "@constants/actions";
 import { ICONS } from "@constants/icons";
 import { authState, createMockUser } from "@test-utils/authMocks";
@@ -71,7 +71,7 @@ vi.mock("./firebase", async () => {
 
 describe("logUserActivity", () => {
   it("calls addDoc with correct params", async () => {
-    const mockAddDoc = fs.addDoc as unknown as jest.Mock;
+    const mockAddDoc = fs.addDoc as unknown as Mock;
     if (mockAddDoc.mockClear) mockAddDoc.mockClear();
     const mockCollection = {} as unknown as CollectionReference<DocumentData>;
     const getUserCollection = vi.spyOn(firebaseUtils, "getUserCollection");

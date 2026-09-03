@@ -37,3 +37,5 @@ export function AtlasProviders() {
     </MapViewProvider>
   );
 }
+
+export default AtlasProviders;

@@ -8,11 +8,8 @@ vi.mock("react-markdown", () => ({
 vi.mock("remark-gfm", () => ({
   default: () => "MockedRemarkGfm",
 }));
-vi.mock("rehype-raw", () => ({
-  default: () => "MockedRehypeRaw",
-}));
-vi.mock("rehype-prism-plus", () => ({
-  default: () => "MockedRehypePrism",
+vi.mock("./rehypeTypeScript", () => ({
+  rehypeTypeScript: () => "MockedRehypeTypeScript",
 }));
 
 describe("useMarkdown", () => {
@@ -30,7 +27,6 @@ describe("useMarkdown", () => {
 
     expect(result.current).toHaveProperty("ReactMarkdown");
     expect(result.current).toHaveProperty("remarkGfm");
-    expect(result.current).toHaveProperty("rehypeRaw");
-    expect(result.current).toHaveProperty("rehypePrism");
+    expect(result.current).toHaveProperty("rehypeTypeScript");
   });
 });
