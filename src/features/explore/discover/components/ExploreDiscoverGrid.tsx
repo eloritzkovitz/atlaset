@@ -29,10 +29,6 @@ export function ExploreDiscoverGrid() {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="text-xl font-semibold mb-4">
-          {t("menu.discover", "Discover")}
-        </h2>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <DiscoverCountryCard
             title={t("discover.countryOfTheDay.title", "Country of the Day")}

@@ -1,8 +1,7 @@
 import React from "react";
 import { _3x2 as Flags } from "@eloritzkovitz/atlaset-flags";
-import { FLAG_OVERRIDES } from "../constants/flagOverrides";
 import type { Flag } from "../types";
-import { SPECIAL_COUNTRIES } from "../../core/constants/specialCountries";
+import { resolveFlagIsoCode } from "../utils/flags";
 
 interface CountryFlagProps {
   flag: Flag;
@@ -19,19 +18,11 @@ export function CountryFlag({ flag, style, className }: CountryFlagProps) {
   const height = Math.round((width * 2) / 3);
 
   // Check for special cases where the flag should be overridden by a sovereign or alternate flag
-  const special = SPECIAL_COUNTRIES[flag.isoCode];
-  const isOverridden = FLAG_OVERRIDES.includes(flag.isoCode);
-
-  const mappedIso =
-    special?.flag ||
-    special?.sovereign ||
-    (isOverridden
-      ? flag.sovereignState?.toUpperCase() || flag.isoCode
-      : flag.isoCode);
+  const isoCode = resolveFlagIsoCode(flag);
 
   // Handle 3x2 flags
   if (flag.ratio === "3x2") {
-    const FlagSvg = Flags[mappedIso as keyof typeof Flags];
+    const FlagSvg = Flags[isoCode as keyof typeof Flags];
     if (FlagSvg) {
       return (
         <FlagSvg
@@ -60,7 +51,7 @@ export function CountryFlag({ flag, style, className }: CountryFlagProps) {
   // Default: use original aspect ratio
   return (
     <img
-      src={`/flags/${mappedIso}.svg`}
+      src={`/flags/${isoCode}.svg`}
       alt={`${flag.isoCode} flag`}
       width={width}
       height={height}
