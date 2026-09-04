@@ -3,6 +3,7 @@
  * Only downloads if the remote data has changed.
  */
 
+import "dotenv/config";
 import path from "path";
 import { fileURLToPath } from "url";
 import {
@@ -16,9 +17,13 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const ACHIEVEMENTS_DATA_URL =
-	process.env.VITE_ACHIEVEMENTS_DATA_URL ||
-	"https://atlaset-data-server.onrender.com/data/achievements.json";
+const DATA_URL = process.env.VITE_DATA_URL;
+
+if (!DATA_URL) {
+	throw new Error("VITE_DATA_URL is not configured.");
+}
+
+const ACHIEVEMENTS_DATA_URL = `${DATA_URL}/data/achievements.json`;
 const DEST_DIR = path.join(__dirname, "../../public/data");
 
 ensureDirExists(DEST_DIR);

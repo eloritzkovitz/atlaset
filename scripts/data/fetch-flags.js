@@ -4,6 +4,7 @@
  * into the specified directory.
  */
 
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import https from "https";
@@ -19,9 +20,13 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BACKEND_URL =
-  process.env.VITE_FLAG_DATA_URL ||
-  "https://atlaset-data-server.onrender.com/flags";
+const DATA_URL = process.env.VITE_DATA_URL;
+
+if (!DATA_URL) {
+  throw new Error("VITE_DATA_URL is not configured.");
+}
+
+const FLAGS_URL = `${DATA_URL}/flags`;
 const DEST_DIR = path.join(__dirname, "../../public/flags");
 
 ensureDirExists(DEST_DIR);
@@ -31,7 +36,7 @@ ensureDirExists(DEST_DIR);
  * @returns Promise that resolves to the raw index.json string
  */
 async function fetchRemoteIndex(retries = 5, delayMs = 2000) {
-  const url = `${BACKEND_URL}/index.json`;
+  const url = `${FLAGS_URL}/index.json`;
   return fetchWithRetries(url, retries, delayMs);
 }
 
@@ -49,7 +54,7 @@ async function downloadFlag(iso, retries = 5, delayMs = 2000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       await new Promise((resolve, reject) => {
-        const url = `${BACKEND_URL}/${filename}`;
+        const url = `${FLAGS_URL}/${filename}`;
         const file = fs.createWriteStream(dest);
         https
           .get(url, (response) => {
@@ -57,7 +62,7 @@ async function downloadFlag(iso, retries = 5, delayMs = 2000) {
               file.close();
               fs.unlink(dest, () => {}); // Clean up partial file
               return reject(
-                new Error(`Failed to fetch ${url}: ${response.statusCode}`)
+                new Error(`Failed to fetch ${url}: ${response.statusCode}`),
               );
             }
             response.pipe(file);
@@ -73,7 +78,7 @@ async function downloadFlag(iso, retries = 5, delayMs = 2000) {
     } catch (err) {
       console.error(
         `[downloadFlag] ${filename} attempt ${attempt} failed:`,
-        err
+        err,
       );
       if (attempt < retries) {
         await new Promise((r) => setTimeout(r, delayMs * attempt));
@@ -94,7 +99,7 @@ async function downloadFlag(iso, retries = 5, delayMs = 2000) {
       return;
     }
     console.log(
-      "[fetch-flags] index.json changed or missing, downloading flags..."
+      "[fetch-flags] index.json changed or missing, downloading flags...",
     );
     // Save new index.json
     writeLocalFile(DEST_DIR, "index.json", remoteIndexRaw);

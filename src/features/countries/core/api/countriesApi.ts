@@ -1,5 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { fetchWithFallback } from "@lib/api-client";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import type { Country, SovereigntyStatus } from "../../types";
 
 export interface TransformedCountryData {
@@ -12,20 +11,21 @@ export interface TransformedCountryData {
 /** API for fetching country data. */
 export const countriesApi = createApi({
   reducerPath: "countriesApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "/" }),
+  baseQuery: async () => ({ data: undefined }),
   endpoints: (builder) => ({
     getRawCountries: builder.query<Country[], void>({
       queryFn: async () => {
         try {
-          const staticCountryUrl = "/data/countries.json";
-          const countryData = await fetchWithFallback(
-            staticCountryUrl,
-            { envVar: "VITE_COUNTRY_DATA_URL" },
-            "country data"
-          );
+          const response = await fetch("/data/countries.json");
+
+          if (!response.ok) {
+            throw new Error(`Failed to load country data (${response.status})`);
+          }
+
+          const countryData: unknown = await response.json();
 
           if (!Array.isArray(countryData)) {
-            throw new Error("Failed to load country data");
+            throw new Error("Invalid country data");
           }
 
           return { data: countryData as Country[] };
@@ -33,7 +33,10 @@ export const countriesApi = createApi({
           return {
             error: {
               status: "CUSTOM_ERROR",
-              error: err instanceof Error ? err.message : "Failed to load country data",
+              error:
+                err instanceof Error
+                  ? err.message
+                  : "Failed to load country data",
             },
           };
         }

@@ -4,6 +4,7 @@
  * Only writes files when the remote content differs from local content.
  */
 
+import "dotenv/config";
 import path from "path";
 import { fileURLToPath } from "url";
 import {
@@ -17,11 +18,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DEFAULT_LOCALES = ["he", "en"];
-const DEFAULT_BASE_URL =
-  process.env.VITE_LOCALES_URL ||
-  "https://atlaset-data-server.onrender.com/locales";
+const DATA_URL = process.env.VITE_DATA_URL;
 
-// DEST base directory for locale files
+if (!DATA_URL) {
+  throw new Error("VITE_DATA_URL is not configured.");
+}
+
+const LOCALES_URL = `${DATA_URL}/locales`;
 const DEST_BASE = path.join(__dirname, "../../public/locales");
 
 ensureDirExists(DEST_BASE);
@@ -52,7 +55,7 @@ const remoteUrlFor = (base, lng, filename) => {
 
       // countries.json
       const countriesUrl = remoteUrlFor(
-        DEFAULT_BASE_URL,
+        LOCALES_URL,
         lng,
         "countries.json",
       );
@@ -76,7 +79,7 @@ const remoteUrlFor = (base, lng, filename) => {
 
       // currencies.json
       const currenciesUrl = remoteUrlFor(
-        DEFAULT_BASE_URL,
+        LOCALES_URL,
         lng,
         "currencies.json",
       );
@@ -99,7 +102,7 @@ const remoteUrlFor = (base, lng, filename) => {
 
       // languages.json
       const languagesUrl = remoteUrlFor(
-        DEFAULT_BASE_URL,
+        LOCALES_URL,
         lng,
         "languages.json",
       );
