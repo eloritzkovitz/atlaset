@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 vi.mock("@constants/languages", () => ({
   LANGUAGES: [
@@ -16,11 +16,7 @@ describe("Language mapping utilities", () => {
     if (key === "languages:he") return "Hebrew Localized";
     return undefined;
   };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
+  
   describe("mapLanguages", () => {
     it("maps, sorts by priority, and appends translated names accurately", () => {
       const result = mapLanguages(mockT);

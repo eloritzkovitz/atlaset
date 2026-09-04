@@ -45,11 +45,7 @@ vi.mock("@lib/db", () => {
   };
 });
 
-describe("migrationService", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
+describe("migrationService", () => {  
   describe("hasLocalData", () => {
     it("returns true when any table has counts greater than 0", async () => {
       vi.mocked(appDb.countryLists.count).mockResolvedValue(0);

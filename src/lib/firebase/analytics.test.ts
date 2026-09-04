@@ -6,7 +6,6 @@ vi.stubEnv("DEV", "" as unknown as boolean);
 describe("analyticsUtils", () => {
   beforeEach(() => {
     vi.resetModules();
-    vi.clearAllMocks();
     ac.isSupported.mockReturnValue(true as unknown as Promise<boolean>);
   });
 

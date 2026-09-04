@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { notificationService } from "./notificationService";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 
@@ -17,10 +17,6 @@ vi.mock("@lib/firebase", () => ({
 }));
 
 describe("notificationService", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe("send", () => {
     it("sends a notification", async () => {
       vi.spyOn(crypto, "randomUUID").mockReturnValue(

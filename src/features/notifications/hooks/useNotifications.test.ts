@@ -57,7 +57,6 @@ const renderNotifications = (
 
 describe("useNotifications", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     subscribe();
   });
 

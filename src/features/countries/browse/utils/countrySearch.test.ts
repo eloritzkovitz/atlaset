@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import type { VisitContext } from "@features/visits/types";
 import { mockCountries } from "@test-utils/mockCountries";
+import * as timezoneUtils from "@utils/date/timezone";
 import {
   resolveQualifierConfig,
   buildSearchString,
@@ -8,167 +9,256 @@ import {
   qualifierSuggestionProvider,
 } from "./countrySearch";
 import { SUPPORTED_QUALIFIERS } from "../constants/qualifierConfig";
+import type { Country } from "../../types";
 
 describe("countrySearch utils", () => {
   const countries = mockCountries;
 
-  it("resolves qualifier config and supported qualifiers", () => {
-    const cfg = resolveQualifierConfig("currency");
-    expect(cfg).toBeDefined();
-    expect(cfg?.key).toBe("currency");
-    const supported = SUPPORTED_QUALIFIERS;
-    expect(Array.isArray(supported)).toBe(true);
-    expect(supported).toContain("currency");
+  it("resolves qualifiers and provides suggestions", () => {
+    expect(resolveQualifierConfig("currency")?.key).toBe("currency");
+    expect(resolveQualifierConfig("CURRENCY")?.key).toBe("currency");
+    expect(resolveQualifierConfig("invalid")).toBeUndefined();
+
+    expect(qualifierSuggestionProvider("re")).toContain("region");
+    expect(qualifierSuggestionProvider("$invalid")).toEqual([]);
+    expect(SUPPORTED_QUALIFIERS).toContain("currency");
   });
 
-  it("builds a search string containing name and alternative names", () => {
-    const s = buildSearchString(countries[4]);
-    expect(s).toContain(countries[4].name);
-    expect(s).toContain(countries[4].altNames?.[0]);
+  it("builds a search string", () => {
+    const country = countries[4];
+    expect(buildSearchString(country)).toBe(
+      [country.name, ...(country.altNames ?? [])].join(" "),
+    );
   });
 
   describe("getQualifierTokens", () => {
-    it("returns isoCode and iso3Code for code qualifier", () => {
-      const isocodes = getQualifierTokens(countries[0], "isoCode");
-      expect(isocodes).toContain(countries[0].isoCode);
-      const iso3Codes = getQualifierTokens(countries[0], "iso3Code");
-      expect(iso3Codes).toContain(countries[0].iso3Code);
+    it("handles basic country properties", () => {
+      expect(getQualifierTokens(countries[0], "isoCode")).toEqual([
+        countries[0].isoCode,
+      ]);
+      expect(getQualifierTokens(countries[0], "iso3Code")).toEqual([
+        countries[0].iso3Code,
+      ]);
+      expect(getQualifierTokens(countries[0], "capital")).toEqual(["Paris"]);
+      expect(getQualifierTokens(countries[0], "unMember")).toEqual(["true"]);
+      expect(getQualifierTokens(countries[1], "unMember")).toEqual(["false"]);
     });
 
-    it("returns region tokens and includes transcontinental when requested", () => {
-      const r = getQualifierTokens(countries[0], "region");
-      expect(r).toContain("Europe");
-      const ca = {
+    it("handles region and subregion transcontinental options", () => {
+      const country = {
         ...countries[3],
         transcontinental: {
           scope: "contiguous",
           additionalRegion: "Europe",
           additionalSubregion: "Northern Europe",
         },
+      } as Country;
+
+      expect(
+        getQualifierTokens(country, "region", {
+          tcOption: { scope: "overseas" },
+        }),
+      ).toEqual(["Americas"]);
+
+      expect(
+        getQualifierTokens(country, "region", {
+          tcOption: { scope: "contiguous" },
+        }),
+      ).toEqual(["Americas", "Europe"]);
+
+      expect(
+        getQualifierTokens(country, "region", {
+          tcOption: { scope: "all" },
+        }),
+      ).toEqual(["Americas", "Europe"]);
+
+      expect(
+        getQualifierTokens(country, "subregion", {
+          tcOption: { scope: "contiguous" },
+        }),
+      ).toEqual(["Northern America", "Northern Europe"]);
+    });
+
+    it("handles transcontinental qualifier", () => {
+      const tc = {
+        ...countries[3],
+        transcontinental: { scope: "CONTIGUOUS" },
       } as any;
-      const caTokens = getQualifierTokens(ca, "region", {
-        tcOption: { scope: "all", mode: "include" },
-      });
-      expect(caTokens).toContain("Americas");
-      expect(caTokens).toContain("Europe");
+
+      expect(getQualifierTokens(tc, "tc")).toEqual(["true", "contiguous"]);
+      expect(getQualifierTokens(countries[0], "tc")).toEqual(["false"]);
     });
 
-    it("handles boolean flags", () => {
-      const sov = getQualifierTokens(countries[0], "sovereign");
-      expect(sov).toEqual(["true"]);
-      const visitedTrue = getQualifierTokens(countries[0], "visited", {
-        visitContext: {
-          visitedIsoCodes: [countries[0].isoCode],
-        } as VisitContext,
-      });
-      expect(visitedTrue).toEqual(["true"]);
-      const visitedFalse = getQualifierTokens(countries[1], "visited", {
-        visitContext: {
-          visitedIsoCodes: [countries[0].isoCode],
-        } as VisitContext,
-      });
-      expect(visitedFalse).toEqual(["false"]);
-      const unMemberTrue = getQualifierTokens(countries[0], "unMember");
-      expect(unMemberTrue).toEqual(["true"]);
-      const unMemberFalse = getQualifierTokens(countries[1], "unMember");
-      expect(unMemberFalse).toEqual(["false"]);
+    it("handles language codes, names, duplicates and invalid values", () => {
+      expect(
+        getQualifierTokens(
+          { ...countries[0], languages: ["fr"] } as any,
+          "languages",
+        ),
+      ).toEqual(["French"]);
+
+      expect(
+        getQualifierTokens(
+          { ...countries[0], languages: ["de", "German", "", null] } as any,
+          "languages",
+        ),
+      ).toEqual(["German"]);
+
+      expect(
+        getQualifierTokens(
+          { ...countries[0], languages: ["en-US", "fr-CA"] } as any,
+          "languages",
+        ),
+      ).toEqual(["English", "French"]);
+
+      expect(
+        getQualifierTokens(
+          { ...countries[0], languages: null } as any,
+          "languages",
+        ),
+      ).toEqual([]);
+
+      expect(
+        getQualifierTokens(
+          { ...countries[0], languages: ["  "] } as any,
+          "languages",
+        ),
+      ).toEqual([]);
     });
 
-    it("returns empty arrays when visit-related auxiliary data is missing", () => {
+    it("handles timezone offsets and DST", () => {
+      const fr = countries[0];
+      const de = countries[2];
+      const gp = countries[1];
+      const jp = countries[5];
+
+      expect(getQualifierTokens(fr, "timezones")).toContain("UTC+01:00");
+      expect(getQualifierTokens(fr, "timezones")).not.toContain("UTC+02:00");
+      expect(getQualifierTokens(fr, "timezones", { dst: true })).toContain(
+        "UTC+02:00",
+      );
+
+      expect(getQualifierTokens(de, "timezones")).toContain("UTC+01:00");
+      expect(getQualifierTokens(de, "timezones", { dst: true })).toContain(
+        "UTC+02:00",
+      );
+
+      expect(getQualifierTokens(gp, "timezones", { dst: true })).toContain(
+        "UTC-04:00",
+      );
+      expect(getQualifierTokens(jp, "timezones", { dst: true })).toContain(
+        "UTC+09:00",
+      );
+    });
+
+    it("handles invalid and missing timezone data", () => {
+      expect(
+        getQualifierTokens(
+          { ...countries[0], timezones: null } as any,
+          "timezones",
+        ),
+      ).toEqual([]);
+
+      const timezoneSpy = vi
+        .spyOn(timezoneUtils, "timezoneOffsets")
+        .mockImplementation(() => {
+          throw new Error("invalid timezone");
+        });
+
+      expect(
+        getQualifierTokens(
+          { ...countries[0], timezones: ["Invalid/Timezone"] } as any,
+          "timezones",
+        ),
+      ).toEqual([]);
+
+      timezoneSpy.mockRestore();
+    });
+
+    it("handles sovereign status and sovereign state", () => {
+      expect(getQualifierTokens(countries[0], "sovereign")).toEqual(["true"]);
+
+      expect(
+        getQualifierTokens(
+          {
+            ...countries[0],
+            sovereigntyStatus: "dependent",
+            sovereignState: "fr",
+          } as any,
+          "sovereign",
+        ),
+      ).toEqual(["false", "FR"]);
+
+      expect(
+        getQualifierTokens(
+          {
+            ...countries[0],
+            sovereigntyStatus: "dependent",
+            sovereignState: "",
+          } as any,
+          "sovereign",
+        ),
+      ).toEqual(["false"]);
+    });
+
+    it("handles visit context", () => {
+      const vc: VisitContext = {
+        visitedIsoCodes: [countries[0].isoCode],
+        visitedMap: {},
+        visitedYearMap: {},
+        firstVisitMap: {},
+        lastVisitMap: {},
+      };
+
+      expect(
+        getQualifierTokens(countries[0], "visited", { visitContext: vc }),
+      ).toEqual(["true"]);
+
+      expect(
+        getQualifierTokens(countries[1], "visited", { visitContext: vc }),
+      ).toEqual(["false"]);
+
+      expect(
+        getQualifierTokens(countries[0], "wantToVisit", {
+          visitContext: {
+            wantToVisitIsoCodes: [countries[0].isoCode],
+          } as VisitContext,
+        }),
+      ).toEqual(["true"]);
+
+      expect(getQualifierTokens(countries[0], "wantToVisit")).toEqual([]);
       expect(getQualifierTokens(countries[0], "visited")).toEqual([]);
     });
 
-    it("returns array/string properties correctly", () => {
-      const langs = getQualifierTokens(countries[0], "languages");
-      expect(langs).toEqual(["French"]);
-      const capital = getQualifierTokens(countries[0], "capital");
-      expect(capital).toEqual(["Paris"]);
-    });
-
-    it("maps language codes to English display names", () => {
-      const frCode = { ...countries[0], languages: ["fr"] } as any;
-      expect(getQualifierTokens(frCode, "languages")).toEqual(["French"]);
-
-      const deCode = { ...countries[2], languages: ["de"] } as any;
-      expect(getQualifierTokens(deCode, "languages")).toEqual(["German"]);
-    });
-
-    it("supports options object with visitContext and includeTC in object form", () => {
-      const vc: VisitContext = {
-        visitedIsoCodes: [countries[0].isoCode],
-        visitedMap: { [countries[0].isoCode]: 2 },
-        visitedYearMap: { [countries[0].isoCode]: new Set([2019, 2020]) },
-        firstVisitMap: { [countries[0].isoCode]: new Date("2019-05-01") },
-        lastVisitMap: { [countries[0].isoCode]: new Date("2020-10-01") },
-      };
-
-      // includeTC as object form for region
-      const ca = {
-        ...countries[3],
-        transcontinental: {
-          scope: "contiguous",
-          additionalRegion: "Europe",
-          additionalSubregion: "Northern Europe",
-        },
+    it("handles array, string, boolean and unsupported properties", () => {
+      const country = {
+        ...countries[0],
+        memberOf: ["UN", "", null],
+        capital: "Paris",
+        unMember: true,
       } as any;
-      const caRegion = getQualifierTokens(ca, "region", {
-        tcOption: { scope: "all", mode: "include" },
-      });
-      expect(caRegion).toContain("Americas");
-      expect(caRegion).toContain("Europe");
 
-      // includeTC as object form for subregion
-      const caSubregion = getQualifierTokens(ca, "subregion", {
-        tcOption: { scope: "contiguous", mode: "include" },
-      });
-      expect(caSubregion).toContain("Northern America");
-      expect(caSubregion).toContain("Northern Europe");
+      expect(getQualifierTokens(country, "memberOf")).toEqual(["UN"]);
+      expect(getQualifierTokens(country, "capital")).toEqual(["Paris"]);
+      expect(getQualifierTokens(country, "unMember")).toEqual(["true"]);
 
-      // tc as qualifier
-      const caTc = getQualifierTokens(ca, "tc");
-      expect(caTc).toEqual(["true", "contiguous"]);
-      const nonTc = getQualifierTokens(countries[0], "tc");
-      expect(nonTc).toEqual(["false"]);
+      expect(
+        getQualifierTokens({ ...country, unMember: false }, "unMember"),
+      ).toEqual(["false"]);
 
-      // visited flag via visitContext object
-      const visited = getQualifierTokens(countries[0], "visited", {
-        visitContext: vc,
-      });
-      expect(visited).toEqual(["true"]);
+      expect(
+        getQualifierTokens({ ...country, capital: undefined }, "capital"),
+      ).toEqual([]);
+
+      expect(
+        getQualifierTokens({ ...country, population: 123 }, "population"),
+      ).toEqual([]);
     });
 
-    it("emits winter offsets by default and summer-only when dst:true using mockCountries", () => {
-      const fr = countries[0];
-      const gp = countries[1];
-      const de = countries[2];
-      const jp = countries[5];
-
-      const frWinter = getQualifierTokens(fr, "timezones");
-      expect(frWinter).toContain("UTC+01:00");
-      expect(frWinter).not.toContain("UTC+02:00");
-      const frSummer = getQualifierTokens(fr, "timezones", { dst: true });
-      expect(frSummer).toContain("UTC+02:00");
-
-      const deWinter = getQualifierTokens(de, "timezones");
-      expect(deWinter).toContain("UTC+01:00");
-      const deSummer = getQualifierTokens(de, "timezones", { dst: true });
-      expect(deSummer).toContain("UTC+02:00");
-
-      const gpWinter = getQualifierTokens(gp, "timezones");
-      expect(gpWinter).toContain("UTC-04:00");
-      const gpSummer = getQualifierTokens(gp, "timezones", { dst: true });
-      expect(gpSummer).toContain("UTC-04:00");
-
-      const jpTokens = getQualifierTokens(jp, "timezones");
-      expect(jpTokens).toContain("UTC+09:00");
-      const jpDst = getQualifierTokens(jp, "timezones", { dst: true });
-      expect(jpDst).toContain("UTC+09:00");
+    it("handles empty region values", () => {
+      expect(
+        getQualifierTokens({ ...countries[0], region: "" } as any, "region"),
+      ).toEqual([]);
     });
-  });
-
-  it("provides qualifier suggestions based on prefix", () => {
-    const suggestions = qualifierSuggestionProvider("re");
-    expect(suggestions).toContain("region");
-    expect(qualifierSuggestionProvider("$invalid")).toEqual([]);
   });
 });

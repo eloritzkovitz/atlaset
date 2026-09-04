@@ -79,8 +79,6 @@ describe("useCountryData", () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
-
     mockLanguage = "en";
     mockI18nextLanguage = "fr";
 

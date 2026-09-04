@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeEach } from "vitest";
+import { vi, describe, it, expect } from "vitest";
 import type { Mock } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useUserActivity } from "../hooks/useUserActivity";
@@ -15,11 +15,7 @@ describe("useUserActivity", () => {
   const sample1: UserActivity = { id: "1", action: 120 as any, timestamp: ts1 };
   const sample2: UserActivity = { id: "2", action: 130 as any, timestamp: ts2 };
   const sample3: UserActivity = { id: "3", action: 140 as any, timestamp: ts3 };
-  const mockLastDoc = { id: "2", exists: () => true, data: () => ({}) };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  const mockLastDoc = { id: "2", exists: () => true, data: () => ({}) };  
 
   it("fetches initial activity successfully", async () => {
     (activityService.fetchActivityPage as Mock).mockResolvedValueOnce({

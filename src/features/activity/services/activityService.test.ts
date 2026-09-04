@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from "vitest";
+import { describe, it, beforeEach, expect } from "vitest";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
@@ -20,7 +20,6 @@ describe("activityService", () => {
     ({ id, data: () => dataObj }) as any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
     auth.getUserCollection.mockReturnValue(mockCol as any);
     fs.doc.mockReturnValue(mockDocRef as any);
   });

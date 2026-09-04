@@ -7,11 +7,7 @@ describe("storage utilities", () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+  });  
 
   describe("getCachedValue", () => {
     it("returns parsed value when key exists in localStorage", () => {

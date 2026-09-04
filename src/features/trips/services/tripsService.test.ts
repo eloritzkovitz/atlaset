@@ -30,7 +30,6 @@ describe("tripsService", () => {
   let freshUser: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
     freshUser = createMockUser();
     auth.isAuthenticated.mockReturnValue(true);
     auth.getCurrentUser.mockReturnValue(freshUser);

@@ -23,7 +23,6 @@ describe("countryListService", () => {
   const sampleList = { id: "list-1", name: "Favorites", countryCodes: ["FR"] };
 
   beforeEach(() => {
-    vi.clearAllMocks();
     fs.writeBatch.mockReturnValue(mockBatch as any);
     auth.getCurrentUser.mockReturnValue({ uid: "test-user-123" } as any);
   });

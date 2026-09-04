@@ -17,7 +17,6 @@ describe("useContextMenu", () => {
   const mockOnClose = vi.fn();
 
   beforeEach(() => {
-    vi.clearAllMocks();
     window.innerWidth = 1000;
     window.innerHeight = 1000;
   });

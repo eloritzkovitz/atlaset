@@ -67,7 +67,6 @@ describe("useListNavigation", () => {
   afterEach(() => {
     (document.getElementById as any).mockRestore?.();
     vi.useRealTimers();
-    vi.clearAllMocks();
   });
 
   it("navigates down with ArrowDown", () => {

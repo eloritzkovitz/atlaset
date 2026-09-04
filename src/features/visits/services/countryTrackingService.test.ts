@@ -6,8 +6,6 @@ describe("countryTrackingService", () => {
   const MOCK_USER_REF = { path: "users/u1" };
 
   beforeEach(() => {
-    vi.clearAllMocks();
-
     fs.doc.mockReturnValue(MOCK_USER_REF as any);
 
     fs.arrayUnion.mockImplementation((val) => ({ type: "arrayUnion", val }));

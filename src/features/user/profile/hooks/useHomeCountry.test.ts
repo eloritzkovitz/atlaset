@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { profileService } from "../services/profileService";
 import { useHomeCountry } from "./useHomeCountry";
 import { useAuth } from "../../auth/hooks/useAuth";
@@ -20,10 +20,6 @@ const mockedGetHomeCountry = vi.mocked(profileService.getHomeCountry);
 const mockedSetHomeCountry = vi.mocked(profileService.setHomeCountry);
 
 describe("useHomeCountry", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("loads the user's home country", async () => {
     mockedUseAuth.mockReturnValue({
       user: { uid: "user-1" },

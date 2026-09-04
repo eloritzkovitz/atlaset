@@ -11,7 +11,6 @@ describe("useFlyTransition", () => {
 
   afterEach(() => {
     vi.useRealTimers();
-    vi.clearAllMocks();
   });
 
   describe("Standard Animated Mode", () => {

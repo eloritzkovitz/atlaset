@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from "vitest";
+import { describe, it, beforeEach, expect } from "vitest";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
@@ -18,7 +18,6 @@ describe("savedMapsService", () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
     auth.getCurrentUser.mockReturnValue(createMockUser());
 
     fs.collection.mockReturnValue({ path: "mock-col" } as any);

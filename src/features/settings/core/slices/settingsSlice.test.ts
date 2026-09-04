@@ -26,7 +26,6 @@ describe("settingsSlice", () => {
     });
 
   beforeEach(() => {
-    vi.clearAllMocks();
     store = createTestStore();
   });
 

@@ -90,8 +90,6 @@ vi.mock("../utils/visits", async (importOriginal) => {
 
 describe("useCountryTracking", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-
     authState.currentUser = createMockUser({
       uid: "u1",
       displayName: "Sarah",

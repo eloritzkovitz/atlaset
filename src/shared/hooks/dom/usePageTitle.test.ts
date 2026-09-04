@@ -19,7 +19,6 @@ describe("usePageTitle", () => {
 
   afterEach(() => {
     document.title = originalTitle;
-    vi.clearAllMocks();
   });
 
   it("sets the document title with the default centralized suffix template", () => {

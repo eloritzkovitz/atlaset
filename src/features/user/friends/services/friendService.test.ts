@@ -19,9 +19,7 @@ vi.mock("@features/notifications/services/notificationService", () => ({
 }));
 
 describe("friendService", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-
+  beforeEach(() => {   
     fs.doc.mockReturnValue({ type: "document" } as any);
     fs.writeBatch.mockReturnValue({
       set: vi.fn(),

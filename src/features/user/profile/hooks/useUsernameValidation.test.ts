@@ -15,7 +15,6 @@ vi.mock("../utils/username", () => ({
 describe("useUsernameValidation", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.clearAllMocks();
   });
 
   afterEach(() => {

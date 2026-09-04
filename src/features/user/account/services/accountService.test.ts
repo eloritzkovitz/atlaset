@@ -47,8 +47,6 @@ describe("accountService", () => {
   });
 
   beforeEach(() => {
-    vi.clearAllMocks();
-
     user = createMockUser() as unknown as User;
     auth.auth.currentUser = user;
 

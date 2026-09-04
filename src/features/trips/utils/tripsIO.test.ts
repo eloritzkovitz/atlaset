@@ -30,7 +30,6 @@ vi.mock("papaparse", () => ({
 
 describe("tripsIO utils", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     global.alert = vi.fn();
   });
 

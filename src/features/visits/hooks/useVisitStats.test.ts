@@ -19,8 +19,6 @@ import { getVisitCountStats } from "../utils/visitStats";
 
 describe("useVisitStats", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-
     vi.mocked(getVisitCountStats).mockReturnValue({
       map: { US: 1, FR: 1, DE: 1, CA: 1 },
       min: 1,

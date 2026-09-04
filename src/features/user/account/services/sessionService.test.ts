@@ -26,7 +26,6 @@ describe("sessionService", () => {
   const doc = (id: string) => ({ ref: { id }, id, data: () => ({}) }) as any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
 

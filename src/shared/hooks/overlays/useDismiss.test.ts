@@ -16,10 +16,7 @@ import { useKeyHandler } from "../input/useKeyHandler";
 const mockUseUI = vi.mocked(useUI);
 const mockUseKeyHandler = vi.mocked(useKeyHandler);
 
-describe("useDismiss", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+describe("useDismiss", () => {  
   function mount({
     uiVisible = true,
     modalOpen = false,

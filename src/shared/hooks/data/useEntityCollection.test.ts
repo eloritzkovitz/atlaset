@@ -1,13 +1,5 @@
-import { act, cleanup, renderHook } from "@testing-library/react";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vi,
-  type Mock,
-} from "vitest";
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
 import {
   useEntityCollection,
   type UseEntityCollectionOptions,
@@ -32,11 +24,6 @@ describe("useEntityCollection", () => {
   beforeEach(() => {
     persistItems = vi.fn().mockResolvedValue(undefined);
     onLogAction = vi.fn().mockResolvedValue(undefined);
-  });
-
-  afterEach(() => {
-    cleanup();
-    vi.clearAllMocks();
   });
 
   test("initializes items and handles prop sync", () => {

@@ -11,7 +11,6 @@ describe("useModalAnimation", () => {
 
   afterEach(() => {
     vi.useRealTimers();
-    vi.clearAllMocks();
   });
 
   describe("Standard Animated Path", () => {

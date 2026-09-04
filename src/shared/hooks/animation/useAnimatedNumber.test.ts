@@ -11,7 +11,6 @@ describe("useAnimatedNumber", () => {
 
   afterEach(() => {
     vi.useRealTimers();
-    vi.clearAllMocks();
   });
 
   it.each([

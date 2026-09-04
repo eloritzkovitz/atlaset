@@ -67,7 +67,6 @@ describe("authService", () => {
   let freshUser: User;
 
   beforeEach(() => {
-    vi.clearAllMocks();
     freshUser = createMockUser() as unknown as User;
     auth.auth.currentUser = freshUser;
     auth.signInWithEmailAndPassword.mockResolvedValue({ user: freshUser });

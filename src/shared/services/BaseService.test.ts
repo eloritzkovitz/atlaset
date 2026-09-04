@@ -24,7 +24,6 @@ describe("BaseService", () => {
   let service: MockService;
 
   beforeEach(() => {
-    vi.clearAllMocks();
     service = new MockService();
   });
 

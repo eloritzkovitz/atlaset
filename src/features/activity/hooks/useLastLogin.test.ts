@@ -1,4 +1,4 @@
-import { renderHook, cleanup } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { vi, describe, test, expect, afterEach } from "vitest";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { useLastLogin } from "./useLastLogin";
@@ -16,8 +16,6 @@ vi.mock("./useUserActivity", () => ({
 }));
 
 afterEach(() => {
-  cleanup();
-  vi.clearAllMocks();
   mockAuth.user = null;
 });
 

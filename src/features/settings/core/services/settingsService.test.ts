@@ -30,7 +30,6 @@ describe("settingsService", () => {
 
   beforeEach(async () => {
     vi.resetModules();
-    vi.clearAllMocks();
 
     const module = await import("./settingsService");
     libFirebase = await import("@lib/firebase");

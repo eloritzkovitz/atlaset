@@ -1,5 +1,5 @@
 import type { User } from "firebase/auth";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { auth } from "@lib/firebase/config";
 import {
   isPasswordProvider,
@@ -14,11 +14,7 @@ vi.mock("@lib/firebase/config", () => ({
   },
 }));
 
-describe("auth utils", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
+describe("auth utils", () => { 
   describe("toSerializableUser", () => {
     it("transforms a complex Firebase User into a clean serializable object", () => {
       const mockFirebaseUser = {

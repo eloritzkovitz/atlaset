@@ -1,12 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { sharedTripsService } from "./sharedTripsService";
 
-describe("sharedTripsService", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
+describe("sharedTripsService", () => {  
   it("getSharedTripIds targets the correct collection path", async () => {
     fs.getDocs.mockResolvedValueOnce({
       docs: [

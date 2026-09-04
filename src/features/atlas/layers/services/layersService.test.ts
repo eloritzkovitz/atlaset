@@ -34,7 +34,6 @@ describe("layersService", () => {
   const mockDocRef = (col: any, id: any) => ({ col, id });
 
   beforeEach(() => {
-    vi.clearAllMocks();
     fs.writeBatch.mockReturnValue(mockBatch as any);
     fs.collection.mockReturnValue(mockLayersCol as any);
     fs.doc.mockImplementation(mockDocRef as any);

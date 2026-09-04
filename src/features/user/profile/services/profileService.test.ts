@@ -10,8 +10,6 @@ describe("profileService", () => {
   let mockTx: { get: any; set: any; update: any; delete: any };
 
   beforeEach(() => {
-    vi.clearAllMocks();
-
     fs.doc.mockReturnValue({ type: "document" });
 
     mockTx = {

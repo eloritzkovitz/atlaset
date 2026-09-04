@@ -74,7 +74,6 @@ describe("useLanguage", () => {
 
   beforeEach(() => {
     vi.resetModules();
-    vi.clearAllMocks();
 
     freshUser = createMockUser();
     useAuthMock.mockReturnValue({

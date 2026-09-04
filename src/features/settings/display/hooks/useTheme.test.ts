@@ -38,7 +38,6 @@ describe("useTheme", () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
     mockMatchMedia(true);
     (useSettings as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       settings: { display: { theme: "dark", accent: "blue" } },

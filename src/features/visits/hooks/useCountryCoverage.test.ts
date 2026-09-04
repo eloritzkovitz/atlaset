@@ -11,8 +11,6 @@ vi.mock("./useCountryTracking", () => ({
 
 describe("useCountryCoverage", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-
     vi.mocked(useCountryTracking).mockReturnValue(
       createMockCountryTracking({
         visitedCountryCodes: ["FR", "GP"],

@@ -20,7 +20,6 @@ vi.mock("../services/authService", () => ({
 
 describe("useAuthHandlers", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     sessionStorage.clear();
   });
 

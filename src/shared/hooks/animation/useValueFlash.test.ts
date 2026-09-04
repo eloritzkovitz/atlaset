@@ -11,7 +11,6 @@ describe("useValueFlash", () => {
 
   afterEach(() => {
     vi.useRealTimers();
-    vi.clearAllMocks();
   });
 
   it("should flash successClass when value increases and clear it after 500ms", () => {

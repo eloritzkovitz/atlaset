@@ -1,5 +1,5 @@
 import type { DocumentSnapshot, DocumentData } from "firebase/firestore";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
@@ -38,7 +38,6 @@ describe("leaderboardsService", () => {
   const playerId = "player1";
 
   beforeEach(() => {
-    vi.clearAllMocks();
     fs.collection.mockReturnValue({ id: "mock-collection" });
     fs.query.mockImplementation((ref) => ref);
     fs.doc.mockImplementation((...args: any[]) => ({

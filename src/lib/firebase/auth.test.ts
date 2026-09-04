@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import * as authModule from "firebase/auth";
 import { createMockUser } from "@test-utils/authMocks";
 import { isAuthenticated, getCurrentUser } from "./auth";
@@ -10,11 +10,7 @@ vi.mock("firebase/auth", () => ({
 
 const mockUser = createMockUser({ uid: "test-user" });
 
-describe("firebase utils", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
+describe("firebase utils", () => {  
   describe("isAuthenticated / getCurrentUser", () => {
     it("returns correctly when user is present", () => {
       vi.mocked(authModule.getAuth).mockReturnValue({
