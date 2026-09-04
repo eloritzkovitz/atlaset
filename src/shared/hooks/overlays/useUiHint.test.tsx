@@ -1,5 +1,5 @@
 import React from "react";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { act, fireEvent } from "@testing-library/react";
 import "@test-utils/settingsMocks";
 import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";
