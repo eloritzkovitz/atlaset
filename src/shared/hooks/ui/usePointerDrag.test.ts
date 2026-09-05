@@ -37,7 +37,7 @@ const down = (r: any, x = 500, y = 400, b = 0) =>
       button: b,
       clientX: x,
       clientY: y,
-    } as any),
+    }),
   );
 
 describe("usePointerDrag", () => {
@@ -101,9 +101,9 @@ describe("usePointerDrag", () => {
 
   it("moves on pointermove", async () => {
     const orig = window.requestAnimationFrame;
-    window.requestAnimationFrame = (cb: any) => {
+    window.requestAnimationFrame = (cb: FrameRequestCallback) => {
       cb(0);
-      return 1 as any;
+      return 1;
     };
     const { result, rerender } = mount();
     rerender({ dr: true, open: true });
@@ -121,9 +121,7 @@ describe("usePointerDrag", () => {
   });
 
   it("cleans up raf on pointerup", () => {
-    const raf = vi
-      .spyOn(window, "requestAnimationFrame")
-      .mockReturnValue(5678 as any);
+    const raf = vi.spyOn(window, "requestAnimationFrame").mockReturnValue(5678);
     const caf = vi.spyOn(window, "cancelAnimationFrame");
     const { result, rerender } = mount();
     rerender({ dr: true, open: true });

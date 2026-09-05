@@ -1,3 +1,8 @@
+import type {
+  CollectionReference,
+  DocumentReference,
+  QueryDocumentSnapshot,
+} from "firebase/firestore";
 import { vi } from "vitest";
 import {
   createAnalyticsMocks,
@@ -15,12 +20,11 @@ export const mockFirestoreControls = createFirestoreMocks();
 dbBridge.collection = mockFirestoreControls.collection;
 
 // Auto-wire doc paths into custom reference shapes globally
-vi.spyOn(mockFirestoreControls, "doc").mockImplementation(((
-  colRef: any,
-  id: string,
-) => {
-  return { colRef, id, type: "document" };
-}) as any);
+vi.spyOn(mockFirestoreControls, "doc").mockImplementation(
+  (colRef: unknown, id: string) => {
+    return { colRef, id, type: "document" };
+  },
+);
 
 // Mock Firebase utilities
 vi.mock("@lib/firebase", () => ({
@@ -30,7 +34,7 @@ vi.mock("@lib/firebase", () => ({
   getCollection: () => mockFirestoreControls.collection,
   getUserCollection: mockAuthControls.getUserCollection,
   logToGoogleAnalytics: vi.fn(),
-  getDocData: vi.fn(async (ref: any) => {
+  getDocData: vi.fn(async (ref: DocumentReference) => {
     const lookupKey = ref?.id ? { id: ref.id } : ref;
     const snap = await mockFirestoreControls.getDoc(lookupKey);
     if (!snap || (typeof snap.exists === "function" && !snap.exists())) {
@@ -39,10 +43,10 @@ vi.mock("@lib/firebase", () => ({
     const data = typeof snap.data === "function" ? snap.data() : snap.data;
     return { id: ref?.id, ...data };
   }),
-  getDocsData: vi.fn(async (colRef: any) => {
+  getDocsData: vi.fn(async (colRef: CollectionReference) => {
     const snap = await mockFirestoreControls.getDocs(colRef);
     if (!snap || !snap.docs) return [];
-    return snap.docs.map((d: any) => {
+    return snap.docs.map((d: QueryDocumentSnapshot) => {
       const data = typeof d.data === "function" ? d.data() : d.data;
       return { id: d.id, ...data };
     });
@@ -56,30 +60,25 @@ vi.mock("@lib/firebase", () => ({
   ],
 
   getPaths: {
-    user: vi.fn((uid) => mockFirestoreControls.doc({} as any, `users/${uid}`)),
+    user: vi.fn((uid) => mockFirestoreControls.doc({}, `users/${uid}`)),
     username: vi.fn((username) =>
-      mockFirestoreControls.doc({} as any, `usernames/${username}`),
+      mockFirestoreControls.doc({}, `usernames/${username}`),
     ),
-    usernames: vi.fn(() =>
-      mockFirestoreControls.collection({} as any, "usernames"),
-    ),
+    usernames: vi.fn(() => mockFirestoreControls.collection({}, "usernames")),
     sub: vi.fn((uid, sub) =>
-      mockFirestoreControls.collection({} as any, `users/${uid}/${sub}`),
+      mockFirestoreControls.collection({}, `users/${uid}/${sub}`),
     ),
     subDoc: vi.fn((uid, sub, docId) =>
-      mockFirestoreControls.doc({} as any, `users/${uid}/${sub}/${docId}`),
+      mockFirestoreControls.doc({}, `users/${uid}/${sub}/${docId}`),
     ),
     settingsDoc: vi.fn((uid) =>
-      mockFirestoreControls.doc({} as any, `users/${uid}/settings/main`),
+      mockFirestoreControls.doc({}, `users/${uid}/settings/main`),
     ),
     friendDoc: vi.fn((uid, friendUid) =>
-      mockFirestoreControls.doc({} as any, `users/${uid}/friends/${friendUid}`),
+      mockFirestoreControls.doc({}, `users/${uid}/friends/${friendUid}`),
     ),
     friendRequestDoc: vi.fn((toUid, fromUid) =>
-      mockFirestoreControls.doc(
-        {} as any,
-        `users/${toUid}/friendRequests/${fromUid}`,
-      ),
+      mockFirestoreControls.doc({}, `users/${toUid}/friendRequests/${fromUid}`),
     ),
   },
 
@@ -92,7 +91,7 @@ vi.mock("@lib/firebase", () => ({
 vi.mock("firebase/analytics", () => ({
   getAnalytics: () => mockAnalyticsControls.getAnalytics(),
   isSupported: () => mockAnalyticsControls.isSupported(),
-  logEvent: (...args: any[]) => mockAnalyticsControls.logEvent(...args),
+  logEvent: (...args: unknown[]) => mockAnalyticsControls.logEvent(...args),
   __esModule: true,
 }));
 

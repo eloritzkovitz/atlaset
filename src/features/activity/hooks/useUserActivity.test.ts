@@ -12,9 +12,9 @@ const ts2 = 1771160990000;
 const ts3 = 1771160980000;
 
 describe("useUserActivity", () => {
-  const sample1: UserActivity = { id: "1", action: 120 as any, timestamp: ts1 };
-  const sample2: UserActivity = { id: "2", action: 130 as any, timestamp: ts2 };
-  const sample3: UserActivity = { id: "3", action: 140 as any, timestamp: ts3 };
+  const sample1: UserActivity = { id: "1", action: 120, timestamp: ts1 };
+  const sample2: UserActivity = { id: "2", action: 130, timestamp: ts2 };
+  const sample3: UserActivity = { id: "3", action: 140, timestamp: ts3 };
   const mockLastDoc = { id: "2", exists: () => true, data: () => ({}) };  
 
   it("fetches initial activity successfully", async () => {

@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n, { type TFunction } from "i18next";
 import {
   formatDate,
   formatFirestoreDate,
@@ -65,7 +65,7 @@ describe("formatDate", () => {
     ],
     [
       "2023-01-15",
-      { month: "short" },
+      { month: "short" } satisfies Intl.DateTimeFormatOptions,
       new Intl.DateTimeFormat(defaultLocale, {
         day: "2-digit",
         month: "short",
@@ -79,7 +79,7 @@ describe("formatDate", () => {
     const opts =
       options === "long" || typeof options === "object" ? options : undefined;
 
-    expect(formatDate(date as any, opts as any, locale)).toBe(expected);
+    expect(formatDate(date, opts, locale)).toBe(expected);
   });
 });
 
@@ -133,7 +133,7 @@ describe("formatTimeAgo", () => {
     if (key.endsWith("hours")) return `${options?.count}h ago`;
     if (key.endsWith("days")) return `${options?.count}d ago`;
     return key;
-  }) as any;
+  }) as TFunction;
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -208,7 +208,7 @@ describe("getYear", () => {
     [new Date("2023-01-15"), 2023],
     [1673740800000, 2023],
   ])("gets year from %p", (input, expected) => {
-    expect(getYear(input as any)).toBe(expected);
+    expect(getYear(input as string | undefined)).toBe(expected);
   });
 });
 
@@ -226,7 +226,7 @@ describe("getTimestamp", () => {
     [date, date.getTime()],
     ["2021-06-30T00:00:00Z", date.getTime()],
   ])("converts %p", (input, expected) => {
-    expect(getTimestamp(input as any)).toBe(expected);
+    expect(getTimestamp(input as string | number | Date)).toBe(expected);
   });
 
   it("returns NaN for invalid dates", () => {
@@ -242,7 +242,7 @@ describe("formatTimeSeconds", () => {
     [125, "2:05"],
     [0, "0:00"],
   ])("formats %p -> %p", (input, expected) => {
-    expect(formatTimeSeconds(input as any)).toBe(expected);
+    expect(formatTimeSeconds(input as number | undefined)).toBe(expected);
   });
 });
 
@@ -321,7 +321,7 @@ describe("month helpers", () => {
     [getMonthsLong, "months.long", ["January", "February"]],
   ])("gets translated months", (fn, key, value) => {
     const t = ((requestedKey: string) =>
-      requestedKey === key ? value : []) as any;
+      requestedKey === key ? value : []) as TFunction;
 
     expect(fn(t)).toEqual(formatMonthValues(value));
   });

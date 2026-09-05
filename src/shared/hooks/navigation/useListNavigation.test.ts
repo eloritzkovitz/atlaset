@@ -45,8 +45,12 @@ describe("useListNavigation", () => {
   }
 
   function triggerKey(key: string, props = {}) {
-    const handler = (useKeyHandler as any).mock.calls[0][0];
-    handler({ key, preventDefault: vi.fn(), ...props });
+    const handler = vi.mocked(useKeyHandler).mock.calls[0][0];
+    handler({
+      key,
+      preventDefault: vi.fn(),
+      ...props,
+    } as unknown as KeyboardEvent);
     vi.runAllTimers();
   }
 
@@ -65,7 +69,7 @@ describe("useListNavigation", () => {
   });
 
   afterEach(() => {
-    (document.getElementById as any).mockRestore?.();
+    vi.restoreAllMocks();
     vi.useRealTimers();
   });
 

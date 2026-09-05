@@ -6,6 +6,7 @@ import {
   isTimelineLayer,
   normalizeLayers,
 } from "./layer";
+import type { Layer } from "../types";
 
 describe("layer utils", () => {
   describe("isTimelineLayer", () => {
@@ -21,8 +22,8 @@ describe("layer utils", () => {
   describe("normalizeLayers", () => {
     it("returns undefined for non-array input", () => {
       expect(normalizeLayers(undefined)).toBeUndefined();
-      expect(normalizeLayers(null as unknown as any[])).toBeUndefined();
-      expect(normalizeLayers(123 as unknown as any[])).toBeUndefined();
+      expect(normalizeLayers(null as unknown as Layer[])).toBeUndefined();
+      expect(normalizeLayers(123 as unknown as Layer[])).toBeUndefined();
     });
 
     it("normalizes a basic array of partial layers", () => {
@@ -60,7 +61,7 @@ describe("layer utils", () => {
 
   describe("getDefaultLayerSelections", () => {
     it("returns an object mapping each layer id to 'all'", () => {
-      const layers = [{ id: "a" }, { id: "b" }, { id: "c" }] as any[];
+      const layers = [{ id: "a" }, { id: "b" }, { id: "c" }] as Layer[];
       const result = getDefaultLayerSelections(layers);
       expect(result).toEqual({ a: "all", b: "all", c: "all" });
     });
@@ -80,7 +81,7 @@ describe("layer utils", () => {
 
     it("returns all iso codes if layers are 'all'", () => {
       expect(
-        getLayerFilteredIsoCodes(isoCodes, layers as any, {
+        getLayerFilteredIsoCodes(isoCodes, layers as Layer[], {
           o1: "all",
           o2: "all",
         }),
@@ -89,7 +90,7 @@ describe("layer utils", () => {
 
     it("filters to only layer countries if 'only'", () => {
       expect(
-        getLayerFilteredIsoCodes(isoCodes, layers as any, {
+        getLayerFilteredIsoCodes(isoCodes, layers as Layer[], {
           o1: "only",
         }),
       ).toEqual(["FR", "DE"]);
@@ -99,7 +100,7 @@ describe("layer utils", () => {
       const expected = isoCodes.filter((code) => code !== "GP");
 
       expect(
-        getLayerFilteredIsoCodes(isoCodes, layers as any, {
+        getLayerFilteredIsoCodes(isoCodes, layers as Layer[], {
           o2: "exclude",
         }),
       ).toEqual(expected);

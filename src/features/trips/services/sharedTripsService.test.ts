@@ -2,14 +2,14 @@ import { describe, it, expect } from "vitest";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { sharedTripsService } from "./sharedTripsService";
 
-describe("sharedTripsService", () => {  
+describe("sharedTripsService", () => {
   it("getSharedTripIds targets the correct collection path", async () => {
     fs.getDocs.mockResolvedValueOnce({
       docs: [
         { id: "t1", data: () => ({}) },
         { id: "t2", data: () => ({}) },
       ],
-    } as any);
+    });
 
     const ids = await sharedTripsService.getSharedTripIds("u1");
 

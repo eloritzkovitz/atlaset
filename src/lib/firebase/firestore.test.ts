@@ -1,4 +1,13 @@
-import { getDoc, getDocs, collection } from "firebase/firestore";
+import { type User } from "firebase/auth";
+import {
+  getDoc,
+  getDocs,
+  collection,
+  type CollectionReference,
+  type DocumentReference,
+  type DocumentSnapshot,
+  type QuerySnapshot,
+} from "firebase/firestore";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as auth from "./auth";
 import {
@@ -10,9 +19,7 @@ import {
 
 vi.mock("firebase/firestore");
 vi.mock("./auth");
-vi.mock("./config", () => ({
-  db: {},
-}));
+vi.mock("./config", () => ({ db: {} }));
 
 describe("firestore utils", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -21,7 +28,9 @@ describe("firestore utils", () => {
     it("returns a collection reference", () => {
       const path = "testCollection";
       const colRef = { id: "mockColRef" };
-      vi.mocked(collection).mockReturnValue(colRef as any);
+      vi.mocked(collection).mockReturnValue(
+        colRef as unknown as CollectionReference,
+      );
       const result = getCollection(path);
       expect(result).toBe(colRef);
     });
@@ -34,7 +43,9 @@ describe("firestore utils", () => {
     });
 
     it("returns collection ref when authenticated", () => {
-      vi.spyOn(auth, "getCurrentUser").mockReturnValue({ uid: "123" } as any);
+      vi.spyOn(auth, "getCurrentUser").mockReturnValue({
+        uid: "123",
+      } as unknown as User);
       getUserCollection("trips");
       expect(collection).toHaveBeenCalledWith(
         expect.anything(),
@@ -50,14 +61,16 @@ describe("firestore utils", () => {
       vi.mocked(getDoc).mockResolvedValue({
         exists: () => true,
         data: () => ({ foo: "bar" }),
-      } as any);
-      const res = await getDocData({} as any);
+      } as unknown as DocumentSnapshot);
+      const res = await getDocData({} as unknown as DocumentReference);
       expect(res).toEqual({ foo: "bar" });
     });
 
     it("returns null if not exists", async () => {
-      vi.mocked(getDoc).mockResolvedValue({ exists: () => false } as any);
-      expect(await getDocData({} as any)).toBeNull();
+      vi.mocked(getDoc).mockResolvedValue({
+        exists: () => false,
+      } as unknown as DocumentSnapshot);
+      expect(await getDocData({} as unknown as DocumentReference)).toBeNull();
     });
   });
 
@@ -65,9 +78,8 @@ describe("firestore utils", () => {
     it("maps snapshot docs to typed objects", async () => {
       vi.mocked(getDocs).mockResolvedValue({
         docs: [{ id: "doc1", data: () => ({ val: 1 }) }],
-      } as any);
-
-      const res = await getDocsData({} as any);
+      } as unknown as QuerySnapshot);
+      const res = await getDocsData({} as unknown as CollectionReference);
       expect(res).toEqual([{ id: "doc1", val: 1 }]);
     });
   });

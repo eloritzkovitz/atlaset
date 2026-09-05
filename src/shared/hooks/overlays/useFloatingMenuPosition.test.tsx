@@ -21,7 +21,6 @@ function setupTest({
   defaultLeft = 0,
   defaultTop = 0,
 }: SetupTestArgs) {
-  // Mock window sizes
   Object.defineProperty(window, "innerWidth", {
     value: windowWidth,
     configurable: true,
@@ -31,16 +30,15 @@ function setupTest({
     configurable: true,
   });
 
-  // Create fake DOM nodes
   const mainMenu = {
     getBoundingClientRect: () => mainRect,
-  } as any;
+  };
+
   const floatingMenu = {
     offsetWidth: floatingWidth,
     offsetHeight: floatingHeight,
-  } as any;
+  };
 
-  // Hook test component
   function TestComponent() {
     const mainRef = useRef<any>(mainMenu);
     const floatingRef = useRef<any>(floatingMenu);

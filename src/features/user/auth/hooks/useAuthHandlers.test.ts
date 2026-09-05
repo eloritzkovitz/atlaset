@@ -1,5 +1,6 @@
-import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { renderHook, act } from "@testing-library/react";
+import { createMockUser } from "@test-utils/authMocks";
 import { useAuthHandlers } from "./useAuthHandlers";
 import { authService } from "../services/authService";
 
@@ -25,7 +26,7 @@ describe("useAuthHandlers", () => {
 
   it("handles successful sign in with reactivation and navigation", async () => {
     vi.mocked(authService.signIn).mockResolvedValueOnce({
-      user: { uid: "123" } as any,
+      user: createMockUser({ uid: "123" }),
       reactivated: true,
     });
 
@@ -66,10 +67,15 @@ describe("useAuthHandlers", () => {
   });
 
   it("executes signUp, forgotPassword, googleSignIn, and logout flows", async () => {
-    vi.mocked(authService.signUp).mockResolvedValueOnce({} as any);
+    vi.mocked(authService.signUp).mockResolvedValueOnce({
+      user: createMockUser({ uid: "123" }),
+      providerId: "password",
+      operationType: "signIn",
+      username: "testuser",
+    });
     vi.mocked(authService.resetPassword).mockResolvedValueOnce();
     vi.mocked(authService.signInWithGoogle).mockResolvedValueOnce({
-      user: { uid: "123" } as any,
+      user: createMockUser({ uid: "123" }),
       reactivated: false,
     });
     vi.mocked(authService.logout).mockResolvedValueOnce();

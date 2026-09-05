@@ -1,10 +1,15 @@
 import { mockCountries } from "@test-utils/mockCountries";
-import { mockTrips } from "@test-utils/mockTrips";
-import { getCountrySortOptions, sortCountries } from "./countrySort";
+import type { Trip } from "@features/trips/types";
 import {
   getVisitCountsUpToYear,
   buildVisitContext,
 } from "@features/visits/utils/visits";
+import { mockTrips } from "@test-utils/mockTrips";
+import {
+  getCountrySortOptions,
+  sortCountries,
+  type CountrySortBy,
+} from "./countrySort";
 import type { Country, SovereigntyStatus } from "../../types";
 
 describe("countrySort utils", () => {
@@ -14,8 +19,8 @@ describe("countrySort utils", () => {
   function sortByField(field: keyof Country, asc = true): string[] {
     return [...countries]
       .sort((a, b) => {
-        const av = (a as any)[field];
-        const bv = (b as any)[field];
+        const av = a[field];
+        const bv = b[field];
 
         if (typeof av === "string" || typeof bv === "string") {
           return asc
@@ -23,12 +28,15 @@ describe("countrySort utils", () => {
             : String(bv || "").localeCompare(String(av || ""));
         }
 
-        return asc ? (av ?? 0) - (bv ?? 0) : (bv ?? 0) - (av ?? 0);
+        const aNum = typeof av === "number" ? av : 0;
+        const bNum = typeof bv === "number" ? bv : 0;
+
+        return asc ? aNum - bNum : bNum - aNum;
       })
       .map((c) => c.isoCode);
   }
 
-  function getCounts(trips: any) {
+  function getCounts(trips: Trip[]) {
     return getVisitCountsUpToYear(trips, new Date().getFullYear());
   }
 
@@ -59,20 +67,20 @@ describe("countrySort utils", () => {
       it(`sorts by ${String(key)} ${asc ? "ascending" : "descending"}`, () => {
         const sorted = sortCountries(
           countries,
-          `${String(key)}-${direction}` as any,
+          `${String(key)}-${direction}` as CountrySortBy,
           visitContext,
         );
 
         if (stringField) {
           const expected = [...countries]
             .sort((a, b) => {
-              const av = String((a as any)[key] || "");
-              const bv = String((b as any)[key] || "");
+              const av = String(a[key] || "");
+              const bv = String(b[key] || "");
               return asc ? av.localeCompare(bv) : bv.localeCompare(av);
             })
-            .map((c) => (c as any)[key]);
+            .map((c) => c[key]);
 
-          expect(sorted.map((c) => (c as any)[key])).toEqual(expected);
+          expect(sorted.map((c) => c[key])).toEqual(expected);
         } else {
           expect(sorted.map((c) => c.isoCode)).toEqual(sortByField(key, asc));
         }
@@ -202,13 +210,13 @@ describe("countrySort utils", () => {
       ] as Country[];
 
       expect(
-        sortCountries(arr, `${key}-asc` as any, visitContext).map(
+        sortCountries(arr, `${key}-asc` as CountrySortBy, visitContext).map(
           (c) => c.isoCode,
         ),
       ).toEqual([firstCode, secondCode]);
 
       expect(
-        sortCountries(arr, `${key}-desc` as any, visitContext).map(
+        sortCountries(arr, `${key}-desc` as CountrySortBy, visitContext).map(
           (c) => c.isoCode,
         ),
       ).toEqual([secondCode, firstCode]);
@@ -286,7 +294,7 @@ describe("countrySort utils", () => {
     const sorted = sortCountries(
       arr,
       "visitCount-desc",
-      buildVisitContext(trips as any),
+      buildVisitContext(trips as Trip[]),
     );
 
     expect(sorted[0].isoCode).toBe("AA");
@@ -308,7 +316,9 @@ describe("countrySort utils", () => {
       { name: "Same", isoCode: "AAA" },
     ] as Country[];
 
-    expect(sortCountries(arr, "not-a-sort" as any, visitContext)).toEqual(arr);
+    expect(
+      sortCountries(arr, "not-a-sort" as CountrySortBy, visitContext),
+    ).toEqual(arr);
   });
 
   describe("getCountrySortOptions", () => {

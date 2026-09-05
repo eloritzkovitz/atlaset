@@ -87,7 +87,7 @@ describe("Quiz Utilities", () => {
     });
 
     it("should fall back to null if the underlying random function yields undefined", () => {
-      const fakeGetNextCountry = () => () => undefined as any;
+      const fakeGetNextCountry = () => () => undefined;
 
       const getNextFn = makeGetNext(fakeGetNextCountry, mockCountries);
       const result = getNextFn(null);

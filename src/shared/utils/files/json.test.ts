@@ -126,7 +126,7 @@ describe("json utils", () => {
       const downloadSpy = vi
         .spyOn(downloadModule, "downloadBlob")
         .mockImplementation(() => {});
-      exportToFile(null as any);
+      exportToFile(null as unknown as Dummy[], "test.json");
       expect(downloadSpy).not.toHaveBeenCalled();
     });
 
@@ -155,7 +155,7 @@ describe("json utils", () => {
       );
 
       exportToFile<Dummy>(
-        [{ value: 1 }, { value: 2 }] as any,
+        [{ value: 1 }, { value: 2 }] as unknown as Dummy[],
         undefined,
         [],
         "layer",

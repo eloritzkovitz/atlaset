@@ -1,5 +1,7 @@
-import { describe, it, expect } from "vitest";
 import type { TFunction } from "i18next";
+import { describe, it, expect } from "vitest";
+import type { Country } from "@features/countries/types";
+import type { UserProfile } from "@features/user/profile/types";
 import {
   getCountryDropdownOptions,
   getYearDropdownOptions,
@@ -8,6 +10,7 @@ import {
   getStatusDropdownOptions,
   getTagDropdownOptions,
 } from "./tripDropdownOptions";
+import type { Trip } from "../types";
 
 const mockT = ((_key: string, defaultValue: string) =>
   defaultValue) as TFunction;
@@ -20,7 +23,7 @@ describe("Trip Filter Dropdown Utilities", () => {
       { isoCode: "MX", name: "Mexico" },
     ];
     const usedCodes = new Set(["MX", "CA"]);
-    const result = getCountryDropdownOptions(countries as any, usedCodes);
+    const result = getCountryDropdownOptions(countries as Country[], usedCodes);
     expect(result).toEqual([
       { value: "CA", label: "Canada" },
       { value: "MX", label: "Mexico" },
@@ -38,7 +41,10 @@ describe("Trip Filter Dropdown Utilities", () => {
   it("getParticipantsDropdownOptions matches profiles and falls back safely to UID", () => {
     const uids = ["user-1", "user-2"];
     const profiles = [{ uid: "user-1", displayName: "Alice" }];
-    const result = getParticipantsDropdownOptions(uids, profiles as any);
+    const result = getParticipantsDropdownOptions(
+      uids,
+      profiles as UserProfile[],
+    );
     expect(result).toEqual([
       { value: "user-1", label: "Alice" },
       { value: "user-2", label: "user-2" },
@@ -55,7 +61,7 @@ describe("Trip Filter Dropdown Utilities", () => {
   });
 
   it("getTagDropdownOptions transforms tag strings with words capitalized", () => {
-    const dummyTrips = [{ tags: ["national-park"] }] as any;
+    const dummyTrips = [{ tags: ["national-park"] }] as unknown as Trip[];
     const result = getTagDropdownOptions(dummyTrips, mockT);
 
     expect(result).toContainEqual({
@@ -65,7 +71,7 @@ describe("Trip Filter Dropdown Utilities", () => {
   });
 
   it("getCategoryDropdownOptions transforms raw strings cleanly with explicit translation function", () => {
-    const dummyTrips = [{ categories: ["roadtrip"] }] as any;
+    const dummyTrips = [{ categories: ["roadtrip"] }] as unknown as Trip[];
     const result = getCategoryDropdownOptions(dummyTrips, mockT);
 
     expect(result).toContainEqual({ value: "roadtrip", label: "Roadtrip" });

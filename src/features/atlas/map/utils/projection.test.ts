@@ -1,5 +1,5 @@
-import type { Coordinates } from "../types";
 import * as d3Geo from "d3-geo";
+import type { Feature, Geometry } from "geojson";
 import * as projectionModule from "./projection";
 import {
   makeProjection,
@@ -7,6 +7,7 @@ import {
   getFeatureCentroid,
   getCountryCenterAndZoom,
 } from "./projection";
+import type { Coordinates, GeoData } from "../types";
 
 describe("makeProjection", () => {
   it("creates a default geoEqualEarth projection", () => {
@@ -34,14 +35,16 @@ describe("makeProjection", () => {
   });
 
   it("applies projectionConfig center, rotate, scale, and parallels", () => {
-    const mockProj: any = {
+    const mockProj = {
       translate: vi.fn(() => mockProj),
       center: vi.fn(() => mockProj),
       rotate: vi.fn(() => mockProj),
       scale: vi.fn(() => mockProj),
       parallels: vi.fn(() => mockProj),
     };
-    projectionModule.projectionMap["geoTest"] = vi.fn(() => mockProj);
+    projectionModule.projectionMap["geoTest"] = vi.fn(
+      () => mockProj as unknown as d3Geo.GeoProjection,
+    );
 
     const config = {
       center: [1, 2] as Coordinates,
@@ -59,8 +62,12 @@ describe("makeProjection", () => {
   });
 
   it("ignores projectionConfig keys with invalid values or missing methods", () => {
-    const mockProj: any = { translate: vi.fn(() => mockProj) }; // missing other methods
-    projectionModule.projectionMap["geoTest2"] = vi.fn(() => mockProj);
+    const mockProj = {
+      translate: vi.fn(() => mockProj),
+    };
+    projectionModule.projectionMap["geoTest2"] = vi.fn(
+      () => mockProj as unknown as d3Geo.GeoProjection,
+    );
 
     const config = {
       center: [1] as unknown as Coordinates,
@@ -112,48 +119,51 @@ describe("getSvgCoordsFromTransform", () => {
 
 describe("getFeatureCentroid", () => {
   it("proxies execution directly to geoCentroid", () => {
-    const feature: any = {
+    const feature: Feature<Geometry, { [key: string]: unknown }> = {
       type: "Feature",
       geometry: { type: "Point", coordinates: [1, 2] },
+      properties: {},
     };
     expect(getFeatureCentroid(feature, () => [1, 2])).toEqual([1, 2]);
   });
 });
 
 describe("getCountryCenterAndZoom", () => {
-  const geoData: any = {
+  const geoData: GeoData = {
+    type: "FeatureCollection",
     features: [
-      { properties: { "ISO3166-1-Alpha-2": "FR" }, geometry: {} },
-      { properties: { "ISO3166-1-Alpha-3": "USA" }, geometry: {} },
-      { properties: null, geometry: {} },
+      {
+        type: "Feature",
+        properties: { "ISO3166-1-Alpha-2": "FR" },
+        geometry: { type: "Point", coordinates: [0, 0] },
+      },
+      {
+        type: "Feature",
+        properties: { "ISO3166-1-Alpha-3": "USA" },
+        geometry: { type: "Point", coordinates: [0, 0] },
+      },
+      {
+        type: "Feature",
+        properties: null,
+        geometry: { type: "Point", coordinates: [0, 0] },
+      },
     ],
   };
 
   it("safely resolves country targets, missing identifiers, or structural failures", () => {
-    const mockCentroid = () => [2, 3] as const;
-    const mockBounds = () =>
-      [
-        [0, 0],
-        [10, 5],
-      ] as const;
+    const mockCentroid: typeof d3Geo.geoCentroid = () => [2, 3];
+    const mockBounds: typeof d3Geo.geoBounds = () => [
+      [0, 0],
+      [10, 5],
+    ];
 
     expect(getCountryCenterAndZoom(null, "FR")).toBeNull();
     expect(getCountryCenterAndZoom(geoData, "UK")).toBeNull();
     expect(
-      getCountryCenterAndZoom(
-        geoData,
-        "FR",
-        mockCentroid as any,
-        mockBounds as any,
-      ),
+      getCountryCenterAndZoom(geoData, "FR", mockCentroid, mockBounds),
     ).toEqual({ center: [2, 3], zoom: 6 });
     expect(
-      getCountryCenterAndZoom(
-        geoData,
-        "USA",
-        mockCentroid as any,
-        mockBounds as any,
-      ),
+      getCountryCenterAndZoom(geoData, "USA", mockCentroid, mockBounds),
     ).toBeDefined();
   });
 });

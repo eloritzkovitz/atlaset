@@ -1,4 +1,6 @@
+import { describe, expect, it, vi } from "vitest";
 import { mockCountries } from "@test-utils/mockCountries";
+import type { VisitContext } from "@features/visits/types";
 import * as searchUtils from "@utils";
 import {
   applyQualifierSearch,
@@ -7,6 +9,7 @@ import {
   filterCountriesByQualifier,
   getCountryCounts,
 } from "./countryFilters";
+import type { CountryFilterOptions, CountryModifiers } from "../types";
 
 describe("countryFilters utils", () => {
   const countries = mockCountries;
@@ -14,8 +17,8 @@ describe("countryFilters utils", () => {
   const fq = (
     qualifier: string,
     value: string,
-    visitContext?: any,
-    modifiers?: any,
+    visitContext?: VisitContext,
+    modifiers?: CountryModifiers,
   ) =>
     filterCountriesByQualifier(
       countries,
@@ -27,17 +30,17 @@ describe("countryFilters utils", () => {
 
   const mkVC = ({
     iso = [],
-    map = undefined,
-    ymap = undefined,
-    firstMap = undefined,
-    lastMap = undefined,
+    map = {},
+    ymap = {},
+    firstMap,
+    lastMap,
   }: {
     iso?: string[];
-    map?: Record<string, number> | undefined;
-    ymap?: Record<string, Set<number>> | undefined;
-    firstMap?: Record<string, number> | undefined;
-    lastMap?: Record<string, number> | undefined;
-  } = {}): any => ({
+    map?: Record<string, number>;
+    ymap?: Record<string, Set<number>>;
+    firstMap?: Record<string, Date>;
+    lastMap?: Record<string, Date>;
+  } = {}): VisitContext => ({
     visitedIsoCodes: iso,
     visitedMap: map,
     visitedYearMap: ymap,
@@ -45,717 +48,752 @@ describe("countryFilters utils", () => {
     lastVisitMap: lastMap,
   });
 
-  describe("filterCountries", () => {
-    const cases = [
-      {
-        name: "filters by region",
-        opts: { selectedRegion: "Europe" },
-        expected: [countries[0], countries[2]],
-      },
-      {
-        name: "filters by subregion",
-        opts: { selectedSubregion: "Caribbean" },
-        expected: [countries[1]],
-      },
-      {
-        name: "filters by sovereignty",
-        opts: { selectedSovereignty: "dependency" },
-        expected: [countries[1]],
-      },
-      {
-        name: "filters by layerCountries",
-        opts: { layerCountries: ["FR", "DE"] },
-        expected: [countries[0], countries[2]],
-      },
-      {
-        name: "filters by geoType (island)",
-        opts: { selectedGeoType: "Island" },
-        expected: [countries[1], countries[5]],
-      },
-      {
-        name: "filters by geoType (landlocked)",
-        opts: { selectedGeoType: "Landlocked" },
-        expected: [countries[2]],
-      },
-      {
-        name: "filters by search and region together",
-        opts: { search: "germany", selectedRegion: "Europe" },
-        expected: [countries[2]],
-      },
-    ];
+  const baseOptions: CountryFilterOptions = {
+    search: "",
+    selectedRegion: "",
+    selectedSubregion: "",
+    selectedSovereignty: "",
+    modifiers: {},
+  };
 
-    test.each(cases)("$name", ({ opts, expected }) => {
-      expect(filterCountries(countries, opts as any)).toEqual(expected);
+  const applySearch = (
+    search: string,
+    options: Partial<CountryFilterOptions> = {},
+    layerCountries?: string[],
+    visitedMap?: Record<string, number>,
+    visitedYearMap?: Record<string, Set<number>>,
+    wantToVisitCodes?: string[],
+  ) =>
+    applyQualifierSearch(
+      countries,
+      search,
+      undefined,
+      { ...baseOptions, search, ...options },
+      layerCountries,
+      visitedMap,
+      visitedYearMap,
+      wantToVisitCodes,
+    );
+
+  describe("filterCountries", () => {
+    it("filters by region", () => {
+      expect(
+        filterCountries(countries, {
+          selectedRegion: "Europe",
+        }),
+      ).toEqual([countries[0], countries[2]]);
+    });
+
+    it("filters by subregion", () => {
+      expect(
+        filterCountries(countries, {
+          selectedSubregion: "Caribbean",
+        }),
+      ).toEqual([countries[1]]);
+    });
+
+    it("filters by sovereignty", () => {
+      expect(
+        filterCountries(countries, {
+          selectedSovereignty: "dependency",
+        }),
+      ).toEqual([countries[1]]);
+    });
+
+    it("filters by layer countries", () => {
+      expect(
+        filterCountries(countries, {
+          layerCountries: ["FR", "DE"],
+        }),
+      ).toEqual([countries[0], countries[2]]);
+    });
+
+    it("filters by island geo type", () => {
+      expect(
+        filterCountries(countries, {
+          selectedGeoType: "Island",
+        }),
+      ).toEqual([countries[1], countries[5]]);
+    });
+
+    it("filters by landlocked geo type", () => {
+      expect(
+        filterCountries(countries, {
+          selectedGeoType: "Landlocked",
+        }),
+      ).toEqual([countries[2]]);
+    });
+
+    it("filters by search and region together", () => {
+      expect(
+        filterCountries(countries, {
+          search: "germany",
+          selectedRegion: "Europe",
+        }),
+      ).toEqual([countries[2]]);
     });
 
     it("filters by altNames in search", () => {
-      const countriesWithAltNames = [
+      const withAltNames = [
         { ...countries[0], altNames: ["Testland"] },
         ...countries.slice(1),
       ];
+
       expect(
-        filterCountries(countriesWithAltNames, { search: "Testland" }),
-      ).toEqual([countriesWithAltNames[0]]);
+        filterCountries(withAltNames, {
+          search: "Testland",
+        }),
+      ).toEqual([withAltNames[0]]);
     });
 
-    const tcCases = [
-      {
-        name: "includes transcontinental extras (include)",
-        opts: { selectedRegion: "Europe", modifiers: { tc: "include" } },
-        expected: [countries[0], countries[2]],
-      },
-      {
-        name: "excludes transcontinental extras (default)",
-        opts: { selectedRegion: "Europe", modifiers: { tc: "default" } },
-        expected: [countries[0], countries[2]],
-      },
-      {
-        name: "only transcontinental (only)",
-        opts: { modifiers: { tc: "only" } },
-        expected: [countries[4]],
-      },
-      {
-        name: "only contiguous scope (only:contiguous)",
-        opts: { modifiers: { tc: "only:contiguous" } },
-        expected: [],
-      },
-      {
-        name: "only overseas scope (only:overseas)",
-        opts: { modifiers: { tc: "only:overseas" } },
-        expected: [countries[4]],
-      },
-    ];
+    it("handles transcontinental include", () => {
+      expect(
+        filterCountries(countries, {
+          selectedRegion: "Europe",
+          modifiers: {
+            tc: "include",
+          },
+        }),
+      ).toEqual([countries[0], countries[2]]);
+    });
 
-    test.each(tcCases)("$name", ({ opts, expected }) => {
-      expect(filterCountries(countries, opts as any)).toEqual(expected);
+    it("handles transcontinental default", () => {
+      expect(
+        filterCountries(countries, {
+          selectedRegion: "Europe",
+          modifiers: {
+            tc: "default",
+          },
+        }),
+      ).toEqual([countries[0], countries[2]]);
+    });
+
+    it("filters to transcontinental countries with only", () => {
+      expect(
+        filterCountries(countries, {
+          modifiers: {
+            tc: "only",
+          },
+        }),
+      ).toEqual([countries[4]]);
+    });
+
+    it("filters to contiguous transcontinental countries", () => {
+      expect(
+        filterCountries(countries, {
+          modifiers: {
+            tc: "only:contiguous",
+          },
+        }),
+      ).toEqual([]);
+    });
+
+    it("filters to overseas transcontinental countries", () => {
+      expect(
+        filterCountries(countries, {
+          modifiers: {
+            tc: "only:overseas",
+          },
+        }),
+      ).toEqual([countries[4]]);
+    });
+
+    it("applies visit modifiers", () => {
+      const visitContext = mkVC({
+        iso: ["FR"],
+        map: { FR: 2 },
+      });
+
+      expect(
+        filterCountries(
+          countries,
+          {
+            modifiers: {
+              count: {
+                op: ">",
+                value: 1,
+              },
+            },
+          },
+          visitContext,
+        ),
+      ).toEqual([countries[0]]);
+    });
+
+    it("returns no countries for an unmatched region", () => {
+      expect(
+        filterCountries(countries, {
+          selectedRegion: "Oceania",
+        }),
+      ).toEqual([]);
+    });
+
+    it("returns no countries for an unmatched subregion", () => {
+      expect(
+        filterCountries(countries, {
+          selectedSubregion: "Unknown",
+        }),
+      ).toEqual([]);
     });
   });
 
-  it("filters to dependencies when using sovereign qualifier", () => {
-    const res = filterCountries(countries, {
-      qualifiers: { sovereign: "FR" },
-    } as any);
-    expect(res.map((c) => c.isoCode)).toContain("GP");
-  });
-
-  it("returns empty array for unknown sovereign modifier", () => {
-    const res = applyQualifierSearch(
-      countries,
-      "sovereign:ZZ",
-      undefined,
-      {
-        search: "sovereign:ZZ",
-        selectedRegion: "",
-        selectedSubregion: "",
-        selectedSovereignty: "",
-        modifiers: {},
-      } as any,
-      undefined,
-    );
-    expect(res).toEqual([]);
-  });
-
-  describe("applyQualifierSearch wrapper", () => {
-    it("delegates to qualifier search when input is qualifier:query", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "currency:EUR",
-        undefined,
-        {
-          search: "currency:EUR",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: { tc: "default" },
-        } as any,
-        undefined,
-      );
-      expect(res).toEqual([countries[0], countries[1], countries[2]]);
-    });
-
-    it("falls back to normal search with layerCountries when not a qualifier query", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "germany",
-        undefined,
-        {
-          search: "germany",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: { tc: false },
-        } as any,
-        ["DE"],
-      );
-      expect(res).toEqual([countries[2]]);
-    });
-
-    it("falls back to base filtered list when qualifier: has empty query", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "isocode:",
-        undefined,
-        {
-          search: "isocode:",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: { tc: false },
-        } as any,
-        ["FR", "DE"],
-      );
-      expect(res).toEqual([countries[0], countries[2]]);
-    });
-
-    it("applies additional qualifier-like modifiers (subregion) after primary qualifier", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "region:europe subregion:Western",
-        undefined,
-        {
-          search: "region:europe subregion:Western",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: { tc: false },
-        } as any,
-        undefined,
-      );
-      expect(res).toEqual([countries[0], countries[2]]);
-    });
-
-    it("honors modifier-only keys such as of (sovereignty dependencies)", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "sovereignty:Dependency of:FR",
-        undefined,
-        {
-          search: "sovereignty:Dependency of:FR",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: {},
-        } as any,
-        undefined,
-      );
-      expect(res.map((c) => c.isoCode)).toContain("GP");
-    });
-
-    it("sovereign qualifier supports boolean and ISO tokens", () => {
-      const baseParams = {
-        search: "",
-        selectedRegion: "",
-        selectedSubregion: "",
-        selectedSovereignty: "",
-        modifiers: {},
-      } as any;
-
-      const resTrue = applyQualifierSearch(
-        countries,
-        "sovereign:true",
-        undefined,
-        { ...baseParams, search: "sovereign:true" },
-        undefined,
-      );
-      expect(resTrue.some((c) => c.sovereigntyStatus === "sovereign")).toBe(
-        true,
-      );
-
-      const resFalse = applyQualifierSearch(
-        countries,
-        "sovereign:false",
-        undefined,
-        { ...baseParams, search: "sovereign:false" },
-        undefined,
-      );
-      expect(resFalse.some((c) => c.sovereigntyStatus !== "sovereign")).toBe(
-        true,
-      );
-
-      const resIso = applyQualifierSearch(
-        countries,
-        "sovereign:FR",
-        undefined,
-        { ...baseParams, search: "sovereign:FR" },
-        undefined,
-      );
-      expect(resIso.map((c) => c.isoCode)).toContain("GP");
-    });
-
-    it("applies tc modifier merged into global modifiers", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "region:europe tc:include",
-        undefined,
-        {
-          search: "region:europe tc:include",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: {},
-        } as any,
-        undefined,
-      );
-      expect(res.map((c) => c.isoCode)).toEqual([
-        countries[0].isoCode,
-        countries[2].isoCode,
+  describe("filterCountriesByQualifier", () => {
+    it("filters by currency", () => {
+      expect(fq("currency", "EUR")).toEqual([
+        countries[0],
+        countries[1],
+        countries[2],
       ]);
     });
 
-    it("returns empty array when selected region has no matches", () => {
-      const res = filterCountries(countries, { selectedRegion: "Oceania" });
-      expect(res).toEqual([]);
+    it("filters currency case-insensitively", () => {
+      expect(fq("currency", "eur")).toEqual([
+        countries[0],
+        countries[1],
+        countries[2],
+      ]);
     });
 
-    it("returns empty array when selected subregion has no matches", () => {
-      const res = filterCountries(countries, { selectedSubregion: "Unknown" });
-      expect(res).toEqual([]);
+    it("filters by language", () => {
+      expect(fq("language", "french")).toEqual([countries[0], countries[1]]);
     });
 
-    it("ignores unknown raw modifiers when applying qualifier search", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "region:europe foobar:xyz",
-        undefined,
-        {
-          search: "region:europe foobar:xyz",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: {},
-        } as any,
-        undefined,
-      );
-      expect(res).toEqual([countries[0], countries[2]]);
+    it("filters language partially and case-insensitively", () => {
+      expect(fq("language", "fren")).toEqual([countries[0], countries[1]]);
     });
 
-    it("skips resolved qualifier modifiers when raw value is undefined", () => {
+    it("filters by calling code", () => {
+      expect(fq("callingcode", "+1")).toEqual([countries[3], countries[4]]);
+    });
+
+    it("filters by region", () => {
+      expect(fq("region", "europe")).toEqual([countries[0], countries[2]]);
+    });
+
+    it("filters by capital", () => {
+      expect(fq("capital", "paris")).toEqual([countries[0]]);
+    });
+
+    it("filters by subregion", () => {
+      expect(fq("subregion", "caribbean")).toEqual([countries[1]]);
+    });
+
+    it("filters by sovereignty", () => {
+      expect(fq("sovereignty", "dependency")).toEqual([countries[1]]);
+    });
+
+    it("filters by ISO code", () => {
+      expect(fq("isocode", "FR")).toEqual([countries[0]]);
+    });
+
+    it("returns empty for an unknown qualifier", () => {
+      expect(fq("unknown", "value")).toEqual([]);
+    });
+
+    it("applies transcontinental modifiers", () => {
+      expect(fq("region", "europe", undefined, { tc: "include" })).toEqual([
+        countries[0],
+        countries[2],
+      ]);
+
+      expect(fq("region", "europe", undefined, { tc: "default" })).toEqual([
+        countries[0],
+        countries[2],
+      ]);
+    });
+
+    it("applies visit count modifiers", () => {
+      const visitContext = mkVC({
+        iso: ["FR"],
+        map: { FR: 2 },
+      });
+
+      expect(
+        fq("region", "europe", visitContext, {
+          count: {
+            op: ">",
+            value: 0,
+          },
+        }),
+      ).toEqual([countries[0]]);
+    });
+
+    it("filters population with greater-than comparator", () => {
+      const selected = [countries[1], countries[2], countries[5]];
+
+      expect(
+        filterCountriesByQualifier(selected, "population", ">10000"),
+      ).toEqual([countries[5]]);
+    });
+
+    it("filters population with equality comparator", () => {
+      const selected = [countries[1], countries[2], countries[5]];
+
+      expect(
+        filterCountriesByQualifier(selected, "population", "=8300"),
+      ).toEqual([countries[2]]);
+    });
+
+    it("filters population with less-than comparator", () => {
+      const selected = [countries[1], countries[2], countries[5]];
+
+      expect(
+        filterCountriesByQualifier(selected, "population", "<2000"),
+      ).toEqual([countries[1]]);
+    });
+
+    it("filters population with approximate comparator", () => {
+      const selected = [countries[1], countries[2], countries[5]];
+
+      expect(
+        filterCountriesByQualifier(selected, "population", "~12600"),
+      ).toEqual([countries[5]]);
+    });
+
+    it("filters area with approximate comparator", () => {
+      const selected = [countries[0], countries[2], countries[4]];
+
+      expect(filterCountriesByQualifier(selected, "area", "~357000")).toEqual([
+        countries[2],
+      ]);
+    });
+
+    it("returns no results for an invalid numeric comparator", () => {
+      expect(
+        filterCountriesByQualifier(countries, "population", "invalid"),
+      ).toEqual([]);
+    });
+
+    it("uses the configured match modifier", () => {
+      expect(
+        filterCountriesByQualifier(countries, "capital", "par", undefined, {
+          match: "prefix",
+        }),
+      ).toEqual([countries[0]]);
+    });
+  });
+
+  describe("applyQualifierSearch", () => {
+    it("applies a qualifier query", () => {
+      expect(applySearch("currency:EUR")).toEqual([
+        countries[0],
+        countries[1],
+        countries[2],
+      ]);
+    });
+
+    it("applies normal search with layer filtering", () => {
+      expect(applySearch("germany", {}, ["DE"])).toEqual([countries[2]]);
+    });
+
+    it("handles a qualifier with an empty query", () => {
+      expect(applySearch("isocode:", {}, ["FR", "DE"])).toEqual([
+        countries[0],
+        countries[2],
+      ]);
+    });
+
+    it("applies additional qualifier filters", () => {
+      expect(applySearch("region:europe subregion:Western")).toEqual([
+        countries[0],
+        countries[2],
+      ]);
+    });
+
+    it("skips known modifier keys", () => {
+      expect(applySearch("region:europe tc:include")).toEqual([
+        countries[0],
+        countries[2],
+      ]);
+    });
+
+    it("applies additional qualifier filters such as sovereignty", () => {
+      expect(
+        applySearch("sovereignty:Dependency of:FR").map(
+          (country) => country.isoCode,
+        ),
+      ).toContain("GP");
+    });
+
+    it("ignores unknown additional qualifiers", () => {
+      expect(applySearch("region:europe foobar:xyz")).toEqual([
+        countries[0],
+        countries[2],
+      ]);
+    });
+
+    it("ignores additional qualifiers with empty values", () => {
       const spy = vi
         .spyOn(searchUtils, "parseQualifierSearch")
         .mockReturnValue({
           qualifier: "region",
           query: "europe",
-          modifiers: { subregion: undefined },
-        } as any);
+          modifiers: {
+            subregion: "",
+          },
+        });
 
       try {
-        const res = applyQualifierSearch(
-          countries,
-          "region:europe subregion:",
-          undefined,
-          {
-            search: "region:europe subregion:",
-            selectedRegion: "",
-            selectedSubregion: "",
-            selectedSovereignty: "",
-            modifiers: {},
-          } as any,
-          undefined,
-        );
-        expect(res).toEqual([countries[0], countries[2]]);
+        expect(applySearch("ignored")).toEqual([countries[0], countries[2]]);
       } finally {
         spy.mockRestore();
       }
     });
 
-    it("parseQualifierSearch result for trailing empty modifier", () => {
-      const parsed = searchUtils.parseQualifierSearch(
-        "region:europe subregion:",
-      );
-      expect(parsed).toEqual({
-        qualifier: "region",
-        query: "europe",
-        modifiers: {},
-      });
+    it("skips the primary qualifier when repeated as a modifier", () => {
+      const spy = vi
+        .spyOn(searchUtils, "parseQualifierSearch")
+        .mockReturnValue({
+          qualifier: "region",
+          query: "europe",
+          modifiers: {
+            region: "europe",
+          },
+        });
+
+      try {
+        expect(applySearch("ignored")).toEqual([countries[0], countries[2]]);
+      } finally {
+        spy.mockRestore();
+      }
     });
 
-    it("ignores trailing qualifier tokens with empty values", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "region:europe subregion:",
-        undefined,
-        {
-          search: "region:europe subregion:",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: {},
-        } as any,
-        undefined,
-      );
-      expect(res).toEqual([countries[0], countries[2]]);
+    it("handles boolean modifier values", () => {
+      const spy = vi
+        .spyOn(searchUtils, "parseQualifierSearch")
+        .mockReturnValue({
+          qualifier: "region",
+          query: "europe",
+          modifiers: {
+            tc: true,
+          },
+        });
+
+      try {
+        expect(applySearch("ignored")).toEqual([countries[0], countries[2]]);
+      } finally {
+        spy.mockRestore();
+      }
     });
 
-    it("uses visitedMap when visitedIsoCodes is not provided to applyQualifierSearch", () => {
-      const res = applyQualifierSearch(
-        countries,
-        "region:europe visited:true",
-        undefined,
-        {
-          search: "region:europe visited:true",
-          selectedRegion: "",
-          selectedSubregion: "",
-          selectedSovereignty: "",
-          modifiers: {},
-        } as any,
-        undefined,
-        { FR: 1 },
-      );
-      expect(res).toEqual([countries[0]]);
+    it("uses visitedMap when visitedIsoCodes is unavailable", () => {
+      expect(applySearch("visited:true", {}, undefined, { FR: 1 })).toEqual([
+        countries[0],
+      ]);
+    });
+
+    it("accepts visitedYearMap", () => {
+      expect(
+        applySearch("region:europe", {}, undefined, undefined, {
+          FR: new Set([2020]),
+        }),
+      ).toEqual([countries[0], countries[2]]);
+    });
+
+    it("accepts wantToVisitCodes", () => {
+      expect(
+        applySearch("region:europe", {}, undefined, undefined, undefined, [
+          "FR",
+        ]),
+      ).toEqual([countries[0], countries[2]]);
+    });
+
+    it("uses explicitly supplied visitedIsoCodes", () => {
+      expect(
+        applyQualifierSearch(
+          countries,
+          "visited:true",
+          ["FR"],
+          baseOptions,
+          undefined,
+        ),
+      ).toEqual([countries[0]]);
+    });
+
+    it("falls back when parsing returns null", () => {
+      const spy = vi
+        .spyOn(searchUtils, "parseQualifierSearch")
+        .mockReturnValue(null);
+
+      try {
+        expect(applySearch("germany")).toEqual([countries[2]]);
+      } finally {
+        spy.mockRestore();
+      }
+    });
+
+    it("handles a colon search with an empty trailing value", () => {
+      const spy = vi
+        .spyOn(searchUtils, "parseQualifierSearch")
+        .mockReturnValue(null);
+
+      try {
+        expect(applySearch("isocode:")).toEqual(countries);
+      } finally {
+        spy.mockRestore();
+      }
+    });
+
+    it("falls through for a colon search with a non-empty value", () => {
+      const spy = vi
+        .spyOn(searchUtils, "parseQualifierSearch")
+        .mockReturnValue(null);
+
+      try {
+        expect(applySearch("germany:test")).toEqual([]);
+      } finally {
+        spy.mockRestore();
+      }
+    });
+
+    it("merges parsed modifiers with existing filter modifiers", () => {
+      expect(
+        applySearch("region:europe tc:include", {
+          modifiers: {
+            match: "substring",
+          },
+        }),
+      ).toEqual([countries[0], countries[2]]);
     });
   });
 
   describe("getCountryCounts", () => {
-    const countries = mockCountries;
-    const visitedIsoCodes = ["FR", "GP"];
-    const filteredCountries = countries;
-
-    it("returns correct counts for all, sovereign, and visited", () => {
+    it("returns all category counts", () => {
       const counts = getCountryCounts({
-        filteredCountries,
-        visitedIsoCodes,
+        filteredCountries: countries,
+        visitedIsoCodes: ["FR", "GP"],
         wantToVisitIsoCodes: ["DE", "GP"],
       });
-      expect(counts.allCount).toBe(filteredCountries.length);
-      expect(counts.sovereignCount).toBe(
-        filteredCountries.filter((c) => c.sovereigntyStatus === "sovereign")
-          .length,
-      );
-      expect(counts.visitedCount).toBe(
-        filteredCountries.filter((c) => visitedIsoCodes.includes(c.isoCode))
-          .length,
-      );
-      expect(counts.wantToVisitCount).toBe(
-        filteredCountries.filter((c) => ["DE", "GP"].includes(c.isoCode))
-          .length,
-      );
+
+      expect(counts).toEqual({
+        allCount: countries.length,
+        sovereignCount: countries.filter(
+          (country) => country.sovereigntyStatus === "sovereign",
+        ).length,
+        visitedCount: countries.filter((country) =>
+          ["FR", "GP"].includes(country.isoCode),
+        ).length,
+        wantToVisitCount: countries.filter((country) =>
+          ["DE", "GP"].includes(country.isoCode),
+        ).length,
+      });
     });
 
     it("returns zero counts for empty arrays", () => {
-      const counts = getCountryCounts({
-        filteredCountries: [],
-        visitedIsoCodes: [],
-        wantToVisitIsoCodes: [],
+      expect(
+        getCountryCounts({
+          filteredCountries: [],
+          visitedIsoCodes: [],
+          wantToVisitIsoCodes: [],
+        }),
+      ).toEqual({
+        allCount: 0,
+        sovereignCount: 0,
+        visitedCount: 0,
+        wantToVisitCount: 0,
       });
-      expect(counts.allCount).toBe(0);
-      expect(counts.sovereignCount).toBe(0);
-      expect(counts.visitedCount).toBe(0);
     });
   });
 
   describe("createSovereigntyFilter", () => {
-    it("returns all countries when sovereignOnly is false or undefined", () => {
-      const filter = createSovereigntyFilter();
-      expect(mockCountries.filter(filter)).toEqual(mockCountries);
-      const filterFalse = createSovereigntyFilter(false);
-      expect(mockCountries.filter(filterFalse)).toEqual(mockCountries);
+    it("returns all countries when undefined", () => {
+      expect(mockCountries.filter(createSovereigntyFilter())).toEqual(
+        mockCountries,
+      );
     });
 
-    it("returns only sovereign countries when sovereignOnly is true", () => {
-      const filter = createSovereigntyFilter(true);
-      const expected = mockCountries.filter(
-        (c) => c.sovereigntyStatus === "sovereign",
+    it("returns all countries when false", () => {
+      expect(mockCountries.filter(createSovereigntyFilter(false))).toEqual(
+        mockCountries,
       );
-      expect(mockCountries.filter(filter)).toEqual(expected);
+    });
+
+    it("returns only sovereign countries when true", () => {
+      expect(mockCountries.filter(createSovereigntyFilter(true))).toEqual(
+        mockCountries.filter(
+          (country) => country.sovereigntyStatus === "sovereign",
+        ),
+      );
     });
   });
 
-  describe("filterCountriesByQualifier", () => {
-    const testCases = [
-      {
-        label: "currency",
-        qualifier: "currency",
-        value: "EUR",
-        expected: [countries[0], countries[1], countries[2]],
-      },
-      {
-        label: "currency (partial, insensitive)",
-        qualifier: "currency",
-        value: "eur",
-        expected: [countries[0], countries[1], countries[2]],
-      },
-      {
-        label: "language (array qualifier)",
-        qualifier: "language",
-        value: "french",
-        expected: [countries[0], countries[1]],
-      },
-      {
-        label: "language (partial, insensitive)",
-        qualifier: "language",
-        value: "fren",
-        expected: [countries[0], countries[1]],
-      },
-      {
-        label: "callingcode (token match)",
-        qualifier: "callingcode",
-        value: "+1",
-        expected: [countries[3], countries[4]],
-      },
-      {
-        label: "region",
-        qualifier: "region",
-        value: "europe",
-        expected: [countries[0], countries[2]],
-      },
-      {
-        label: "capital",
-        qualifier: "capital",
-        value: "paris",
-        expected: [countries[0]],
-      },
-      {
-        label: "subregion",
-        qualifier: "subregion",
-        value: "caribbean",
-        expected: [countries[1]],
-      },
-      {
-        label: "sovereignty",
-        qualifier: "sovereignty",
-        value: "dependency",
-        expected: [countries[1]],
-      },
-      {
-        label: "isoCode",
-        qualifier: "isocode",
-        value: "FR",
-        expected: [countries[0]],
-      },
-      {
-        label: "region includes transcontinental extras (tc:true)",
-        qualifier: "region",
-        value: "europe",
-        options: { modifiers: { tc: "include" } },
-        expected: [countries[0], countries[2]],
-      },
-      {
-        label: "subregion includes transcontinental extras (tc:true)",
-        qualifier: "subregion",
-        value: "northern europe",
-        options: { modifiers: { tc: "include" } },
-        expected: [],
-      },
-      {
-        label: "region includes transcontinental extras (tc:include)",
-        qualifier: "region",
-        value: "europe",
-        options: { modifiers: { tc: "include" } },
-        expected: [countries[0], countries[2]],
-      },
-      {
-        label: "region excludes transcontinental extras (tc:false)",
-        qualifier: "region",
-        value: "europe",
-        options: { modifiers: { tc: "default" } },
-        expected: [countries[0], countries[2]],
-      },
-      {
-        label: "subregion includes overseas (tc:'overseas')",
-        qualifier: "subregion",
-        value: "northern europe",
-        options: { modifiers: { tc: "overseas" } },
-        expected: [],
-      },
-      {
-        label: "subregion overseas scope (tc:'overseas')",
-        qualifier: "subregion",
-        value: "northern europe",
-        options: { modifiers: { tc: "overseas" } },
-        expected: [],
-      },
-      {
-        label: "unknown qualifier",
-        qualifier: "unknown",
-        value: "value",
-        expected: [],
-      },
-    ];
+  describe("visit modifiers", () => {
+    const visitedMap: Record<string, number> = {
+      FR: 2,
+      DE: 1,
+    };
 
-    testCases.forEach(({ label, qualifier, value, expected, options }: any) => {
-      it(`filters by ${label}`, () => {
-        const result = filterCountriesByQualifier(
-          countries,
-          qualifier,
-          value,
-          options?.visitContext,
-          options?.modifiers,
-        );
-        expect(result).toEqual(expected);
-      });
-    });
-
-    it("filters by region with visited:true modifier", () => {
-      const visitContext = mkVC({ iso: ["FR"] });
-      const res = fq("region", "europe", visitContext, { visited: true });
-      expect(res).toEqual([countries[0], countries[2]]);
-    });
-
-    it("filters by region with visited:false modifier", () => {
-      const visitContext = mkVC({ iso: ["FR"] });
-      const res = fq("region", "europe", visitContext, { visited: false });
-      expect(res).toEqual([countries[0], countries[2]]);
-    });
-
-    it("accepts visited modifier as boolean true/false", () => {
-      const visitContext = mkVC({ iso: ["FR"] });
-      const resTrue = fq("region", "europe", visitContext, { visited: true });
-      expect(resTrue).toEqual([countries[0], countries[2]]);
-
-      const resFalse = fq("region", "europe", visitContext, {
-        visited: false,
-      });
-      expect(resFalse).toEqual([countries[0], countries[2]]);
-    });
-
-    it("filters by region with visited:true and count:>0 modifiers", () => {
-      const visitContext = mkVC({ iso: ["FR"], map: { FR: 2 } });
-      const res = fq("region", "europe", visitContext, {
-        visited: true,
-        count: { op: ">", value: 0 },
-      });
-      expect(res).toEqual([countries[0]]);
-    });
-
-    it("filters by number type numeric comparators", () => {
-      const popCountries = [countries[1], countries[2], countries[5]];
-
-      const gt = filterCountriesByQualifier(
-        popCountries as any,
-        "population",
-        ">10000",
-      );
-      expect(gt).toEqual([popCountries[2]]);
-
-      const eq = filterCountriesByQualifier(
-        popCountries as any,
-        "population",
-        "=8300",
-      );
-      expect(eq).toEqual([popCountries[1]]);
-
-      const lt = filterCountriesByQualifier(
-        popCountries as any,
-        "population",
-        "<2000",
-      );
-      expect(lt).toEqual([popCountries[0]]);
-
-      const res = filterCountriesByQualifier(
-        popCountries as any,
-        "population",
-        "~12600",
-      );
-      expect(res).toEqual([popCountries[2]]);
-    });
-
-    it("filters by area approx (~)", () => {
-      const areaCountries = [countries[0], countries[2], countries[4]];
-      const res = filterCountriesByQualifier(
-        areaCountries as any,
-        "area",
-        "~357000",
-      );
-      expect(res).toEqual([areaCountries[1]]);
-    });
-  });
-
-  describe("qualifier-specific numeric/year/callingcode filters", () => {
-    const visitedMap = { FR: 2, DE: 1 } as Record<string, number>;
     const visitedIsoCodes = Object.keys(visitedMap);
 
-    const visitedYearMapFull: Record<string, Set<number>> = {
+    const visitedYearMap: Record<string, Set<number>> = {
       FR: new Set([2019, 2020]),
       DE: new Set([2018]),
       GP: new Set(),
     };
 
-    const visitedYearMapSmall: Record<string, Set<number>> = {
-      FR: new Set([2019, 2020]),
-      DE: new Set([2018]),
-    };
-
-    it("filters by visits > N and =0 correctly", () => {
-      const baseVC = mkVC({ iso: visitedIsoCodes, map: visitedMap, ymap: {} });
-      const gtResult = fq("visited", "", baseVC, {
-        count: { op: ">", value: 1 },
-      });
-      expect(gtResult).toEqual([countries[0]]);
-
-      const eqZero = fq("visited", "", baseVC, {
-        count: { op: "=", value: 0 },
+    it("filters visits by count", () => {
+      const context = mkVC({
+        iso: visitedIsoCodes,
+        map: visitedMap,
       });
 
-      expect(eqZero.map((c) => c.isoCode).sort()).toEqual([
-        "CA",
-        "GP",
-        "JP",
-        "US",
-      ]);
+      expect(
+        fq("visited", "", context, {
+          count: {
+            op: ">",
+            value: 1,
+          },
+        }),
+      ).toEqual([countries[0]]);
+
+      expect(
+        fq("visited", "", context, {
+          count: {
+            op: "=",
+            value: 0,
+          },
+        })
+          .map((country) => country.isoCode)
+          .sort(),
+      ).toEqual(["CA", "GP", "JP", "US"]);
     });
 
-    it("filters by year modifier equality and comparisons", () => {
-      const yearVC = mkVC({ ymap: visitedYearMapFull });
-      const eq2020 = fq("visited", "", yearVC, {
-        year: { op: "=", year: 2020 },
+    it("filters visits by year equality", () => {
+      const context = mkVC({
+        ymap: visitedYearMap,
       });
-      expect(eq2020).toEqual([countries[0]]);
 
-      const gt2018 = fq("visited", "", yearVC, {
-        year: { op: ">", year: 2018 },
-      });
-      expect(gt2018).toEqual([countries[0]]);
+      expect(
+        fq("visited", "", context, {
+          year: {
+            op: "=",
+            year: 2020,
+          },
+        }),
+      ).toEqual([countries[0]]);
     });
 
-    it("filters by first (modifier) comparators", () => {
-      const firstVC = mkVC({ ymap: visitedYearMapSmall });
-      const eq2018 = fq("visited", "", firstVC, {
-        first: { op: "=", year: 2018 },
+    it("filters visits by first year", () => {
+      const context = mkVC({
+        ymap: visitedYearMap,
       });
-      expect(eq2018).toEqual([countries[2]]);
 
-      const lt2019 = fq("visited", "", firstVC, {
-        first: { op: "<", year: 2019 },
-      });
-      expect(lt2019).toEqual([countries[2]]);
+      expect(
+        fq("visited", "", context, {
+          first: {
+            op: "=",
+            year: 2018,
+          },
+        }),
+      ).toEqual([countries[2]]);
+
+      expect(
+        fq("visited", "", context, {
+          first: {
+            op: "<",
+            year: 2019,
+          },
+        }),
+      ).toEqual([countries[2]]);
     });
 
-    it("filters by last (modifier) comparators", () => {
-      const visitedYearMap: Record<string, Set<number>> = {
-        FR: new Set([2019, 2020]),
-        DE: new Set([2018]),
-      };
-
-      const lastVC = mkVC({ ymap: visitedYearMap });
-      const eq2020 = fq("visited", "", lastVC, {
-        last: { op: "=", year: 2020 },
+    it("filters visits by last year", () => {
+      const context = mkVC({
+        ymap: visitedYearMap,
       });
-      expect(eq2020).toEqual([countries[0]]);
 
-      const gt2019 = fq("visited", "", lastVC, {
-        last: { op: ">", year: 2019 },
-      });
-      expect(gt2019).toEqual([countries[0]]);
+      expect(
+        fq("visited", "", context, {
+          last: {
+            op: "=",
+            year: 2020,
+          },
+        }),
+      ).toEqual([countries[0]]);
 
-      const lt2019 = fq("visited", "", lastVC, {
-        last: { op: "<", year: 2019 },
-      });
-      expect(lt2019).toEqual([countries[2]]);
+      expect(
+        fq("visited", "", context, {
+          last: {
+            op: ">",
+            year: 2019,
+          },
+        }),
+      ).toEqual([countries[0]]);
+
+      expect(
+        fq("visited", "", context, {
+          last: {
+            op: "<",
+            year: 2019,
+          },
+        }),
+      ).toEqual([countries[2]]);
     });
 
-    it("accepts typed modifier objects (ensureModifiers fast-path)", () => {
-      const visitedMap = { FR: 2, DE: 1 } as Record<string, number>;
-      const visitedIsoCodes = Object.keys(visitedMap);
-      const baseVC = mkVC({ iso: visitedIsoCodes, map: visitedMap, ymap: {} });
-      const res = fq("visited", "", baseVC, {
-        count: { op: ">", value: 1 },
-      } as any);
-      expect(res).toEqual([countries[0]]);
+    it("uses firstVisitMap when available", () => {
+      const context = mkVC({
+        ymap: visitedYearMap,
+        firstMap: {
+          FR: new Date("2022-05-01"),
+        },
+      });
+
+      expect(
+        fq("visited", "", context, {
+          first: {
+            op: "=",
+            year: 2022,
+          },
+        }),
+      ).toEqual([countries[0]]);
     });
 
-    it("filters by callingcode tokens", () => {
-      const res = filterCountriesByQualifier(countries, "callingcode", "+1");
-      expect(res.map((c) => c.isoCode).sort()).toEqual(["CA", "US"]);
+    it("uses lastVisitMap when available", () => {
+      const context = mkVC({
+        ymap: visitedYearMap,
+        lastMap: {
+          FR: new Date("2023-05-01"),
+        },
+      });
+
+      expect(
+        fq("visited", "", context, {
+          last: {
+            op: "=",
+            year: 2023,
+          },
+        }),
+      ).toEqual([countries[0]]);
+    });
+
+    it("returns no matches when there is no first visit", () => {
+      const context = mkVC({
+        ymap: {},
+      });
+
+      expect(
+        fq("visited", "", context, {
+          first: {
+            op: "=",
+            year: 2020,
+          },
+        }),
+      ).toEqual([]);
+    });
+
+    it("returns no matches when there is no last visit", () => {
+      const context = mkVC({
+        ymap: {},
+      });
+
+      expect(
+        fq("visited", "", context, {
+          last: {
+            op: "=",
+            year: 2020,
+          },
+        }),
+      ).toEqual([]);
     });
   });
 });

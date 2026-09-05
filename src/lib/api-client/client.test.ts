@@ -8,7 +8,7 @@ afterEach(() => vi.restoreAllMocks());
 const mockFetchSeq = (...responses: Array<any | Promise<any>>) => {
   const fn = vi.fn();
   for (const r of responses) fn.mockResolvedValueOnce(r);
-  vi.stubGlobal("fetch", fn as any);
+  vi.stubGlobal("fetch", fn);
   return fn;
 };
 
@@ -98,7 +98,7 @@ describe("fetchWithFallback", () => {
       ok: true,
       json: async () => ({ recovered: true }),
     });
-    vi.stubGlobal("fetch", fn as any);
+    vi.stubGlobal("fetch", fn);
     expect(
       await fetchWithFallback("/static.json", "http://api", "data"),
     ).toEqual({ recovered: true });
@@ -107,7 +107,7 @@ describe("fetchWithFallback", () => {
   it("static throws and no backend -> generic error", async () => {
     const fn = vi.fn();
     fn.mockRejectedValueOnce(new Error("boom"));
-    vi.stubGlobal("fetch", fn as any);
+    vi.stubGlobal("fetch", fn);
     await expect(
       fetchWithFallback("/static.json", undefined, "countries"),
     ).rejects.toThrow("Failed to load countries");

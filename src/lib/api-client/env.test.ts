@@ -5,7 +5,7 @@ import * as envModule from "./env";
 
 describe("resolveBackendUrl", () => {
   it("returns the string when passed a URL string", () => {
-    expect(resolveBackendUrl("http://api.example" as any)).toEqual(
+    expect(resolveBackendUrl("http://api.example")).toEqual(
       "http://api.example",
     );
   });
@@ -45,19 +45,23 @@ describe("resolveBackendUrl", () => {
   });
 
   it("returns undefined for unsupported descriptor shapes", () => {
-    expect(resolveBackendUrl({ notEnvVar: true } as any)).toBe(undefined);
+    expect(
+      resolveBackendUrl({ notEnvVar: true } as unknown as Parameters<
+        typeof resolveBackendUrl
+      >[0]),
+    ).toBe(undefined);
   });
 
   it("returns undefined when process is undefined (browser-like)", () => {
     const spy = vi
       .spyOn(envModule, "getImportMetaEnv")
       .mockReturnValue(undefined);
-    const origProc = (global as any).process;
+    const origProc = global.process;
     try {
-      (global as any).process = undefined;
+      (global.process as unknown) = undefined;
       expect(resolveBackendUrl({ envVar: "ANY" })).toBe(undefined);
     } finally {
-      (global as any).process = origProc;
+      global.process = origProc;
       spy.mockRestore();
     }
   });

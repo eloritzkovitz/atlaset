@@ -44,11 +44,13 @@ describe("geography utility suite", () => {
       };
       const spy = vi.spyOn(topojsonClient, "feature").mockReturnValue({
         type: "FeatureCollection",
-        features: [mockFeature as any],
+        features: [mockFeature],
       });
 
       expect(getFeatures(topo)).toEqual([mockFeature]);
-      spy.mockReturnValue(null as any);
+      spy.mockReturnValue(
+        null as unknown as import("geojson").FeatureCollection,
+      );
       expect(getFeatures(topo)).toEqual([]);
       spy.mockRestore();
     });

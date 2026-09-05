@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as utils from "@utils";
 import { exportMap, exportSvg, exportSvgAsImage } from "./mapExport";
+import type { ImageExportOptions, SvgExportOptions } from "../types";
 
 describe("mapExport", () => {
   beforeEach(() => {
@@ -26,10 +27,9 @@ describe("mapExport", () => {
     return svg;
   };
 
-  // Helper to automatically trigger Image.onload or Image.onerror upon setting .src
   const mockImageTrigger = (
     event: "onload" | "onerror" = "onload",
-    errPayload?: any,
+    errPayload?: unknown,
   ) => {
     const originalDesc = Object.getOwnPropertyDescriptor(
       window.Image.prototype,
@@ -51,10 +51,11 @@ describe("mapExport", () => {
     };
   };
 
-  const mockSvgOpts = {
+  const mockSvgOpts: React.RefObject<SvgExportOptions> = {
     current: { svgInlineStyles: true, includeTitles: true },
   };
-  const mockImgOpts = {
+
+  const mockImgOpts: React.RefObject<ImageExportOptions> = {
     current: { scale: 2, quality: 0.9, backgroundColor: "#ffffff" },
   };
 
@@ -63,8 +64,8 @@ describe("mapExport", () => {
       exportMap({
         svgRef: { current: null },
         format: "svg",
-        svgOptions: mockSvgOpts as any,
-        imageOptions: mockImgOpts as any,
+        svgOptions: mockSvgOpts,
+        imageOptions: mockImgOpts,
       });
       expect(utils.downloadBlob).not.toHaveBeenCalled();
     });
@@ -74,8 +75,8 @@ describe("mapExport", () => {
       const opts = {
         svgRef: { current: null },
         format: "json" as const,
-        svgOptions: mockSvgOpts as any,
-        imageOptions: mockImgOpts as any,
+        svgOptions: mockSvgOpts,
+        imageOptions: mockImgOpts,
       };
 
       exportMap({ ...opts, jsonData: mockJson });
@@ -93,8 +94,8 @@ describe("mapExport", () => {
       exportMap({
         svgRef: { current: createMockSvg() },
         format: "svg",
-        svgOptions: mockSvgOpts as any,
-        imageOptions: mockImgOpts as any,
+        svgOptions: mockSvgOpts,
+        imageOptions: mockImgOpts,
       });
       expect(utils.downloadBlob).toHaveBeenCalledWith(
         expect.any(Blob),
@@ -107,14 +108,18 @@ describe("mapExport", () => {
       exportMap({
         svgRef: { current: svg },
         format: "png",
-        svgOptions: mockSvgOpts as any,
-        imageOptions: mockImgOpts as any,
+        svgOptions: mockSvgOpts,
+        imageOptions: mockImgOpts,
       });
       exportMap({
         svgRef: { current: svg },
         format: "png",
-        svgOptions: { current: null } as any,
-        imageOptions: { current: null } as any,
+        svgOptions: {
+          current: null,
+        } as unknown as React.RefObject<SvgExportOptions>,
+        imageOptions: {
+          current: null,
+        } as unknown as React.RefObject<ImageExportOptions>,
       });
       expect(utils.downloadCanvas).toBeDefined();
     });
@@ -160,7 +165,7 @@ describe("mapExport", () => {
         drawImage: vi.fn(),
       };
       vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(
-        mockCtx as any,
+        mockCtx as unknown as CanvasRenderingContext2D,
       );
 
       await exportSvgAsImage(

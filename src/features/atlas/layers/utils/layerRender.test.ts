@@ -4,6 +4,7 @@ import {
   groupLayerItemsByIsoCode,
   getTopmostLayerColor,
 } from "./layerRender";
+import type { LayerItem } from "../types";
 
 describe("layerRender utils", () => {
   describe("getLayerItems", () => {
@@ -36,7 +37,7 @@ describe("layerRender utils", () => {
       const items = [
         { isoCode: "", color: "#f00", layerId: "1" },
         { isoCode: undefined, color: "#0f0", layerId: "2" },
-      ] as any;
+      ] as LayerItem[];
       const grouped = groupLayerItemsByIsoCode(items);
       expect(grouped).toEqual({});
     });
@@ -70,7 +71,7 @@ describe("layerRender utils", () => {
       const layers = [
         { isoCode: "US", color: "", layerId: "a" },
         { isoCode: "US", color: undefined, layerId: "b" },
-      ] as any;
+      ] as LayerItem[];
       expect(getTopmostLayerColor(layers, "#fff")).toBe("#fff");
     });
   });

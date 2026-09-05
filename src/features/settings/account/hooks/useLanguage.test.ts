@@ -1,7 +1,7 @@
+import i18n from "i18next";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { createMockUser } from "@test-utils/authMocks";
-import i18n from "i18next";
 
 vi.mock("@constants/languages", () => ({
   getLanguageByCode: (code: string) => ({
@@ -22,9 +22,9 @@ vi.mock("i18next", () => ({
   },
 }));
 
-vi.mock("@hooks", () => ({ useDebounce: (v: any) => v }));
+vi.mock("@hooks", () => ({ useDebounce: (v: unknown) => v }));
 
-let freshUser: any;
+let freshUser: ReturnType<typeof createMockUser>;
 const useAuthMock = vi.fn();
 
 vi.mock("@features/user/auth", () => ({
@@ -32,20 +32,20 @@ vi.mock("@features/user/auth", () => ({
 }));
 
 vi.mock("../../core/slices/settingsSlice", () => ({
-  saveSettings: vi.fn((payload: any) => ({ type: "SAVE_SETTINGS", payload })),
+  saveSettings: vi.fn((payload: unknown) => ({
+    type: "SAVE_SETTINGS",
+    payload,
+  })),
   selectSettings: () => ({ localization: { language: "en" } }),
 }));
 
 vi.mock("../selectors", () => ({ selectSettingsReady: () => false }));
 
 import { useSelector } from "react-redux";
-import {
-  saveSettings,
-  selectSettings,
-} from "../../core/slices/settingsSlice";
-import { selectSettingsReady } from "../../selectors";
-import { isRtl } from "./useLanguage";
 import { setupDefaultReduxMocks } from "@test-utils/reduxMocks";
+import { isRtl } from "./useLanguage";
+import { saveSettings, selectSettings } from "../../core/slices/settingsSlice";
+import { selectSettingsReady } from "../../selectors";
 
 const mockReduxSettings = (language = "he", ready = true) => {
   vi.mocked(useSelector).mockImplementation((selector) => {
@@ -70,7 +70,7 @@ describe("isRtl", () => {
 });
 
 describe("useLanguage", () => {
-  let dispatchMock: any;
+  let dispatchMock: ReturnType<typeof setupDefaultReduxMocks>["dispatchMock"];
 
   beforeEach(() => {
     vi.resetModules();
@@ -85,7 +85,7 @@ describe("useLanguage", () => {
     const reduxMocks = setupDefaultReduxMocks();
     dispatchMock = reduxMocks.dispatchMock;
 
-    vi.mocked(i18n.changeLanguage).mockResolvedValue(undefined as any);
+    vi.mocked(i18n.changeLanguage).mockResolvedValue(i18n.t);
   });
 
   it("applies stored language when settings are ready and dispatches on change", async () => {

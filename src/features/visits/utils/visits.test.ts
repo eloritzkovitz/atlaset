@@ -30,7 +30,7 @@ describe("visits utils", () => {
         endDate: undefined,
       }));
 
-      expect(getYearsFromTrips(trips as any)).toEqual([]);
+      expect(getYearsFromTrips(trips)).toEqual([]);
     });
 
     it("returns empty array for no trips", () => {
@@ -152,7 +152,7 @@ describe("visits utils", () => {
         { ...mockTrips[1], endDate: "2023-01-01", countryCodes: [] },
       ];
 
-      expect(getVisitCountsUpToYear(trips as any, 2023)).toEqual({});
+      expect(getVisitCountsUpToYear(trips, 2023)).toEqual({});
     });
   });
 

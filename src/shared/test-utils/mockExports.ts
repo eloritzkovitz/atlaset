@@ -1,3 +1,19 @@
+type MockCanvasContext = {
+  imageSmoothingEnabled: boolean;
+  imageSmoothingQuality: string;
+  clearRect: ReturnType<typeof vi.fn>;
+  save: ReturnType<typeof vi.fn>;
+  restore: ReturnType<typeof vi.fn>;
+  fillStyle: string;
+  fillRect: ReturnType<typeof vi.fn>;
+  drawImage: ReturnType<typeof vi.fn>;
+};
+
+type MockCanvas = HTMLCanvasElement & {
+  getContext: () => MockCanvasContext | null;
+  toBlob: (callback: BlobCallback) => void;
+};
+
 export function makeSvgMockFactory(opts?: {
   viewBox?: string;
   w?: number;
@@ -6,25 +22,24 @@ export function makeSvgMockFactory(opts?: {
   const viewBox = opts?.viewBox ?? "0 0 100 100";
   const w = opts?.w ?? 100;
   const h = opts?.h ?? 100;
-  return () =>
-    ({
-      cloneNode: vi.fn(() => ({
-        getAttribute: vi.fn((attr: string) =>
-          attr === "viewBox" ? viewBox : null,
-        ),
-        setAttribute: vi.fn(),
-        querySelectorAll: vi.fn(() => []),
-        width: { baseVal: { value: w } },
-        height: { baseVal: { value: h } },
-      })),
-      ownerDocument: {
-        defaultView: {
-          getComputedStyle: vi.fn(() => ({
-            getPropertyValue: vi.fn(() => ""),
-          })),
-        },
+  return () => ({
+    cloneNode: vi.fn(() => ({
+      getAttribute: vi.fn((attr: string) =>
+        attr === "viewBox" ? viewBox : null,
+      ),
+      setAttribute: vi.fn(),
+      querySelectorAll: vi.fn(() => []),
+      width: { baseVal: { value: w } },
+      height: { baseVal: { value: h } },
+    })),
+    ownerDocument: {
+      defaultView: {
+        getComputedStyle: vi.fn(() => ({
+          getPropertyValue: vi.fn(() => ""),
+        })),
       },
-    }) as any;
+    },
+  });
 }
 
 export function installCanvasMock(opts?: {
@@ -33,14 +48,14 @@ export function installCanvasMock(opts?: {
   throwOnDrawImage?: boolean;
 }) {
   const orig = document.createElement;
-  document.createElement = ((
+  document.createElement = (
     tagName: string,
     options?: ElementCreationOptions,
   ) => {
     const el = orig.call(document, tagName, options);
     if (tagName === "canvas") {
       if (opts?.getContextNull) {
-        (el as any).getContext = () => null;
+        (el as MockCanvas).getContext = () => null;
       } else {
         (el as any).getContext = () => ({
           imageSmoothingEnabled: true,
@@ -57,18 +72,18 @@ export function installCanvasMock(opts?: {
             : vi.fn(),
         });
       }
-      (el as any).toBlob = (cb: any) =>
+      (el as MockCanvas).toBlob = (cb: BlobCallback) =>
         cb(opts?.toBlobNull ? null : new Blob());
     }
     return el;
-  }) as any;
+  };
   return () => {
     document.createElement = orig;
   };
 }
 
 export function stubImage(success = true) {
-  const Orig = (globalThis as any).Image;
+  const Orig = globalThis.Image;
   class MockImage {
     onload: (() => void) | null = null;
     onerror: (() => void) | null = null;

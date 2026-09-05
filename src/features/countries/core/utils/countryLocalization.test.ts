@@ -15,7 +15,7 @@ vi.mock("../utils/countryData", () => ({
 describe("processLocalizedCountries", () => {
   const mockI18n = {
     getResourceBundle: vi.fn(),
-  } as any;
+  };
 
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -37,7 +37,11 @@ describe("processLocalizedCountries", () => {
       (country) => (country.isoCode === "FR" ? ["GP"] : []),
     );
 
-    const result = processLocalizedCountries(mockCountries, "fr", mockI18n);
+    const result = processLocalizedCountries(
+      mockCountries,
+      "fr",
+      mockI18n as unknown as typeof i18next,
+    );
 
     expect(result.localizedCountries[0].name).toBe("La France");
     expect(result.localizedCountries[0].capital).toBe("Paris (FR)");
@@ -62,9 +66,13 @@ describe("processLocalizedCountries", () => {
       throw new Error("Failed to load");
     });
 
-    const emptyCountry: Country = { name: "Empty Land" } as Country;
+    const emptyCountry = { name: "Empty Land" } as unknown as Country;
 
-    const result = processLocalizedCountries([emptyCountry], "en", {} as any);
+    const result = processLocalizedCountries(
+      [emptyCountry],
+      "en",
+      {} as unknown as typeof i18next,
+    );
 
     expect(result.localizedCountries[0]).toEqual({
       name: "Empty Land",

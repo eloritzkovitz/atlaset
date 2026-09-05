@@ -1,32 +1,34 @@
-import { describe, expect, it, vi } from "vitest";
-import * as authModule from "firebase/auth";
+import type { User } from "firebase/auth";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createMockUser } from "@test-utils/authMocks";
 import { isAuthenticated, getCurrentUser } from "./auth";
 
-vi.unmock("./firebase");
-vi.mock("firebase/auth", () => ({
-  getAuth: vi.fn(),
+const mockAuth = vi.hoisted<{ currentUser: User | null }>(() => ({
+  currentUser: null,
+}));
+
+vi.mock("./config", () => ({
+  auth: mockAuth,
 }));
 
 const mockUser = createMockUser({ uid: "test-user" });
 
-describe("firebase utils", () => {  
+beforeEach(() => {
+  mockAuth.currentUser = null;
+});
+
+describe("firebase utils", () => {
   describe("isAuthenticated / getCurrentUser", () => {
     it("returns correctly when user is present", () => {
-      vi.mocked(authModule.getAuth).mockReturnValue({
-        currentUser: mockUser,
-      } as any);
+      mockAuth.currentUser = mockUser;
 
       expect(isAuthenticated()).toBe(true);
       expect(getCurrentUser()).toEqual(mockUser);
     });
-  });
 
-  it("throws if not authenticated", () => {
-    vi.mocked(authModule.getAuth).mockReturnValue({
-      currentUser: null,
-    } as any);
-
-    expect(isAuthenticated()).toBe(false);
+    it("returns correctly when no user is present", () => {
+      expect(isAuthenticated()).toBe(false);
+      expect(getCurrentUser()).toBeNull();
+    });
   });
 });

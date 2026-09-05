@@ -18,7 +18,7 @@ describe("useInfiniteScroll", () => {
       this.unobserve = unobserveMock;
       this.disconnect = disconnectMock;
       this.cb = cb;
-    }) as any;
+    }) as unknown as typeof IntersectionObserver;
   });
   afterEach(() => {
     global.IntersectionObserver = IntersectionObserverBackup;
@@ -61,7 +61,7 @@ describe("useInfiniteScroll", () => {
   it("should disconnect on cleanup", () => {
     const callback = vi.fn();
     const { result, unmount } = renderHook(() =>
-      useInfiniteScroll(callback, true)
+      useInfiniteScroll(callback, true),
     );
     const node = document.createElement("div");
     act(() => {
@@ -78,7 +78,7 @@ describe("useInfiniteScroll", () => {
       this.observe = observeMock;
       this.unobserve = unobserveMock;
       this.disconnect = disconnectMock;
-    }) as any;
+    }) as unknown as typeof IntersectionObserver;
 
     const callback = vi.fn();
     const { result } = renderHook(() => useInfiniteScroll(callback, true));

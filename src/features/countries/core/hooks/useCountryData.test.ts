@@ -75,7 +75,7 @@ describe("useCountryData", () => {
       isFetching: isLoading,
       error: isLoading ? { message: "Error" } : undefined,
       refetch: mockRefetch,
-    } as any);
+    });
   };
 
   beforeEach(() => {
@@ -83,7 +83,9 @@ describe("useCountryData", () => {
     mockI18nextLanguage = "fr";
 
     vi.mocked(processLocalizedCountries).mockReturnValue(
-      mockProcessResult as any,
+      mockProcessResult as unknown as ReturnType<
+        typeof processLocalizedCountries
+      >,
     );
 
     vi.mocked(buildTimezonesFromCountries).mockReturnValue(mockTimezones);

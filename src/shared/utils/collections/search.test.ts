@@ -27,9 +27,9 @@ describe("search utils", () => {
       ["abc123", "\\d+$", { match: "regex" }, true],
       ["abc", "\\d+$", { match: "regex" }, false],
       ["abc", "(", { match: "regex" }, false],
-      ["Germany", "ger", { match: "bogus" as any }, true],
-      ["United States", "uni", { match: "bogus" as any }, true],
-      ["abcdef", "bc", { match: "bogus" as any }, false],
+      ["Germany", "ger", { match: "bogus" }, true],
+      ["United States", "uni", { match: "bogus" }, true],
+      ["abcdef", "bc", { match: "bogus" }, false],
       ["Germany", "ger", { caseSensitive: true }, false],
       ["Germany", "Ger", { caseSensitive: true }, true],
     ])(
@@ -98,9 +98,9 @@ describe("search utils", () => {
       expect(coerceModifierValue(input)).toBe(expected);
     });
 
-    it("handles nullish input edge cases on line 90", () => {
-      expect(parseQualifierSearch(null as any)).toBeNull();
-      expect(parseQualifierSearch(undefined as any)).toBeNull();
+    it("handles nullish input edge cases", () => {
+      expect(parseQualifierSearch(null as unknown as string)).toBeNull();
+      expect(parseQualifierSearch(undefined as unknown as string)).toBeNull();
       expect(parseQualifierSearch("   ")).toBeNull();
     });
 

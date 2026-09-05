@@ -1,4 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import { mockCountries } from "@test-utils/mockCountries";
+import type { Country } from "@features/countries/types";
+import type { VisitContext } from "@features/visits/types";
+import type { CountryModifiers } from "../types";
 import {
   normalizeModifiers,
   ensureModifiers,
@@ -8,213 +12,326 @@ import {
 } from "./countryModifiers";
 
 describe("countryModifiers", () => {
-  it("parses count/year/first/last comparators", () => {
-    const out = normalizeModifiers({
-      count: ">2",
-      year: ">=2020",
-      first: "=1990",
-      last: "<=2010",
+  const country = mockCountries[0];
+
+  const vc = (overrides: Partial<VisitContext> = {}): VisitContext => ({
+    visitedIsoCodes: [],
+    visitedMap: {},
+    visitedYearMap: {},
+    ...overrides,
+  });
+
+  describe("normalizeModifiers", () => {
+    it("normalizes comparator modifiers", () => {
+      expect(
+        normalizeModifiers({
+          count: ">2",
+          year: ">=2020",
+          first: "=1990",
+          last: "<=2010",
+        }),
+      ).toEqual({
+        count: { op: ">", value: 2 },
+        year: { op: ">=", year: 2020 },
+        first: { op: "=", year: 1990 },
+        last: { op: "<=", year: 2010 },
+      });
     });
-    expect(out.count).toEqual({ op: ">", value: 2 });
-    expect(out.year).toEqual({ op: ">=", year: 2020 });
-    expect(out.first).toEqual({ op: "=", year: 1990 });
-    expect(out.last).toEqual({ op: "<=", year: 2010 });
+
+    it("handles missing and invalid modifiers", () => {
+      expect(normalizeModifiers()).toEqual({});
+
+      expect(normalizeModifiers({})).toEqual({
+        count: undefined,
+        year: undefined,
+        first: undefined,
+        last: undefined,
+      });
+
+      expect(
+        normalizeModifiers({
+          count: "invalid",
+          year: "invalid",
+          first: "invalid",
+          last: "invalid",
+        }),
+      ).toEqual({
+        count: undefined,
+        year: undefined,
+        first: undefined,
+        last: undefined,
+      });
+    });
+
+    it("normalizes match modifiers", () => {
+      expect(normalizeModifiers({ match: " exact " }).match).toBe("exact");
+      expect(normalizeModifiers({ match: "" }).match).toBeUndefined();
+    });
+
+    it("normalizes dst modifiers", () => {
+      expect(normalizeModifiers({ dst: true }).dst).toBe(true);
+      expect(normalizeModifiers({ dst: false }).dst).toBe(false);
+
+      for (const value of ["true", "yes", "1"]) {
+        expect(normalizeModifiers({ dst: value }).dst).toBe(true);
+      }
+
+      for (const value of ["false", "no", "0"]) {
+        expect(normalizeModifiers({ dst: value }).dst).toBe(false);
+      }
+
+      expect(normalizeModifiers({ dst: "maybe" }).dst).toBe("maybe");
+    });
+
+    it("preserves tc values", () => {
+      expect(normalizeModifiers({ tc: "europe" }).tc).toBe("europe");
+    });
   });
 
-  it("normalizes match modifiers correctly", () => {
-    const m1 = normalizeModifiers({ match: " exact " });
-    expect(m1.match).toBe("exact");
+  describe("ensureModifiers", () => {
+    it("returns an empty object for undefined", () => {
+      expect(ensureModifiers(undefined)).toEqual({});
+    });
 
-    const m2 = normalizeModifiers({ match: "" });
-    expect(m2.match).toBeUndefined();
+    it("returns structured modifiers unchanged", () => {
+      const modifiers: CountryModifiers = {
+        count: { op: ">", value: 1 },
+      };
+
+      expect(ensureModifiers(modifiers)).toBe(modifiers);
+    });
+
+    it("normalizes raw modifiers", () => {
+      expect(
+        ensureModifiers({
+          count: ">1",
+          year: ">=2020",
+        }),
+      ).toEqual({
+        count: { op: ">", value: 1 },
+        year: { op: ">=", year: 2020 },
+        first: undefined,
+        last: undefined,
+      });
+    });
   });
 
-  it("ensureModifiers returns the object fast-path when comparator objects are present", () => {
-    const obj = { count: { op: ">", value: 1 } } as unknown;
-    const res = ensureModifiers(obj);
-    expect(res).toBe(obj);
-  });
-
-  it("ensureModifiers handles undefined by returning an empty object", () => {
-    expect(ensureModifiers(undefined)).toEqual({});
-  });
-
-  it("preserves tc values (string or boolean)", () => {
-    const a = normalizeModifiers({ tc: "europe" });
-    expect(a.tc).toBe("europe");
-
-    const b = normalizeModifiers({ tc: true as unknown as string });
-    expect(b.tc).toBe(true);
-  });
-
-  it("normalizes dst modifier into booleans when possible", () => {
-    expect(normalizeModifiers({ dst: true }).dst).toBe(true);
-    expect(normalizeModifiers({ dst: false }).dst).toBe(false);
-
-    expect(normalizeModifiers({ dst: "true" }).dst).toBe(true);
-    expect(normalizeModifiers({ dst: "yes" }).dst).toBe(true);
-    expect(normalizeModifiers({ dst: "1" }).dst).toBe(true);
-
-    expect(normalizeModifiers({ dst: "false" }).dst).toBe(false);
-    expect(normalizeModifiers({ dst: "no" }).dst).toBe(false);
-    expect(normalizeModifiers({ dst: "0" }).dst).toBe(false);
-  });
-
-  it("preserves non-boolean dst values when they cannot be coerced", () => {
-    const out = normalizeModifiers({ dst: "maybe" } as any);
-    expect(out.dst).toBe("maybe");
-  });
-
-  it("parses transcontinental scope strings and matches transcontinental entries", () => {
-    const tcCases: Array<[string | undefined, any]> = [
+  describe("parseTCOption", () => {
+    it.each([
       ["true", { mode: "default" }],
       ["false", { mode: "default" }],
       ["contiguous", { scope: "contiguous", mode: "default" }],
       ["overseas", { scope: "overseas", mode: "default" }],
+      ["cultural", { scope: "cultural", mode: "default" }],
       ["other", { scope: "other", mode: "default" }],
       ["all", { scope: "all", mode: "default" }],
       ["bogus", { mode: "default" }],
       ["only", { scope: "all", mode: "only" }],
       ["include", { scope: "all", mode: "include" }],
-    ];
-    tcCases.forEach(([input, expected]) => {
-      expect(parseTCOption(input as any)).toEqual(expected);
+      ["include:contiguous", { scope: "contiguous", mode: "include" }],
+      ["contiguous:include", { scope: "contiguous", mode: "include" }],
+      ["only:overseas", { scope: "overseas", mode: "only" }],
+      ["", { mode: "default" }],
+      [undefined, { mode: "default" }],
+    ] as const)("parses %s", (input, expected) => {
+      expect(parseTCOption(input)).toEqual(expected);
     });
 
-    const countryUS = {
-      isoCode: "US",
-      transcontinental: { scope: "overseas", additionalRegion: "Americas" },
-    } as any;
-    const countryAZ = {
-      isoCode: "AZ",
-      transcontinental: { scope: "contiguous", additionalRegion: "Asia" },
-    } as any;
-    const countryXX = { isoCode: "XX" } as any;
-
-    expect(matchesTranscontinental(countryUS, "overseas")).toBe(true);
-    expect(matchesTranscontinental(countryAZ, "contiguous")).toBe(true);
-    expect(matchesTranscontinental(countryXX, "all")).toBe(false);
+    it("trims, lowercases, and ignores empty tokens", () => {
+      expect(parseTCOption(" INCLUDE :: CONTIGUOUS ")).toEqual({
+        scope: "contiguous",
+        mode: "include",
+      });
+    });
   });
 
-  it("applyModifiersToCountry respects visited, count, year, first, and last", () => {
-    const country = { isoCode: "BB" } as any;
-    const ctx1 = { visitedIsoCodes: ["BB"] } as any;
-    expect(
-      applyModifiersToCountry(country, { visited: false } as any, ctx1),
-    ).toBe(true);
+  describe("matchesTranscontinental", () => {
+    const overseas: Country = {
+      ...country,
+      isoCode: "US",
+      transcontinental: {
+        scope: "overseas",
+        additionalRegion: "Americas",
+      },
+    };
 
-    const countCases: Array<{
-      country: any;
-      ctx: any;
-      mod: any;
-      expected: boolean;
-    }> = [
-      {
-        country: { isoCode: "CC" },
-        ctx: { visitedMap: { CC: 2 } },
-        mod: { count: { op: ">", value: 1 } },
-        expected: true,
+    const contiguous: Country = {
+      ...country,
+      isoCode: "AZ",
+      transcontinental: {
+        scope: "contiguous",
+        additionalRegion: "Asia",
       },
-      {
-        country: { isoCode: "CC" },
-        ctx: { visitedMap: { CC: 2 } },
-        mod: { count: { op: ">=", value: 3 } },
-        expected: false,
-      },
-      {
-        country: { isoCode: "CD" },
-        ctx: { visitedIsoCodes: ["CD"] },
-        mod: { count: { op: ">=", value: 1 } },
-        expected: true,
-      },
-      {
-        country: { isoCode: "CD" },
-        ctx: { visitedIsoCodes: ["CD"] },
-        mod: { count: { op: ">", value: 1 } },
-        expected: false,
-      },
-    ];
-    countCases.forEach(({ country, ctx, mod, expected }) => {
-      expect(
-        applyModifiersToCountry(country as any, mod as any, ctx as any),
-      ).toBe(expected);
+    };
+
+    const noEntry: Country = {
+      ...country,
+      isoCode: "XX",
+      transcontinental: undefined,
+    };
+
+    it("returns false without a scope or transcontinental data", () => {
+      expect(matchesTranscontinental(overseas, undefined)).toBe(false);
+      expect(matchesTranscontinental(noEntry, "all")).toBe(false);
     });
 
-    const countryE = { isoCode: "YY" } as any;
-    const ctx3 = { visitedYearMap: { YY: new Set([2020]) } } as any;
-    expect(
-      applyModifiersToCountry(
-        countryE,
-        { year: { op: "=", year: 2020 } } as any,
-        ctx3,
-      ),
-    ).toBe(true);
+    it("matches all transcontinental entries", () => {
+      expect(matchesTranscontinental(overseas, "all")).toBe(true);
+    });
 
-    const countryF = { isoCode: "ZZ" } as any;
-    expect(
-      applyModifiersToCountry(
-        countryF,
-        { year: { op: ">", year: 2000 } } as any,
-        {} as any,
-      ),
-    ).toBe(false);
+    it("matches the requested scope", () => {
+      expect(matchesTranscontinental(overseas, "overseas")).toBe(true);
+      expect(matchesTranscontinental(contiguous, "contiguous")).toBe(true);
+    });
 
-    const countryG = { isoCode: "FG" } as any;
-    const ctx4 = {
-      firstVisitMap: { FG: new Date("1990-01-01") },
-      lastVisitMap: { FG: new Date("2010-01-01") },
-    } as any;
-    expect(
-      applyModifiersToCountry(
-        countryG,
-        { first: { op: "=", year: 1990 } } as any,
-        ctx4,
-      ),
-    ).toBe(true);
-    expect(
-      applyModifiersToCountry(
-        countryG,
-        { last: { op: "=", year: 2010 } } as any,
-        ctx4,
-      ),
-    ).toBe(true);
+    it("rejects a different scope", () => {
+      expect(matchesTranscontinental(overseas, "contiguous")).toBe(false);
+    });
 
-    const sov = { isoCode: "S1", sovereigntyStatus: "sovereign" } as any;
-    expect(applyModifiersToCountry(sov, { sovereign: false } as any)).toBe(
-      true,
-    );
+    it("defaults a missing scope to contiguous", () => {
+      const entryWithoutScope: Country = {
+        ...country,
+        isoCode: "YY",
+        transcontinental: {
+          additionalRegion: "Asia",
+        },
+      };
 
-    const noIso = {} as any as any;
-    const noIsoMods = [
-      { count: { op: ">", value: 0 } },
-      { year: { op: ">", year: 2000 } },
-      { first: { op: "=", year: 1990 } },
-      { last: { op: "=", year: 2010 } },
-    ];
-    noIsoMods.forEach((m) => {
-      expect(applyModifiersToCountry(noIso as any, m as any, {} as any)).toBe(
-        false,
+      expect(matchesTranscontinental(entryWithoutScope, "contiguous")).toBe(
+        true,
       );
     });
   });
 
-  it("additional parseTCOption and matchesTranscontinental cases", () => {
-    expect(parseTCOption(undefined as any)).toEqual({ mode: "default" });
-    expect(parseTCOption("")).toEqual({ mode: "default" });
-    expect(parseTCOption("include:contiguous")).toEqual({
-      scope: "contiguous",
-      mode: "include",
-    });
-    expect(parseTCOption("contiguous:include")).toEqual({
-      scope: "contiguous",
-      mode: "include",
-    });
-    expect(parseTCOption("only:overseas")).toEqual({
-      scope: "overseas",
-      mode: "only",
+  describe("applyModifiersToCountry", () => {
+    it("returns true without modifiers", () => {
+      expect(applyModifiersToCountry(country, {})).toBe(true);
     });
 
-    const countryUS = { isoCode: "US" } as any;
-    expect(matchesTranscontinental(countryUS, undefined as any)).toBe(false);
-  });  
+    it.each([
+      [{ count: { op: ">", value: 1 } }, { visitedMap: { CC: 2 } }, true],
+      [{ count: { op: ">=", value: 3 } }, { visitedMap: { CC: 2 } }, false],
+      [{ count: { op: ">=", value: 1 } }, { visitedMap: { CD: 1 } }, true],
+      [{ count: { op: ">", value: 1 } }, { visitedMap: { CD: 1 } }, false],
+    ] as const)("applies count modifier", (mod, context, expected) => {
+      const isoCode = "CC" in context.visitedMap ? "CC" : "CD";
+
+      expect(
+        applyModifiersToCountry({ ...country, isoCode }, mod, vc(context)),
+      ).toBe(expected);
+    });
+
+    it.each([
+      [
+        "matching year",
+        { year: { op: "=", year: 2020 } },
+        { visitedYearMap: { YY: new Set([2020]) } },
+        true,
+      ],
+      [
+        "non-matching year",
+        { year: { op: "=", year: 2020 } },
+        { visitedYearMap: { YY: new Set([2019]) } },
+        false,
+      ],
+      [
+        "successful year comparison",
+        { year: { op: ">", year: 2019 } },
+        { visitedYearMap: { YY: new Set([2020]) } },
+        true,
+      ],
+      [
+        "failed year comparison",
+        { year: { op: ">", year: 2020 } },
+        { visitedYearMap: { YY: new Set([2020]) } },
+        false,
+      ],
+      [
+        "year comparison without visit data",
+        { year: { op: ">", year: 2000 } },
+        {},
+        false,
+      ],
+    ] as const)("handles %s", (_, mod, context, expected) => {
+      expect(
+        applyModifiersToCountry(
+          { ...country, isoCode: "YY" },
+          mod,
+          vc(context),
+        ),
+      ).toBe(expected);
+    });
+
+    it.each([
+      ["first", { op: "=", year: 1990 }, true],
+      ["first", { op: "<", year: 2000 }, true],
+      ["first", { op: ">", year: 1990 }, false],
+      ["last", { op: "=", year: 2010 }, true],
+      ["last", { op: "<", year: 2020 }, true],
+      ["last", { op: ">", year: 2010 }, false],
+    ] as const)("%s modifier comparison", (type, comparator, expected) => {
+      const modifiers: CountryModifiers =
+        type === "first" ? { first: comparator } : { last: comparator };
+
+      expect(
+        applyModifiersToCountry(
+          { ...country, isoCode: "FG" },
+          modifiers,
+          vc({
+            firstVisitMap: { FG: new Date("1990-01-01") },
+            lastVisitMap: { FG: new Date("2010-01-01") },
+          }),
+        ),
+      ).toBe(expected);
+    });
+
+    it.each([
+      ["first", { first: { op: "=", year: 1990 } }],
+      ["last", { last: { op: "=", year: 2010 } }],
+    ] as const)("rejects %s without visit data", (_, modifiers) => {
+      expect(
+        applyModifiersToCountry({ ...country, isoCode: "FG" }, modifiers, vc()),
+      ).toBe(false);
+    });
+
+    it("falls back to visitedYearMap for first and last", () => {
+      const context = vc({
+        visitedYearMap: { FG: new Set([1990, 2010]) },
+      });
+
+      expect(
+        applyModifiersToCountry(
+          { ...country, isoCode: "FG" },
+          { first: { op: "=", year: 1990 } },
+          context,
+        ),
+      ).toBe(true);
+
+      expect(
+        applyModifiersToCountry(
+          { ...country, isoCode: "FG" },
+          { last: { op: "=", year: 2010 } },
+          context,
+        ),
+      ).toBe(true);
+    });
+
+    it("applies multiple modifiers together", () => {
+      expect(
+        applyModifiersToCountry(
+          { ...country, isoCode: "FG" },
+          {
+            count: { op: ">=", value: 2 },
+            first: { op: "=", year: 1990 },
+            last: { op: "=", year: 2010 },
+          },
+          vc({
+            visitedMap: { FG: 2 },
+            firstVisitMap: { FG: new Date("1990-01-01") },
+            lastVisitMap: { FG: new Date("2010-01-01") },
+          }),
+        ),
+      ).toBe(true);
+    });
+  });
 });

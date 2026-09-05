@@ -56,7 +56,7 @@ describe("useSettings", () => {
 
     await act(async () => {
       await result.current.updateSettings({
-        display: { theme: "dark" } as any,
+        display: { theme: "dark" },
       });
     });
 

@@ -69,7 +69,7 @@ describe("useLastLogin", () => {
     "%s",
     (_name, user, activityArr, expTs, expMethod, expHas) => {
       mockAuth.user = user;
-      (activityMockTracker as any).mockReturnValue(activityArr);
+      activityMockTracker.mockReturnValue(activityArr);
 
       const { result } = renderHook(() => useLastLogin());
 

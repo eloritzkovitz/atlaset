@@ -1,10 +1,11 @@
 import { normalizeMarkers } from "./marker";
+import type { Marker } from "../types";
 
 describe("normalizeMarkers", () => {
   it("returns undefined for non-array input", () => {
     expect(normalizeMarkers(undefined)).toBeUndefined();
-    expect(normalizeMarkers(null as unknown as any[])).toBeUndefined();
-    expect(normalizeMarkers(123 as unknown as any[])).toBeUndefined();
+    expect(normalizeMarkers(null as unknown as Marker[])).toBeUndefined();
+    expect(normalizeMarkers(123 as unknown as Marker[])).toBeUndefined();
   });
 
   it("normalizes a basic array of partial markers", () => {
@@ -39,7 +40,7 @@ describe("normalizeMarkers", () => {
   });
 
   it("handles undefined or unknown marker entries", () => {
-    const input = [undefined, { name: "A" }, null as any];
+    const input = [undefined, { name: "A" }, null as unknown as Marker];
     const result = normalizeMarkers(input);
     expect(result?.[0].id).toBe("shared-marker-0");
     expect(result?.[1].name).toBe("A");

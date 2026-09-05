@@ -21,7 +21,7 @@ function mockI18nTemplate(key: number | string, template: string) {
 }
 
 function getSegments(action: Action, details?: Record<string, unknown>) {
-  return activityUtils.getActivityDescription(action, details as any);
+  return activityUtils.getActivityDescription(action, details);
 }
 
 function findSegmentsByType(
@@ -49,7 +49,7 @@ beforeEach(() => {
 vi.mock("firebase/auth", () => ({
   getAuth: vi.fn(() => ({
     currentUser: authState.currentUser,
-    app: {} as any,
+    app: {},
     name: "",
     config: {},
     setPersistence: vi.fn(),

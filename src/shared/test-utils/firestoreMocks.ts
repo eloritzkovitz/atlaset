@@ -99,10 +99,10 @@ export const createFirestoreMocks = () => {
     updateDoc: vi.fn(),
     where: vi.fn(),
     writeBatch: vi.fn(() => ({
-      set: (...args: any[]) => batchSet(...args),
-      update: (...args: any[]) => batchUpdate(...args),
-      delete: (...args: any[]) => deleteDoc(...args),
-      commit: (...args: any[]) => batchCommit(...args),
+      set: (...args: []) => batchSet(...args),
+      update: (...args: []) => batchUpdate(...args),
+      delete: (...args: []) => deleteDoc(...args),
+      commit: (...args: []) => batchCommit(...args),
     })),
   };
 };
@@ -115,7 +115,7 @@ export const createFirestoreMocks = () => {
 export function createDbMock(methods: string[]) {
   const mock = {};
   methods.forEach((method) => {
-    (mock as any)[method] = vi.fn();
+    (mock as unknown as Record<string, unknown>)[method] = vi.fn();
   });
   return mock;
 }
@@ -127,7 +127,7 @@ export function createDbMock(methods: string[]) {
  * @returns A mock QuerySnapshot object with the specified documents.
  */
 export function createMockSnapshot(
-  docs: Array<{ id: string; data: object; ref?: any }>,
+  docs: Array<{ id: string; data: object; ref?: { id: string } }>,
 ) {
   return {
     docs: docs.map((d) => ({
@@ -158,10 +158,12 @@ export function createMockDocSnap(exists: boolean, dataObj: object = {}) {
  * Resets all mocks in the provided mock objects.
  * @param mocks - An array of mock objects whose functions should be reset.
  */
-export const resetAllMocks = (...mockContainers: any[]) => {
+export const resetAllMocks = (
+  ...mockContainers: Array<Record<string, unknown>>
+) => {
   mockContainers.forEach((container) => {
-    Object.values(container).forEach((mockFn: any) => {
-      if (typeof mockFn?.mockReset === "function") {
+    Object.values(container).forEach((mockFn) => {
+      if (vi.isMockFunction(mockFn)) {
         mockFn.mockReset();
       }
     });

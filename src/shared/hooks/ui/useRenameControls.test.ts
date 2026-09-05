@@ -42,7 +42,7 @@ describe("useRenameControls", () => {
       result.current.handleKeyDown({
         key: "Enter",
         stopPropagation: vi.fn(),
-      } as any);
+      } as never);
     });
     expect(onNameChange).not.toHaveBeenCalled();
     expect(result.current.isEditing).toBe(false);
@@ -61,7 +61,7 @@ describe("useRenameControls", () => {
       result.current.handleKeyDown({
         key: "a",
         stopPropagation: vi.fn(),
-      } as any);
+      } as never);
     });
     expect(onNameChange).not.toHaveBeenCalled();
     expect(result.current.isEditing).toBe(true);
@@ -82,7 +82,7 @@ describe("useRenameControls", () => {
       result.current.handleKeyDown({
         key: "Escape",
         stopPropagation: vi.fn(),
-      } as any);
+      } as never);
     });
     expect(result.current.editName).toBe("Test");
     expect(result.current.isEditing).toBe(false);
@@ -169,7 +169,7 @@ describe("useRenameControls", () => {
       result.current.handleKeyDown({
         key: "Enter",
         stopPropagation: vi.fn(),
-      } as any);
+      } as never);
     });
     expect(onNameChange).toHaveBeenCalledWith("NewName");
     expect(result.current.isEditing).toBe(false);
@@ -183,7 +183,7 @@ describe("useRenameControls", () => {
       result.current.handleKeyDown({
         key: "Escape",
         stopPropagation: vi.fn(),
-      } as any);
+      } as never);
     });
     expect(result.current.editName).toBe("Test");
     expect(result.current.isEditing).toBe(false);

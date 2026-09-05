@@ -35,7 +35,7 @@ const setMockDimensions = (scrollWidth: number, clientWidth = 200) => {
 
 // Helper function to dispatch touch events
 const dispatchTouch = (type: string, target: EventTarget, clientX: number) => {
-  const event = new Event(type, { bubbles: true }) as any;
+  const event = new Event(type, { bubbles: true });
   Object.defineProperty(event, "touches", { value: [{ clientX }] });
   target.dispatchEvent(event);
 };

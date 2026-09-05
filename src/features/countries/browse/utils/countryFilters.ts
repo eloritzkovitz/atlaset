@@ -80,7 +80,7 @@ export function filterCountries(
     layerCountries,
   } = options;
 
-  const mods = (options.modifiers ?? {}) as CountryModifiers;
+  const mods = options.modifiers ?? {};
 
   // Parse transcontinental option from modifiers
   const tcParsed = parseTCOption(mods.tc);
@@ -163,7 +163,7 @@ export function filterCountriesByQualifier(
   if (!config?.key) return [];
 
   const key = config.key;
-  const mods = (modifiers ?? {}) as CountryModifiers;
+  const mods = modifiers ?? {};
   const tcOption = parseTCOption(mods.tc);
   const searchValue = value.toLowerCase();
 
@@ -311,7 +311,7 @@ export function applyQualifierSearch(
 
     // Merge parsed modifiers into the existing filter params so they apply globally
     const mergedModifiers = {
-      ...(filterParams.modifiers as CountryModifiers | undefined),
+      ...(filterParams.modifiers ?? {}),
       ...(parsedMods ?? {}),
     } as CountryModifiers;
 

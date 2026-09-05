@@ -44,10 +44,7 @@ describe("tripsIO utils", () => {
   };
 
   const createMockFile = (name: string, content: string) => {
-    const file = new Blob([content]) as any;
-    file.name = name;
-    file.text = () => Promise.resolve(content);
-    return file;
+    return new File([content], name, { type: "text/plain" });
   };
 
   describe("importTripsFromFile", () => {

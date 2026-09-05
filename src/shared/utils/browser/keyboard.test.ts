@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import type { KeyCommand } from "@types";
+import type { CommandId, Key, KeyCommand, Modifier } from "@types";
 import {
   formatKeyCommand,
   formatShortcut,
@@ -45,7 +45,7 @@ describe("keyboard utils", () => {
     });
 
     describe("System and Navigation Keys (length > 1)", () => {
-      const systemKeys = [
+      const systemKeys: Key[] = [
         "ArrowUp",
         "ArrowDown",
         "ArrowLeft",
@@ -64,7 +64,10 @@ describe("keyboard utils", () => {
 
       systemKeys.forEach((sysKey) => {
         it(`should return false for system key: '${sysKey}' with no modifiers`, () => {
-          const cmd = { key: sysKey, modifiers: [] } as any;
+          const cmd = {
+            key: sysKey,
+            modifiers: [],
+          };
           expect(isRestrictedSingleKey(cmd)).toBe(false);
         });
       });
@@ -97,7 +100,7 @@ describe("keyboard utils", () => {
 
       shiftSymbols.forEach((symbol) => {
         it(`should return false for shifted symbol: '${symbol}'`, () => {
-          const cmd = { key: symbol, modifiers: [] } as any;
+          const cmd = { key: symbol as Key, modifiers: [] };
           expect(isRestrictedSingleKey(cmd)).toBe(false);
         });
       });
@@ -108,7 +111,7 @@ describe("keyboard utils", () => {
 
       restrictedKeys.forEach((charKey) => {
         it(`should return true for restricted standalone key: '${charKey}'`, () => {
-          const cmd = { key: charKey, modifiers: [] } as any;
+          const cmd = { key: charKey as Key, modifiers: [] };
           expect(isRestrictedSingleKey(cmd)).toBe(true);
         });
       });
@@ -188,20 +191,18 @@ describe("keyboard utils", () => {
     });
   });
 
-  describe("formatShortcut", () => {
-    it.each([
-      [null, ""],
-      [undefined, ""],
-      ["nonexistent.id" as any, ""],
-      ["shortcuts.show", "Shift+?"],
-    ])("formatShortcut(%p) -> '%s'", (id, expected) => {
-      expect(formatShortcut(id)).toBe(expected);
-    });
+  it.each([
+    [null, ""],
+    [undefined, ""],
+    ["nonexistent.id", ""],
+    ["shortcuts.show", "Shift+?"],
+  ])("formatShortcut(%p) -> '%s'", (id, expected) => {
+    expect(formatShortcut(id as CommandId | null | undefined)).toBe(expected);
   });
 
   describe("formatKeyCommand", () => {
     const defaultCmd = {
-      id: "test-id" as any,
+      id: "test-id" as CommandId,
       category: "General",
       labelKey: "test",
     };
@@ -211,7 +212,10 @@ describe("keyboard utils", () => {
         { ...defaultCmd, key: "a", modifiers: ["Meta", "Shift"] },
         "Cmd+Shift+A",
       ],
-      [{ ...defaultCmd, key: "k", modifiers: ["Option" as any] }, "Option+K"],
+      [
+        { ...defaultCmd, key: "k", modifiers: ["Option" as Modifier] },
+        "Option+K",
+      ],
       [{ ...defaultCmd, key: " ", modifiers: [] }, "Space"],
       [{ ...defaultCmd, key: "ArrowUp", modifiers: [] }, "Up"],
       [{ ...defaultCmd, key: "ArrowDown", modifiers: [] }, "Down"],

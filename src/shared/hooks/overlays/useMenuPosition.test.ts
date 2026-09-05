@@ -77,8 +77,8 @@ describe("useMenuPosition", () => {
       ),
     );
 
-    expect((result.current as any).left).toBe(opts.expectedLeft);
-    expect((result.current as any).top).toBe(opts.expectedTop);
+    expect(result.current.left).toBe(opts.expectedLeft);
+    expect(result.current.top).toBe(opts.expectedTop);
   };
 
   it("calculates basic positioning and placement variants", () => {
@@ -170,7 +170,7 @@ describe("useMenuPosition", () => {
         false,
       ),
     );
-    expect((r1.current as any).width).toBeUndefined();
+    expect(r1.current.width).toBeUndefined();
 
     const { result: r2 } = renderHook(() =>
       useMenuPosition(false, { current: btn }, { current: menu }),

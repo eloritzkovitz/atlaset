@@ -58,7 +58,7 @@ describe("extractUniqueSorted", () => {
   });
 
   it("works with empty input", () => {
-    expect(extractUniqueSorted([], (i) => i as any)).toEqual([]);
+    expect(extractUniqueSorted([], (i) => i)).toEqual([]);
   });
 
   it("sorts values lexicographically", () => {

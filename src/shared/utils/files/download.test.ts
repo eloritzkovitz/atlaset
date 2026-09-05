@@ -26,7 +26,7 @@ describe("downloadBlob", () => {
         return mockLink;
       }
       return originalCreateElement.call(document, tagName);
-    }) as any;
+    });
 
     vi.spyOn(document.body, "appendChild").mockImplementation((node) => node);
     vi.spyOn(document.body, "removeChild").mockImplementation((node) => node);
@@ -123,7 +123,7 @@ describe("downloadCanvas", () => {
         return mockLink;
       }
       return originalCreateElement.call(document, tagName);
-    }) as any;
+    });
 
     vi.spyOn(document.body, "appendChild").mockImplementation((node) => node);
     vi.spyOn(document.body, "removeChild").mockImplementation((node) => node);

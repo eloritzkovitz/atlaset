@@ -83,7 +83,7 @@ describe("countrySearch utils", () => {
       const tc = {
         ...countries[3],
         transcontinental: { scope: "CONTIGUOUS" },
-      } as any;
+      } as unknown as Country;
 
       expect(getQualifierTokens(tc, "tc")).toEqual(["true", "contiguous"]);
       expect(getQualifierTokens(countries[0], "tc")).toEqual(["false"]);
@@ -91,38 +91,35 @@ describe("countrySearch utils", () => {
 
     it("handles language codes, names, duplicates and invalid values", () => {
       expect(
-        getQualifierTokens(
-          { ...countries[0], languages: ["fr"] } as any,
-          "languages",
-        ),
+        getQualifierTokens({ ...countries[0], languages: ["fr"] }, "languages"),
       ).toEqual(["French"]);
 
       expect(
         getQualifierTokens(
-          { ...countries[0], languages: ["de", "German", "", null] } as any,
+          {
+            ...countries[0],
+            languages: ["de", "German", "", null],
+          } as unknown as Country,
           "languages",
         ),
       ).toEqual(["German"]);
 
       expect(
         getQualifierTokens(
-          { ...countries[0], languages: ["en-US", "fr-CA"] } as any,
+          { ...countries[0], languages: ["en-US", "fr-CA"] },
           "languages",
         ),
       ).toEqual(["English", "French"]);
 
       expect(
         getQualifierTokens(
-          { ...countries[0], languages: null } as any,
+          { ...countries[0], languages: null } as unknown as Country,
           "languages",
         ),
       ).toEqual([]);
 
       expect(
-        getQualifierTokens(
-          { ...countries[0], languages: ["  "] } as any,
-          "languages",
-        ),
+        getQualifierTokens({ ...countries[0], languages: ["  "] }, "languages"),
       ).toEqual([]);
     });
 
@@ -154,7 +151,7 @@ describe("countrySearch utils", () => {
     it("handles invalid and missing timezone data", () => {
       expect(
         getQualifierTokens(
-          { ...countries[0], timezones: null } as any,
+          { ...countries[0], timezones: null } as unknown as Country,
           "timezones",
         ),
       ).toEqual([]);
@@ -167,7 +164,7 @@ describe("countrySearch utils", () => {
 
       expect(
         getQualifierTokens(
-          { ...countries[0], timezones: ["Invalid/Timezone"] } as any,
+          { ...countries[0], timezones: ["Invalid/Timezone"] },
           "timezones",
         ),
       ).toEqual([]);
@@ -182,9 +179,9 @@ describe("countrySearch utils", () => {
         getQualifierTokens(
           {
             ...countries[0],
-            sovereigntyStatus: "dependent",
+            sovereigntyStatus: "dependency",
             sovereignState: "fr",
-          } as any,
+          },
           "sovereign",
         ),
       ).toEqual(["false", "FR"]);
@@ -193,9 +190,9 @@ describe("countrySearch utils", () => {
         getQualifierTokens(
           {
             ...countries[0],
-            sovereigntyStatus: "dependent",
+            sovereigntyStatus: "dependency",
             sovereignState: "",
-          } as any,
+          },
           "sovereign",
         ),
       ).toEqual(["false"]);
@@ -222,7 +219,10 @@ describe("countrySearch utils", () => {
         getQualifierTokens(countries[0], "wantToVisit", {
           visitContext: {
             wantToVisitIsoCodes: [countries[0].isoCode],
-          } as VisitContext,
+            visitedIsoCodes: [],
+            visitedMap: {},
+            visitedYearMap: {},
+          },
         }),
       ).toEqual(["true"]);
 
@@ -236,7 +236,7 @@ describe("countrySearch utils", () => {
         memberOf: ["UN", "", null],
         capital: "Paris",
         unMember: true,
-      } as any;
+      } as unknown as Country;
 
       expect(getQualifierTokens(country, "memberOf")).toEqual(["UN"]);
       expect(getQualifierTokens(country, "capital")).toEqual(["Paris"]);
@@ -257,7 +257,7 @@ describe("countrySearch utils", () => {
 
     it("handles empty region values", () => {
       expect(
-        getQualifierTokens({ ...countries[0], region: "" } as any, "region"),
+        getQualifierTokens({ ...countries[0], region: "" }, "region"),
       ).toEqual([]);
     });
   });
