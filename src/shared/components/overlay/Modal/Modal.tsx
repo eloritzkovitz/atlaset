@@ -159,9 +159,13 @@ export function Modal({
             }}
             className={
               "group fixed " +
-              "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
-              (isOpen ? "modal-show " : "modal-hide ") +
-              (closing ? " modal-closing " : "") +
+              "modal rounded-xl shadow-xl pt-0 px-2 pb-4 overflow-y-auto transition-all duration-300 ease-in-out " +
+              "max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl " +
+              "px-4 sm:px-6 py-4 " +
+              (isOpen
+                ? "opacity-100 pointer-events-auto scale-100 modal-show"
+                : "opacity-0 pointer-events-none scale-95 modal-hide") +
+              (closing ? " modal-closing" : "") +
               className
             }
             style={{

@@ -13,7 +13,6 @@ import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
 import { useToolbarActions } from "./useToolbarActions";
-import "./MapToolbar.css";
 
 interface MapToolbarProps {
   orientation: "horizontal" | "vertical";
@@ -169,14 +168,14 @@ export function MapToolbar({
   // Horizontal layout
   return (
     <div
-      className={`toolbar-container ${
+      className={`fixed z-[101] flex flex-col items-end transition-transform transition-opacity duration-300 ${
         isEmbed ? "!end-2 !bottom-0" : "end-4 bottom-8"
       } ${
         uiVisible
-          ? "toolbar-container-visible"
+          ? "opacity-100 pointer-events-auto translate-x-0"
           : isRtl
-            ? "toolbar-container-hidden toolbar-container-hidden-rtl"
-            : "toolbar-container-hidden toolbar-container-hidden-ltr"
+            ? "opacity-0 pointer-events-none -translate-x-full"
+            : "opacity-0 pointer-events-none translate-x-full"
       }`}
     >
       <MapControls

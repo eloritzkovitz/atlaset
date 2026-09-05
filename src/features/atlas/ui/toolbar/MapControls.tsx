@@ -77,10 +77,10 @@ export function MapControls({
 
   return (
     <div
-      className={`toolbar-zoom-controls ${
+      className={`mb-3 transition-transform transition-opacity duration-300 ${
         visible
-          ? "toolbar-zoom-controls-visible"
-          : "toolbar-zoom-controls-hidden"
+          ? "translate-y-0 opacity-100 pointer-events-auto"
+          : "translate-y-10 opacity-0 pointer-events-none"
       }`}
     >
       <div className="flex flex-col items-center space-y-0.5">
