@@ -6,6 +6,7 @@ import { useSettings } from "@features/settings";
 import { useAnalytics } from "@features/settings/privacy/hooks/useAnalytics";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { MigrationModal } from "@features/user/migration/components/MigrationModal";
+import { warmUpBackend } from "@lib/api-client/backend";
 import { AppProviders } from "./providers/AppProviders";
 import { AppRoutes } from "./routes/AppRoutes";
 
@@ -28,6 +29,11 @@ export function AppBootstrap({ children }: AppBootstrapProps) {
 
   // Initialize analytics tracking
   useAnalytics();
+
+  // Warm up the backend on initial load
+  useEffect(() => {
+    warmUpBackend();
+  }, []);
 
   // Redirect to /atlas if the user is logged in and on the root path
   useEffect(() => {
