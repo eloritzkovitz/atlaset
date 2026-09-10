@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { IconType } from "react-icons/lib";
+import { STATUS_COLOR_CLASSES } from "@constants/colors";
 import {
-  TRIP_STATUS_COLOR_CLASSES,
   TRIP_STATUS_COLORS,
   TRIP_STATUS_ICONS,
   TRIP_STATUS_LABELS,
@@ -10,7 +10,7 @@ import {
   TRIP_TYPE_COLORS,
   TRIP_TYPE_ICONS,
   TRIP_TYPE_LABELS,
-} from "@features/trips/constants/trips";
+} from "@features/trips";
 import { useTripsStats } from "./useTripsStats";
 
 export interface TripCategoryItem {
@@ -47,7 +47,7 @@ export function useTripCategoryData() {
         }),
         value: plannedTrips.length,
         color: TRIP_STATUS_COLORS[0],
-        colorClass: TRIP_STATUS_COLOR_CLASSES["planned"],
+        colorClass: STATUS_COLOR_CLASSES["planned"],
         icon: TRIP_STATUS_ICONS[0],
       },
       {
@@ -57,7 +57,7 @@ export function useTripCategoryData() {
         }),
         value: upcomingTrips.length,
         color: TRIP_STATUS_COLORS[1],
-        colorClass: TRIP_STATUS_COLOR_CLASSES["upcoming"],
+        colorClass: STATUS_COLOR_CLASSES["upcoming"],
         icon: TRIP_STATUS_ICONS[1],
       },
       {
@@ -67,7 +67,7 @@ export function useTripCategoryData() {
         }),
         value: inProgressTrips.length,
         color: TRIP_STATUS_COLORS[2],
-        colorClass: TRIP_STATUS_COLOR_CLASSES["in-progress"],
+        colorClass: STATUS_COLOR_CLASSES["in-progress"],
         icon: TRIP_STATUS_ICONS[2],
       },
       {
@@ -77,7 +77,7 @@ export function useTripCategoryData() {
         }),
         value: completedTrips.length,
         color: TRIP_STATUS_COLORS[3],
-        colorClass: TRIP_STATUS_COLOR_CLASSES["completed"],
+        colorClass: STATUS_COLOR_CLASSES["completed"],
         icon: TRIP_STATUS_ICONS[3],
       },
       {
@@ -87,7 +87,7 @@ export function useTripCategoryData() {
         }),
         value: cancelledTrips.length,
         color: TRIP_STATUS_COLORS[4],
-        colorClass: "bg-status-cancelled/90 hover:bg-status-cancelled",
+        colorClass: STATUS_COLOR_CLASSES["cancelled"],
         icon: TRIP_STATUS_ICONS[4],
       },
     ],

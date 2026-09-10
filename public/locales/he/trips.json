@@ -2,11 +2,42 @@
   "pageTitle": "הטיולים שלי",
   "loading": "טוען טיולים...",
   "noTrips": "אין עדיין טיולים.",
+
+  "fields": {
+    "name": "שם",
+    "rating": "דירוג",
+    "countries": "מדינות",
+    "destinations": "יעדים",
+    "year": "שנה",
+    "startDate": "תאריך התחלה",
+    "endDate": "תאריך סיום",
+    "fullDays": "ימים מלאים",
+    "participants": "משתתפים",
+    "categories": "קטגוריות",
+    "status": "סטטוס",
+    "tags": "תגיות",
+    "notes": "הערות",
+    "photoAlbumUrl": "קישור לאלבום תמונות"
+  },
+
+  "indicators": {
+    "favorite": "מועדף",
+    "sharedWithMe": "משותף איתי"
+  },
+
+  "sections": {
+    "overview": "סקירה",
+    "details": "פרטים",
+    "destinations": "יעדים",
+    "photos": "תמונות"
+  },
+
   "table": {
     "toolbar": {
       "search": {
         "placeholder": "חיפוש טיולים"
       },
+
       "filters": {
         "clearFilters": "נקה פילטרים",
         "local": "מקומי",
@@ -18,9 +49,11 @@
         "favorites": "מועדפים",
         "filtersToggle": "הצג/הסתר {{label}}"
       },
+
       "calendar": {
         "viewCalendar": "הצג לוח שנה"
       },
+
       "importExport": {
         "importTitle": "ייבא טיולים",
         "importConfirmTitle": "לייבא טיולים?",
@@ -31,6 +64,7 @@
         "exportCSV": "ייצא כ-CSV",
         "exportJSON": "ייצא כ-JSON"
       },
+
       "bulkActions": {
         "duplicateSelected": "שכפל נבחרים",
         "deleteSelected": "מחק נבחרים",
@@ -41,19 +75,7 @@
         "cancel": "ביטול"
       }
     },
-    "headers": {
-      "name": "שם",
-      "rating": "דירוג",
-      "countries": "מדינות",
-      "year": "שנה",
-      "startDate": "תאריך התחלה",
-      "endDate": "תאריך סיום",
-      "fullDays": "ימים מלאים",
-      "participants": "משתתפים",
-      "categories": "קטגוריות",
-      "status": "סטטוס",
-      "tags": "תגיות"
-    },
+
     "placeholders": {
       "searchByName": "חפש לפי שם",
       "allRatings": "כל הדירוגים",
@@ -64,52 +86,91 @@
       "allStatuses": "כל המצבים",
       "allTags": "כל התגיות"
     },
+
     "itemLabels": {
       "singular": "טיול",
       "plural": "טיולים"
-    },
-    "actions": {
-      "sharedDisabledTitle": "לא ניתן לערוך טיולים משותפים",
-      "moreActions": "עוד פעולות",
-      "viewInCalendar": "הצג בלוח שנה",
-      "editTrip": "ערוך טיול",
-      "duplicate": "שכפול",
-      "favorite": "הוסף למועדפים",
-      "unfavorite": "הסר ממועדפים",
-      "rate": "דרג",
-      "deleteTrip": "מחק טיול"
     }
   },
-  "modal": {
+
+  "actions": {
+    "sharedDisabledTitle": "לא ניתן לערוך טיולים משותפים",
+    "moreActions": "עוד פעולות",
+    "viewTrip": "הצג טיול",
+    "viewPhotoAlbum": "הצג אלבום תמונות",
+    "viewInCalendar": "הצג בלוח שנה",
+    "editTrip": "ערוך טיול",
+    "duplicate": "שכפול",
+    "favorite": "הוסף למועדפים",
+    "unfavorite": "הסר ממועדפים",
+    "rate": "דרג",
+    "deleteTrip": "מחק טיול"
+  },
+
+  "editor": {
     "titleAdd": "הוסף טיול",
     "titleEdit": "ערוך טיול",
-    "form": {
-      "name": "שם",
-      "startDate": "תאריך התחלה",
-      "endDate": "תאריך סיום",
+
+    "overview": {
       "tentativeDates": "תאריכים משוערים",
-      "fullDays": "ימים מלאים",
-      "participants": "משתתפים",
-      "selectParticipants": "בחר משתתפים",
-      "categories": "קטגוריות",
-      "selectCategories": "בחר קטגוריות",
-      "tags": "תגיות",
-      "addTags": "הוסף תגיות",
-      "countriesTitle": "מדינות",
-      "noCountriesSelected": "לא נבחרו מדינות.",
-      "notesTitle": "הערות",
-      "notesPlaceholder": "הוסף הערות לגבי הטיול הזה..."
+      "notesPlaceholder": "הוסף הערות לגבי הטיול הזה...",
+      "noNotes": "אין הערות זמינות."
     },
+
+    "details": {
+      "participants": {
+        "select": "בחר משתתפים",
+        "none": "לא נבחרו משתתפים."
+      },
+      "categories": {
+        "select": "בחר קטגוריות",
+        "none": "לא נבחרו קטגוריות."
+      },
+      "tags": {
+        "select": "בחר תגיות",
+        "none": "לא נבחרו תגיות."
+      }
+    },
+
+    "destinations": {
+      "countries": {
+        "select": "בחר מדינות",
+        "none": "לא נבחרו מדינות."
+      },
+
+      "locations": {
+        "title": "מיקומים",
+        "select": "בחר מיקומים",
+        "none": "לא נבחרו מיקומים.",
+        "searchPlaceholder": "חפש מיקומים",
+        "noResults": "לא נמצאו מיקומים."
+      }
+    },
+
+    "photos": {
+      "photoAlt": "תמונה מטיול {{index}}",
+      "fileHint": "העלה/י תמונות כדי להציג את הטיול שלך. ניתן להעלות עד {{max}} תמונות בפורמט JPEG, PNG או WEBP.",
+      "limitReached": "הגעת למספר המירבי של תמונות ({{max}}).",
+      "invalidFileType": "פורמט תמונה לא נתמך. רק JPEG, PNG ו- WEBP מותרים.",
+      "uploadError": "לא ניתן היה להעלות חלק מהתמונות. אנא נסה/י שוב.",
+      "deleteError": "לא ניתן היה למחוק תמונה. אנא נסה/י שוב."
+    },
+
     "actions": {
       "saveChanges": "שמור שינויים",
       "addTrip": "הוסף טיול",
-      "removeCountry": "הסר",
-      "editCountries": "ערוך מדינות",
-      "selectCountries": "בחר מדינות",
       "edit": "ערוך",
-      "add": "הוסף"
+      "add": "הוסף",
+      "remove": "הסר"
     }
   },
+
+  "gallery": {
+    "title": "גלריה",
+    "openAlbum": "פתח/י את אלבום התמונות",
+    "noAlbum": "לא מקושר אלבום תמונות"
+  },
+
   "categories": {
     "solo": "בודד",
     "couple": "זוגי",
@@ -143,7 +204,9 @@
     "cultural": "תרבותי",
     "other": "אחר"
   },
+
   "types": { "local": "מקומי", "abroad": "בחו\"ל" },
+
   "statuses": {
     "planned": "מתוכנן",
     "upcoming": "עתידי",
@@ -151,6 +214,7 @@
     "completed": "הושלם",
     "cancelled": "בוטל"
   },
+
   "tags": {
     "beach": "חוף",
     "mountain": "הר",

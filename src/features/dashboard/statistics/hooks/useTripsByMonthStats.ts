@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTrips } from "@features/trips";
-import { isAbroadTrip } from "@features/trips/utils/trips";
+import { isAbroadTrip } from "@features/trips/core/utils/trips";
 import { useHomeCountry } from "@features/user/profile";
 import { formatMonthValues } from "@utils";
 import { MONTH_COLORS } from "../constants/statistics";

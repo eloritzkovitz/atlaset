@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FaUmbrellaBeach, FaStopwatch } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
 import { ICONS } from "@constants/icons";
-import { useKeyHandler } from "@hooks";
+import { useArrowNavigation } from "@hooks";
 import { isAuthenticated } from "@lib/firebase";
 import type { Difficulty, GameMode } from "../../types";
 
@@ -74,26 +74,27 @@ export function QuizSettings({
 }: QuizSettingsProps) {
   const { t } = useTranslation("quizzes");
 
-  // Arrow key navigation
-  useKeyHandler(
-    (e) => {
-      if (!document.activeElement || document.activeElement === document.body) {
-        const currentIdx = LEVELS.findIndex(
-          (l) => l.key === (difficulty ?? "easy"),
-        );
-        if (e.key === "ArrowRight") {
-          setDifficulty(LEVELS[(currentIdx + 1) % LEVELS.length].key);
-        } else if (e.key === "ArrowLeft") {
-          setDifficulty(
-            LEVELS[(currentIdx - 1 + LEVELS.length) % LEVELS.length].key,
-          );
-        }
-      }
-    },
-    ["ArrowLeft", "ArrowRight"],
+  const currentIndex = LEVELS.findIndex(
+    (level) => level.key === (difficulty ?? "easy"),
   );
 
   const selected = LEVELS.find((l) => l.key === difficulty);
+
+  useArrowNavigation({
+    enabled: document.activeElement === document.body,
+    isRTL: false,
+    canPrevious: true,
+    canNext: true,
+    wrap: true,
+    onPrevious: () => {
+      setDifficulty(
+        LEVELS[(currentIndex - 1 + LEVELS.length) % LEVELS.length].key,
+      );
+    },
+    onNext: () => {
+      setDifficulty(LEVELS[(currentIndex + 1) % LEVELS.length].key);
+    },
+  });
 
   return (
     <Card className="max-w-xl w-full p-8 rounded-xl shadow-lg text-center font-sans">

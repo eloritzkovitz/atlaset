@@ -69,7 +69,7 @@ export function FriendshipButton({
         buttonClass: "bg-surface hover:bg-surface-hover",
         icon: <FaHourglassHalf />,
         label: t("friends.status.pending"),
-        menuIcon: <FaXmark className="!text-danger" />,
+        menuIcon: <FaXmark />,
         menuLabel: t("friends.actions.withdrawRequest"),
         onMenuClick: () => {
           setShowMenu(false);
@@ -80,7 +80,7 @@ export function FriendshipButton({
         buttonClass: "bg-surface hover:bg-surface-hover",
         icon: <FaUserCheck />,
         label: t("friends.status.friend"),
-        menuIcon: <FaUserMinus className="!text-danger" />,
+        menuIcon: <FaUserMinus />,
         menuLabel: t("friends.actions.unfriend"),
         onMenuClick: () => {
           setShowMenu(false);
@@ -108,12 +108,12 @@ export function FriendshipButton({
         <Menu open={showMenu} containerRef={containerRef} style={menuStyle}>
           <div ref={menuRef}>
             <MenuButton
+              variant="danger"
               icon={config.menuIcon}
               onClick={config.onMenuClick}
               ariaLabel={config.menuLabel}
-              className="text-danger"
             >
-              <span className="!text-danger">{config.menuLabel}</span>
+              {config.menuLabel}
             </MenuButton>
           </div>
         </Menu>

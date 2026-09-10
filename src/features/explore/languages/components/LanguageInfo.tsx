@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { WikipediaButton } from "@components";
 import { groupCountryIsoCodes } from "@features/countries";
 import type { Country } from "@features/countries/types";
+import { useLanguage } from "@features/settings/account/hooks/useLanguage";
 import type { Language } from "@types";
 import { getQueryParam } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
-import { WikipediaButton } from "../../core/components/WikipediaButton";
 import { EXPLORE_URLS } from "../../core/constants/exploreMenu";
 import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
@@ -21,6 +22,8 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { code: routeCode } = useParams<{ code?: string }>();
+
+  const { current: lang } = useLanguage();
 
   // Resolve code via route param or fallback query string
   const code = routeCode || getQueryParam("code", "", location.search);
@@ -53,7 +56,9 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
     <InfoWithCountryGroups
       title={languageName}
       subtitle={languageCode ? `(${languageCode})` : undefined}
-      actions={<WikipediaButton searchTerm={`${language.name} language`} />}
+      actions={
+        <WikipediaButton searchTerm={`${language.name} language`} lang={lang} />
+      }
       onBack={() => navigateBack(EXPLORE_URLS.languages)}
       labelArgs={{ name: languageName }}
       onSelectCountry={(isoCode, navigationCountryIsoCodes) =>

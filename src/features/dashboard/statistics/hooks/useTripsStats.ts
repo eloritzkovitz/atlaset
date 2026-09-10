@@ -11,13 +11,13 @@ import {
   isInProgressTrip,
   isCompletedTrip,
   getCancelledTrips,
-} from "@features/trips/utils/trips";
+} from "@features/trips/core/utils/trips";
 import {
   findLongestTrip,
   findShortestTrip,
   getFirstAndLastTrip,
   getRecentTrips,
-} from "@features/trips/utils/tripStats";
+} from "@features/trips/core/utils/tripStats";
 import { useHomeCountry } from "@features/user/profile";
 import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
 import { getMostVisitedCountries } from "@features/visits/utils/visitStats";

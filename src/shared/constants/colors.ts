@@ -22,3 +22,12 @@ export const NOT_VISITED_COLOR = "#d1d5db";
 
 export const LOCAL_TRIP_COLOR = "#22d3ee";
 export const ABROAD_TRIP_COLOR = "#a78bfa";
+
+// Status badge classes
+export const STATUS_COLOR_CLASSES = {
+  planned: "bg-status-planned/90 hover:bg-status-planned",
+  upcoming: "bg-status-upcoming/90 hover:bg-status-upcoming",
+  "in-progress": "bg-status-inprogress/90 hover:bg-status-inprogress",
+  completed: "bg-status-completed/90 hover:bg-status-completed",
+  cancelled: "bg-status-cancelled/90 hover:bg-status-cancelled",
+} as const;

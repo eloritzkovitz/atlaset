@@ -1,6 +1,6 @@
 import React from "react";
 import { SettingsInitializer } from "@features/settings/core/components/SettingsInitializer";
-import { TripsProvider } from "@features/trips/context/TripsProvider";
+import { TripsProvider } from "@features/trips/core/context/TripsProvider";
 import { AuthListener } from "@features/user/auth/components/AuthListener";
 import { AudioProvider } from "../contexts/AudioProvider";
 import { UIHintProvider } from "../contexts/UIHintProvider";

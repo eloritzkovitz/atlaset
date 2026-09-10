@@ -1,7 +1,9 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { TabButton } from "@components";
+import { useLocation, useNavigate } from "react-router-dom";
+import { TabControl, type TabControlItem } from "@components";
 import type { UserProfile } from "../../types";
+
+type ProfileTab = "overview" | "friends" | "visits";
 
 interface ProfileTabNavProps {
   profileUser: UserProfile;
@@ -16,33 +18,45 @@ export function ProfileTabNav({ profileUser }: ProfileTabNavProps) {
   const friendsPath = `/users/${profileUser.username}/friends`;
   const visitsPath = `/users/${profileUser.username}/visits`;
 
-  const isOverviewActive = location.pathname === overviewPath;
   const isFriendsActive = location.pathname.startsWith(friendsPath);
   const isVisitsActive = location.pathname.startsWith(visitsPath);
 
+  const activeTab: ProfileTab = isFriendsActive
+    ? "friends"
+    : isVisitsActive
+      ? "visits"
+      : "overview";
+
+  const tabs: TabControlItem<ProfileTab>[] = [
+    {
+      value: "overview",
+      label: t("profile.tabs.about", "About"),
+    },
+    {
+      value: "friends",
+      label: t("profile.tabs.friends", "Friends"),
+    },
+    {
+      value: "visits",
+      label: t("profile.tabs.visits", "Visits"),
+    },
+  ];
+
+  const handleTabChange = (tab: ProfileTab) => {
+    switch (tab) {
+      case "overview":
+        navigate(overviewPath);
+        break;
+      case "friends":
+        navigate(friendsPath);
+        break;
+      case "visits":
+        navigate(visitsPath);
+        break;
+    }
+  };
+
   return (
-    <div className="flex gap-2">
-      <TabButton
-        active={isOverviewActive}
-        onClick={() => navigate(overviewPath)}
-      >
-        {t("profile.tabs.about", "About")}
-      </TabButton>
-
-      <TabButton active={isFriendsActive} onClick={() => navigate(friendsPath)}>
-        <div className="flex items-center gap-2">
-          <span>{t("profile.tabs.friends", "Friends")}</span>
-        </div>
-      </TabButton>
-
-      <TabButton
-        active={isVisitsActive}
-        onClick={() => navigate(visitsPath)}
-      >
-        <div className="flex items-center gap-2">
-          <span>{t("profile.tabs.visits", "Visits")}</span>
-        </div>
-      </TabButton>
-    </div>
+    <TabControl tabs={tabs} activeTab={activeTab} onChange={handleTabChange} />
   );
 }

@@ -2,11 +2,42 @@
   "pageTitle": "My Trips",
   "loading": "Loading trips...",
   "noTrips": "No trips yet.",
+
+  "fields": {
+    "name": "Name",
+    "rating": "Rating",
+    "countries": "Countries",
+    "destinations": "Destinations",
+    "year": "Year",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "fullDays": "Full Days",
+    "participants": "Participants",
+    "categories": "Categories",
+    "status": "Status",
+    "tags": "Tags",
+    "notes": "Notes",
+    "photoAlbumUrl": "Photo Album URL"
+  },
+
+  "indicators": {
+    "favorite": "Favorite",
+    "sharedWithMe": "Shared with me"
+  },
+
+  "sections": {
+    "overview": "Overview",
+    "details": "Details",
+    "destinations": "Destinations",
+    "photos": "Photos"
+  },
+
   "table": {
     "toolbar": {
       "search": {
         "placeholder": "Search trips"
       },
+
       "filters": {
         "clearFilters": "Clear Filters",
         "local": "Local",
@@ -15,12 +46,14 @@
         "upcoming": "Upcoming",
         "completed": "Completed",
         "cancelled": "Cancelled",
-        "favorites": "Favorites",       
+        "favorites": "Favorites",
         "filtersToggle": "Toggle {{label}}"
       },
+
       "calendar": {
         "viewCalendar": "View Calendar"
       },
+
       "importExport": {
         "importTitle": "Import Trips",
         "importConfirmTitle": "Import trips?",
@@ -31,6 +64,7 @@
         "exportCSV": "Export as CSV",
         "exportJSON": "Export as JSON"
       },
+
       "bulkActions": {
         "duplicateSelected": "Duplicate selected",
         "deleteSelected": "Delete selected",
@@ -41,19 +75,7 @@
         "cancel": "Cancel"
       }
     },
-    "headers": {
-      "name": "Name",
-      "rating": "Rating",
-      "countries": "Countries",
-      "year": "Year",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "fullDays": "Full Days",
-      "participants": "Participants",
-      "categories": "Categories",
-      "status": "Status",
-      "tags": "Tags"
-    },
+
     "placeholders": {
       "searchByName": "Search by name",
       "allRatings": "All Ratings",
@@ -64,52 +86,91 @@
       "allStatuses": "All Statuses",
       "allTags": "All Tags"
     },
+
     "itemLabels": {
       "singular": "trip",
       "plural": "trips"
-    },
-    "actions": {
-      "sharedDisabledTitle": "Shared trips cannot be edited",
-      "moreActions": "More actions",
-      "viewInCalendar": "View in Calendar",
-      "editTrip": "Edit Trip",
-      "duplicate": "Duplicate",
-      "favorite": "Favorite",
-      "unfavorite": "Unfavorite",
-      "rate": "Rate",
-      "deleteTrip": "Delete Trip"
     }
   },
-  "modal": {
+
+  "actions": {
+    "sharedDisabledTitle": "Shared trips cannot be edited",
+    "moreActions": "More actions",
+    "viewTrip": "View Trip",
+    "viewPhotoAlbum": "View Photo Album",
+    "viewInCalendar": "View in Calendar",
+    "editTrip": "Edit Trip",
+    "duplicate": "Duplicate",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "rate": "Rate",
+    "deleteTrip": "Delete Trip"
+  },
+
+  "editor": {
     "titleAdd": "Add Trip",
     "titleEdit": "Edit Trip",
-    "form": {
-      "name": "Name",
-      "startDate": "Start Date",
-      "endDate": "End Date",
+
+    "overview": {
       "tentativeDates": "Tentative Dates",
-      "fullDays": "Full Days",
-      "participants": "Participants",
-      "selectParticipants": "Select participants",
-      "categories": "Categories",
-      "selectCategories": "Select categories",
-      "tags": "Tags",
-      "addTags": "Add tags",
-      "countriesTitle": "Countries",
-      "noCountriesSelected": "No countries selected",
-      "notesTitle": "Notes",
-      "notesPlaceholder": "Add notes about this trip..."
+      "notesPlaceholder": "Add notes about this trip...",
+      "noNotes": "No notes available."
     },
+
+    "details": {
+      "participants": {
+        "select": "Select participants",
+        "none": "No participants selected."
+      },
+      "categories": {
+        "select": "Select categories",
+        "none": "No categories selected."
+      },
+      "tags": {
+        "select": "Select tags",
+        "none": "No tags selected."
+      }
+    },
+
+    "destinations": {
+      "countries": {
+        "select": "Select Countries",
+        "none": "No countries selected."
+      },
+
+      "locations": {
+        "title": "Locations",
+        "select": "Select Locations",
+        "none": "No locations selected.",
+        "searchPlaceholder": "Search locations",
+        "noResults": "No locations found."
+      }
+    },
+
+    "photos": {
+      "photoAlt": "Trip photo {{index}}",
+      "fileHint": "Upload photos to showcase your trip. You can upload up to {{max}} photos in JPEG, PNG or WEBP format.",
+      "limitReached": "You have reached the maximum number of photos ({{max}}).",
+      "invalidFileType": "Invalid file type. Only JPEG, PNG and WEBP are allowed.",
+      "uploadError": "Some photos could not be uploaded. Please try again.",
+      "deleteError": "Failed to delete photo. Please try again."
+    },
+
     "actions": {
       "saveChanges": "Save Changes",
       "addTrip": "Add Trip",
-      "removeCountry": "Remove",
-      "editCountries": "Edit Countries",
-      "selectCountries": "Select Countries",
+      "add": "Add",
       "edit": "Edit",
-      "add": "Add"
+      "remove": "Remove"
     }
   },
+
+  "gallery": {
+    "title": "Gallery",
+    "openAlbum": "Open photo album",
+    "noAlbum": "No photo album linked"
+  },
+
   "categories": {
     "solo": "Solo",
     "couple": "Couple",
@@ -143,7 +204,9 @@
     "cultural": "Cultural",
     "other": "Other"
   },
+
   "types": { "local": "Local", "abroad": "Abroad" },
+
   "statuses": {
     "planned": "Planned",
     "upcoming": "Upcoming",
@@ -151,6 +214,7 @@
     "completed": "Completed",
     "cancelled": "Cancelled"
   },
+
   "tags": {
     "beach": "Beach",
     "mountain": "Mountain",

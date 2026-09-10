@@ -1,0 +1,41 @@
+import { useTranslation } from "react-i18next";
+import { ICONS } from "@constants/icons";
+import { TripCountriesList } from "../../../../core/components/TripCountriesList";
+
+interface CountriesSectionProps {
+  selectedCountries: { isoCode: string; name: string }[];
+  onEdit: () => void;
+  onRemove: (isoCode: string) => void;
+}
+
+export function CountriesSection({
+  selectedCountries,
+  onEdit,
+  onRemove,
+}: CountriesSectionProps) {
+  const { t } = useTranslation("trips");
+
+  return (
+    <div className="flex-1 min-h-0 overflow-auto">
+      <div className="flex items-center justify-between mb-1">
+        <span className="font-semibold">{t("fields.countries")}</span>
+        <button
+          type="button"
+          className="flex items-center gap-1 px-2 py-1 rounded hover:bg-input-hover text-sm font-medium"
+          onClick={onEdit}
+          aria-label={t("editor.destinations.countries.select")}
+        >
+          <ICONS.edit className="me-1" />
+          {selectedCountries.length > 0
+            ? t("editor.actions.edit")
+            : t("editor.actions.add")}
+        </button>
+      </div>
+      <TripCountriesList
+        countries={selectedCountries}
+        removable
+        onRemove={onRemove}
+      />
+    </div>
+  );
+}

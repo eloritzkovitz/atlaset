@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-10
+
+- **[feature]** **Trips:** Added trip destinations by using GeoNames locations
+- **[feature]** **Trips:** Added option to upload trip photos and link an external photo album
+- **[feature]** **Trips | Details:** Added new details page with trip information
+- **[feature]** **Trips | Details:** Added new interactive map to show destinations
+- **[feature]** **Trips | Details:** Added new photo gallery and image viewer
+- **[chore]** **General:** Updated some UI elements
+
 ## 2026-09-02
 
 - **[feature]** **Explore | Countries:** Added item navigation inside country pages for quicker list navigation

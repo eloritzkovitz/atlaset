@@ -7,11 +7,13 @@ import {
   FaLocationDot,
   FaRegCalendarDays,
 } from "react-icons/fa6";
-import { Card, TabButton } from "@components";
+import { Card, TabControl, type TabControlItem } from "@components";
 import { CountryWithFlag } from "@features/countries";
 import type { Country } from "@features/countries/types";
 import { ProfileField } from "../../ProfileField";
 import { SocialLinks } from "../../social/SocialLinks";
+
+type ProfileAboutTab = "personal-details" | "contact";
 
 interface ProfileAboutCardProps {
   displayEmail: string | null;
@@ -30,9 +32,8 @@ export function ProfileAboutCard({
   displayBiography,
   displaySocialLinks,
 }: ProfileAboutCardProps) {
-  const [activeTab, setActiveTab] = useState<"personal-details" | "contact">(
-    "personal-details",
-  );
+  const [activeTab, setActiveTab] =
+    useState<ProfileAboutTab>("personal-details");
   const { t } = useTranslation("user");
 
   const notSpecified = t("profile.about.notSpecified");
@@ -44,27 +45,26 @@ export function ProfileAboutCard({
       )
     : null;
 
+  const tabs: TabControlItem<ProfileAboutTab>[] = [
+    {
+      value: "personal-details",
+      label: t("profile.about.personalDetails.title"),
+    },
+  ];
+
+  if (displaySocialLinks) {
+    tabs.push({
+      value: "contact",
+      label: t("profile.about.contactInfo.title"),
+    });
+  }
+
   return (
     <Card className="mt-6">
       <h2 className="text-xl font-bold">{t("profile.about.title")}</h2>
 
       {/* Tab Navigation */}
-      <div className="flex gap-2">
-        <TabButton
-          active={activeTab === "personal-details"}
-          onClick={() => setActiveTab("personal-details")}
-        >
-          {t("profile.about.personalDetails.title")}
-        </TabButton>
-        {displaySocialLinks && (
-          <TabButton
-            active={activeTab === "contact"}
-            onClick={() => setActiveTab("contact")}
-          >
-            {t("profile.about.contactInfo.title")}
-          </TabButton>
-        )}
-      </div>
+      <TabControl tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
       {/* Personal Details Tab */}
       {activeTab === "personal-details" && (

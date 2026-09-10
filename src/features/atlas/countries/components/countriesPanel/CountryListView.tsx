@@ -5,7 +5,7 @@ import {
   useTimeline,
 } from "@features/atlas/timeline";
 import { CountryDisplayPanel, type Country } from "@features/countries";
-import { useTrips } from "@features/trips/context/TripsContext";
+import { useTrips } from "@features/trips/core/context/TripsContext";
 import { useVisitStats } from "@features/visits";
 import { useListNavigation } from "@hooks";
 import { CountryActions } from "./CountryActions";

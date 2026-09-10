@@ -93,6 +93,10 @@
       "toggleRGBA": "Toggle between RGBA and HEX",
       "toggleHEX": "Toggle between HEX and RGBA"
     },
+    "fileDropzone": {
+      "dropFiles": "Drop files here or click to browse",
+      "uploading": "Uploading..."
+    },
     "filter": {
       "all": "All",
       "includeOnly": "Include Only",
@@ -161,6 +165,12 @@
     "empty": "—",
     "date": {
       "tbd": "TBD"
+    },
+    "duration": {
+      "dayUnit": "day",
+      "daysUnit": "days",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
     },
     "timeAgo": {
       "justNow": "Just now",

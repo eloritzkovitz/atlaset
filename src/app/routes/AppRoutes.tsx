@@ -41,7 +41,9 @@ const SettingsRoutes = lazy(
   () => import("@features/settings/core/routes/SettingsRoutes"),
 );
 
-const TripsPage = lazy(() => import("@features/trips/pages/TripsPage"));
+const TripsRoutes = lazy(
+  () => import("@features/trips/core/routes/TripsRoutes"),
+);
 
 /** Main application routes component. */
 export function AppRoutes() {
@@ -71,7 +73,7 @@ export function AppRoutes() {
           <Route element={<AppLayout />}>
             <Route path="/explore/*" element={<ExplorePage />} />
             <Route path="/dashboard/*" element={<DashboardPage />} />
-            <Route path="/trips" element={<TripsPage />} />
+            <Route path="/trips/*" element={<TripsRoutes />} />
             <Route path="/settings/*" element={<SettingsRoutes />} />
             <Route path="/users/:username/*" element={<ProfilePage />} />
             <Route path="/activity" element={<ActivityPage />} />

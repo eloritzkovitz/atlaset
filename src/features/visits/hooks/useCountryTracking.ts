@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ACTIONS } from "@constants/actions";
 import { logUserActivity } from "@features/activity";
 import { getCountryName, useCountryData } from "@features/countries";
-import { useTrips } from "@features/trips/context/TripsContext";
+import { useTrips } from "@features/trips/core/context/TripsContext";
 import { useAuth } from "@features/user/auth";
 import { countryTrackingService } from "../services/countryTrackingService";
 import type { CountryTrackingField, Visit } from "../types";

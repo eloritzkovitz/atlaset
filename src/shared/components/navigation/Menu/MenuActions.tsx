@@ -113,9 +113,10 @@ export function MenuActions({
         <>
           <Separator className="my-1" />
           <MenuButton
+            variant="danger"
             onClick={onRemove}
             icon={removeDisabled ? <ICONS.info /> : <ICONS.remove />}
-            className={`w-full !text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={removeDisabled}
           >
             {removeDisabled

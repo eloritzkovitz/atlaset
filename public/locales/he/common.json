@@ -93,6 +93,10 @@
       "toggleRGBA": "החלפה בין RGBA ל-HEX",
       "toggleHEX": "החלפה בין HEX ל-RGBA"
     },
+    "fileDropzone": {
+      "dropFiles": "גרור קבצים לכאן או לחץ כדי לעיין במכשיר שלך",
+      "uploading": "מעלה..."
+    },
     "filter": {
       "all": "הכל",
       "includeOnly": "כלול רק",
@@ -160,6 +164,12 @@
     "empty": "—",
     "date": {
       "tbd": "טרם"
+    },
+    "duration": {
+      "dayUnit": "יום",
+      "daysUnit": "ימים",
+      "days_one": "יום אחד",
+      "days_other": "{{count}} ימים"
     },
     "timeAgo": {
       "justNow": "עכשיו",

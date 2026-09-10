@@ -31,6 +31,7 @@ export { Checkbox } from "./inputs/Checkbox/Checkbox";
 export { ColorSelectInput } from "./inputs/ColorSelectInput/ColorSelectInput";
 export { DateSelect } from "./inputs/DateSelect/DateSelect";
 export { DropdownSelectInput } from "./inputs/DropdownSelectInput/DropdownSelectInput";
+export { FileDropzone } from "./inputs/FileDropzone/FileDropzone";
 export { FloatingActionButton } from "./inputs/Button/FloatingActionButton";
 export { FormField } from "./inputs/FormField/FormField";
 export { HamburgerButton } from "./inputs/Button/HamburgerButton";
@@ -51,7 +52,6 @@ export { SelectInput } from "./inputs/SelectInput/SelectInput";
 export { SortSelect } from "./inputs/SortSelect/SortSelect";
 export { StarRatingInput } from "./inputs/StarRating/StarRatingInput";
 export { Switch } from "./inputs/Switch/Switch";
-export { TabButton } from "./inputs/Button/TabButton";
 export { ViewModeSegmentedControl } from "./inputs/SegmentedToggle/ViewModeSegmentedControl";
 
 // Media components
@@ -60,6 +60,9 @@ export { Branding } from "./media/branding/Branding";
 export { BrandingWithLabel } from "./media/branding/BrandingWithLabel";
 export { DashboardIcon } from "./media/icons/DashboardIcon";
 export { DirectionalIcon } from "./media/icons/DirectionalIcon";
+export { ImageGallery } from "./media/image/ImageGallery";
+export { ImageThumbnail } from "./media/image/ImageThumbnail";
+export { ImageViewer, type ImageViewerImage } from "./media/image/ImageViewer";
 
 // Layout components
 export { Container } from "./layout/Container";
@@ -69,15 +72,19 @@ export { Separator } from "./layout/Separator";
 export { ActionsToolbar } from "./navigation/Toolbar/ActionsToolbar";
 export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs/Breadcrumbs";
 export { DropdownMenu } from "./navigation/Menu/DropdownMenu";
+export { HeaderNavigation } from "./navigation/Header/HeaderNavigation";
 export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
+export type { NavigationItem } from "./navigation/Header/NavigationButton";
 export { SectionLink } from "./navigation/SectionLink";
 export { SidePanelMenu } from "./navigation/Menu/SidePanelMenu";
 export { SubmenuSection } from "./navigation/Menu/SubmenuSection";
 export { PageHeader } from "./navigation/PageHeader";
 export { Pagination } from "./navigation/Pagination/Pagination";
+export { TabControl, type TabControlItem } from "./navigation/Tabs/TabControl";
 export { ToolbarSelectButton } from "./navigation/Toolbar/ToolbarSelectButton";
 export { ToolbarToggleGroup } from "./navigation/Toolbar/ToolbarToggleGroup";
+export { WikipediaButton } from "./navigation/WikipediaButton";
 export * from "./navigation/Menu/menuUtils";
 
 // Overlay components

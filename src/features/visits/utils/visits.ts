@@ -2,12 +2,12 @@
  * Utility functions for processing visit and trip data.
  */
 
-import { FUTURE_TRIP_STATUSES } from "@features/trips/constants/trips";
+import { FUTURE_TRIP_STATUSES } from "@features/trips/core/constants/trips";
 import type { Trip } from "@features/trips/types";
 import {
   getAutoTripStatus,
   isCompletedTrip,
-} from "@features/trips/utils/trips";
+} from "@features/trips/core/utils/trips";
 import { extractUniqueValues, getYear } from "@utils";
 import type { CategorizedVisits, Visit, VisitContext } from "../types";
 

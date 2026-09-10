@@ -51,7 +51,7 @@ let mockTrips = [
   },
 ];
 
-vi.mock("@features/trips/context/TripsContext", () => ({
+vi.mock("@features/trips/core/context/TripsContext", () => ({
   useTrips: () => ({ trips: mockTrips }),
 }));
 

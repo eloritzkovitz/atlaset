@@ -1,14 +1,11 @@
 import { useTranslation } from "react-i18next";
 import {
   FaCalendarDay,
-  FaCalendarDays,
-  FaClock,
   FaClockRotateLeft,
   FaFlag,
   FaHourglassEnd,
   FaHourglassStart,
   FaNoteSticky,
-  FaSuitcaseRolling,
 } from "react-icons/fa6";
 import { Card, Chip, SectionHeader } from "@components";
 import { CountryWithFlag } from "@features/countries";
@@ -17,6 +14,7 @@ import { TripList } from "./TripList";
 import { TripTypeChip } from "./TripTypeChip";
 import { useTripCategoryData } from "../hooks/useTripCategoryData";
 import { useTripsStats } from "../hooks/useTripsStats";
+import { ICONS } from "@constants/icons";
 
 export function TripsOverview() {
   const { t } = useTranslation("dashboard");
@@ -48,7 +46,7 @@ export function TripsOverview() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {/* Total Trips */}
         <Card
-          icon={FaSuitcaseRolling}
+          icon={ICONS.trips}
           iconClass="text-blue-700"
           title={t("statistics.overview.totalTrips", {
             defaultValue: "Total Trips",
@@ -59,7 +57,7 @@ export function TripsOverview() {
 
         {/* Total Days Traveling */}
         <Card
-          icon={FaCalendarDays}
+          icon={ICONS.tripDates}
           iconClass="text-sky-400"
           title={t("statistics.overview.totalDays.title", {
             defaultValue: "Total days traveling",
@@ -68,14 +66,14 @@ export function TripsOverview() {
           <p className="text-2xl font-bold">
             {totalDaysTraveling ? animatedTotalDays : "—"}
             <span className="ms-1 text-sm font-normal text-muted">
-              {t("statistics.overview.days", { defaultValue: "days/trip" })}
+              {t("common:formatting.duration.daysUnit")}
             </span>
           </p>
         </Card>
 
         {/* Average Duration */}
         <Card
-          icon={FaClock}
+          icon={ICONS.tripDuration}
           iconClass="text-amber-500"
           title={t("statistics.overview.average.title", {
             defaultValue: "Average Duration",
@@ -84,7 +82,7 @@ export function TripsOverview() {
           <p className="text-2xl font-bold">
             {averageTripDuration ? formattedAvgDuration : "0.0"}{" "}
             <span className="text-sm font-normal text-muted">
-              {t("statistics.overview.days", { defaultValue: "days/trip" })}
+              {t("common:formatting.duration.daysUnit")}
             </span>
           </p>
         </Card>

@@ -1,4 +1,6 @@
 import { useLocation } from "react-router-dom";
+import { WikipediaButton } from "@components";
+import { useCalendarNavigation } from "@features/calendar";
 import {
   CountryDetailsPanel,
   CountryFlag,
@@ -11,12 +13,12 @@ import { useQueryParam, useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
 import { getCountryNavigation } from "../utils/countryNavigation";
 import { ExploreHeader } from "../../core/components/ExploreHeader";
-import { WikipediaButton } from "../../core/components/WikipediaButton";
 import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 import type {
   CountryNavigationScope,
   ExploreCountryViewControls,
 } from "../../core/types";
+import { useLanguage } from "@features/settings/account/hooks/useLanguage";
 
 interface CountryStatsProps extends ExploreCountryViewControls {
   selectedIsoCode?: string;
@@ -48,10 +50,12 @@ export function CountryStats({
   onBack,
 }: CountryStatsProps) {
   const location = useLocation();
+  const { openTripInCalendar } = useCalendarNavigation();
   const { countries, countryByIsoCode, currencies } = useCountryData();
   const { navigateToCountry } = useExploreNavigation(countries);
   const { visitedCountryCodes, getCountryVisitsCategorized } =
     useCountryTracking();
+  const { current: lang } = useLanguage();
   const { isMobile } = useScreenSize();
 
   const navigationState = location.state as {
@@ -163,7 +167,7 @@ export function CountryStats({
           actions={
             <div className="flex items-center gap-2">
               <VisitedStatusIndicator country={selectedCountry} />
-              <WikipediaButton searchTerm={selectedCountry.name} />
+              <WikipediaButton searchTerm={selectedCountry.name} lang={lang} />
             </div>
           }
         />
@@ -175,6 +179,7 @@ export function CountryStats({
           activeTab={currentTab}
           onTabChange={handleTabChange}
           onSelectCountry={setSelectedIsoCode}
+          onTripClick={openTripInCalendar}
           className="text-lg"
         />
       </div>

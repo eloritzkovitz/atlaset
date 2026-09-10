@@ -4,10 +4,10 @@
 
 import i18next from "i18next";
 import type { i18n as I18nInstance } from "i18next";
+import { EMPTY_STRING_ARRAY } from "@constants/arrays";
 import { getTerritoryCodesByType } from "./countryData";
 import type { Country, CountryTerritories } from "../../types";
 
-const EMPTY_ARRAY: string[] = [];
 const EMPTY_TERRITORIES: CountryTerritories = {} as CountryTerritories;
 const INTEGRAL_TERRITORY_TYPES = new Set([
   "overseas_region",
@@ -81,7 +81,7 @@ export function processLocalizedCountries(
       ...c,
       name: trans.name ?? c.name,
       capital: trans.capital ?? c.capital ?? "",
-      altNames: trans.altNames ?? c.altNames ?? EMPTY_ARRAY,
+      altNames: trans.altNames ?? c.altNames ?? EMPTY_STRING_ARRAY,
       region: (trans.region as string) ?? c.region,
       subregion: (trans.subregion as string) ?? c.subregion,
       territories: (trans.territories ??

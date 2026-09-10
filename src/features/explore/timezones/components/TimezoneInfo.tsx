@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { WikipediaButton } from "@components";
 import { groupCountryIsoCodes } from "@features/countries";
 import type { Country, Timezone } from "@features/countries/types";
+import { useLanguage } from "@features/settings/account/hooks/useLanguage";
 import { getQueryParam, normalizeTzCode } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
-import { WikipediaButton } from "../../core/components/WikipediaButton";
 import { EXPLORE_URLS } from "../../core/constants/exploreMenu";
 import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
@@ -20,6 +21,8 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { code: routeCode } = useParams<{ code?: string }>();
+
+  const { current: lang } = useLanguage();
 
   const code = useMemo(() => {
     const raw = routeCode || getQueryParam("code", "", location.search);
@@ -83,7 +86,7 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
   return (
     <InfoWithCountryGroups
       title={timezone.code}
-      actions={<WikipediaButton searchTerm={`${timezone.code}`} />}
+      actions={<WikipediaButton searchTerm={`${timezone.code}`} lang={lang} />}
       onBack={() => navigateBack(EXPLORE_URLS.timezones)}
       labelArgs={{ code: timezone.code }}
       onSelectCountry={(isoCode, navigationCountryIsoCodes) =>

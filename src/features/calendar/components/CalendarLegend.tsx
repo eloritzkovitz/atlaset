@@ -1,6 +1,6 @@
 import React from "react";
 import { Checkbox, SectionHeader } from "@components";
-import { TRIP_TYPE_COLORS, TRIP_TYPE_LABELS } from "../../trips/constants/trips";
+import { TRIP_TYPE_COLORS, TRIP_TYPE_LABELS } from "@features/trips";
 import { type TripEventTypeKey } from "../types";
 
 interface CalendarLegendProps {

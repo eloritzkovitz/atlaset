@@ -1,24 +1,24 @@
 import { useTranslation } from "react-i18next";
+import { STATUS_COLOR_CLASSES } from "@constants/colors";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@app/contexts/UIContext";
-import { useTrips } from "@features/trips/context/TripsContext";
 import type { CategorizedVisits } from "@features/visits/types";
 import { VisitSection } from "./VisitSection";
 
 interface CountryVisitsContentProps {
   visits: CategorizedVisits;
+  onTripClick?: (tripId: string) => void;
 }
 
-export function CountryVisitsContent({ visits }: CountryVisitsContentProps) {
-  const { trips } = useTrips();
-  const { handleViewInCalendar } = useUI();
+export function CountryVisitsContent({
+  visits,
+  onTripClick,
+}: CountryVisitsContentProps) {
   const { t } = useTranslation("atlas");
 
-  // Handler for clicking on a visit chip
   const handleVisitChipClick = (tripId: string | undefined) => {
-    if (!tripId) return;
-    const trip = trips.find((t) => t.id === tripId);
-    if (trip) handleViewInCalendar(trip);
+    if (tripId) {
+      onTripClick?.(tripId);
+    }
   };
 
   return (
@@ -28,22 +28,24 @@ export function CountryVisitsContent({ visits }: CountryVisitsContentProps) {
         title={t("countries.details.visits.planned")}
         count={visits.tentative.length}
         visits={visits.tentative}
-        status="planned"
+        badgeColorClass={STATUS_COLOR_CLASSES.planned}
       />
+
       <VisitSection
         icon={<ICONS.tripUpcoming />}
         title={t("countries.details.visits.upcoming")}
         count={visits.upcoming.length}
         visits={visits.upcoming}
-        status="upcoming"
+        badgeColorClass={STATUS_COLOR_CLASSES.upcoming}
         onVisitClick={handleVisitChipClick}
       />
+
       <VisitSection
         icon={<ICONS.tripCompleted />}
         title={t("countries.details.visits.completed")}
         count={visits.past.length}
         visits={visits.past}
-        status="completed"
+        badgeColorClass={STATUS_COLOR_CLASSES.completed}
         onVisitClick={handleVisitChipClick}
       />
     </div>

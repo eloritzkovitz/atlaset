@@ -9,7 +9,7 @@ import {
   type TooltipContentProps,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import { TRIP_TYPE_LABELS } from "@features/trips/constants/trips";
+import { TRIP_TYPE_LABELS } from "@features/trips";
 
 function CustomTooltip(
   props: TooltipContentProps<number, string>,

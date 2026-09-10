@@ -12,14 +12,19 @@ import { filterBySearch } from "@utils";
 
 interface ModalSelectProps<T> {
   isOpen: boolean;
+  onClose: () => void;
+  disabled?: boolean;
   title: React.ReactNode;
   items: T[];
+  placeholder?: string;
+  emptyMessage?: string;
   selectedValues: string[];
+  multiple?: boolean;
   onChange: (newSelectedValues: string[]) => void;
-  onClose: () => void;
   getItemValue: (item: T) => string;
   getItemSearchLabel: (item: T) => string;
   renderItem: (item: T) => React.ReactNode;
+  isItemDisabled?: (item: T) => boolean;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   filterItem?: (items: T[], searchQuery: string) => T[];
@@ -27,30 +32,28 @@ interface ModalSelectProps<T> {
     value: string;
     onChange: (val: string) => void;
   }) => React.ReactNode;
-  emptyMessage?: string;
-  multiple?: boolean;
-  disabled?: boolean;
-  isItemDisabled?: (item: T) => boolean;
 }
 
+/** Renders a modal select component. */
 export function ModalSelect<T>({
   isOpen,
+  onClose,
+  disabled = false,
   title,
   items,
+  placeholder,
+  emptyMessage,
   selectedValues,
+  multiple = true,
   onChange,
-  onClose,
   getItemValue,
   getItemSearchLabel,
   renderItem,
+  isItemDisabled,
   searchValue,
   onSearchChange,
   filterItem,
   renderSearch,
-  emptyMessage,
-  multiple = true,
-  disabled = false,
-  isItemDisabled,
 }: ModalSelectProps<T>) {
   const { t } = useTranslation("common");
   const [internalSearch, setInternalSearch] = useState("");
@@ -102,6 +105,7 @@ export function ModalSelect<T>({
           <SearchInput
             value={currentSearchValue}
             onChange={handleSearchChange}
+            placeholder={placeholder || t("components.search.placeholder")}
           />
         )}
 

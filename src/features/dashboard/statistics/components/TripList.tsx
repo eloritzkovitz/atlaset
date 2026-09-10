@@ -2,8 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Chip, EmptyListMessage } from "@components";
 import { useUI } from "@app/contexts/UIContext";
 import { CountryFlag, useCountryData } from "@features/countries";
-import type { Trip } from "@features/trips/types";
-import { getTripDays } from "@features/trips/utils/trips";
+import { getTripDays, type Trip } from "@features/trips";
 import { formatDate } from "@utils";
 
 interface TripListProps {
@@ -70,8 +69,9 @@ export function TripList({
               <span className="font-semibold text-base">{trip.name}</span>
               {showDuration && trip.startDate && trip.endDate && (
                 <span className="text-muted text-sm">
-                  | {getTripDays(trip)}{" "}
-                  {t("statistics.overview.days", { defaultValue: "days" })}
+                  {t("common:formatting.duration.days", {
+                    count: getTripDays(trip),
+                  })}
                 </span>
               )}
               <span className="flex-1" />

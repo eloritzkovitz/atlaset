@@ -9,7 +9,7 @@ import {
   type Country,
 } from "@features/countries";
 import { useAccessibility } from "@features/settings/accessibility";
-import { useTrips } from "@features/trips/context/TripsContext";
+import { useTrips } from "@features/trips/core/context/TripsContext";
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";

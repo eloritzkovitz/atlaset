@@ -9,7 +9,7 @@ interface MenuButtonProps extends Omit<
   InteractiveBaseProps,
   "children" | "onClick"
 > {
-  variant?: "default" | "sidebar";
+  variant?: "default" | "danger" | "sidebar";
   icon?: React.ReactNode;
   children: React.ReactNode;
   active?: boolean;
@@ -39,12 +39,14 @@ export function MenuButton({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const baseClass =
-    `rounded-lg text-left !text-text font-semibold px-2 py-2 flex items-center gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring-focus ` +
+    `rounded-lg text-left font-semibold px-2 py-2 flex items-center gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring-focus ` +
     (active
-      ? "bg-primary dark:bg-primary/70 !text-white font-semibold "
-      : variant === "sidebar"
-        ? "hover:bg-sidebar-btn-hover "
-        : "hover:bg-surface-hover ") +
+      ? "bg-primary dark:bg-primary/70 !text-white "
+      : variant === "danger"
+        ? "text-danger hover:bg-danger/10 "
+        : variant === "sidebar"
+          ? "text-text hover:bg-sidebar-btn-hover "
+          : "text-text hover:bg-surface-hover ") +
     className;
 
   return (

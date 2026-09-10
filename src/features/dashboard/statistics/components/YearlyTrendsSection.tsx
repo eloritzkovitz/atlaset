@@ -11,7 +11,7 @@ import {
   TRIP_TYPE_COLORS,
   TRIP_TYPE_LABELS,
   TRIP_TYPE_COLOR_CLASSES,
-} from "@features/trips/constants/trips";
+} from "@features/trips";
 import { YEAR_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByYearStats } from "../hooks/useTripsByYearStats";
 

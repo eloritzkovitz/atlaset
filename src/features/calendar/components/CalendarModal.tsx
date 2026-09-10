@@ -1,10 +1,11 @@
 import { lazy, Suspense, useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LoadingSpinner, Modal, ModalHeader, OverlayPortal } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
-import { useTrips } from "@features/trips/context/TripsContext";
-import { useTripFilters } from "@features/trips/hooks/useTripFilters";
-import { useKeyHandler } from "@hooks";
+import { useTrips } from "@features/trips/core/context/TripsContext";
+import { useTripFilters } from "@features/trips";
+import { useArrowNavigation } from "@hooks";
 import { AppCalendar } from "./AppCalendar";
 import { type CalendarView, type TripEventTypeKey } from "../types";
 import { getNextCalendarDate } from "../utils/navigation";
@@ -15,6 +16,8 @@ const CalendarSidePanel = lazy(() =>
 
 /** Renders the calendar modal. */
 export default function CalendarModal() {
+  const navigate = useNavigate();
+
   const { trips } = useTrips();
   const { filters, setFilters, filteredTrips } = useTripFilters(trips);
   const { calendarDate, closeCalendar } = useUI();
@@ -27,18 +30,20 @@ export default function CalendarModal() {
     setFilters((prev) => ({ ...prev, [type]: !prev[type] }));
   };
 
-  // Handler for arrow keys
-  const handleArrow = useCallback(
-    (event: KeyboardEvent) => {
-      setDate((prev) =>
-        getNextCalendarDate(prev, view, event.key === "ArrowRight" ? 1 : -1),
-      );
-    },
-    [view],
-  );
+  const handlePrevious = useCallback(() => {
+    setDate((previousDate) => getNextCalendarDate(previousDate, view, -1));
+  }, [view]);
 
-  useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], {
-    enabled: true,
+  const handleNext = useCallback(() => {
+    setDate((previousDate) => getNextCalendarDate(previousDate, view, 1));
+  }, [view]);
+
+  useArrowNavigation({
+    isRTL: false,
+    canPrevious: true,
+    canNext: true,
+    onPrevious: handlePrevious,
+    onNext: handleNext,
   });
 
   return (
@@ -71,6 +76,10 @@ export default function CalendarModal() {
           <div className="flex flex-col flex-1 min-w-0">
             <AppCalendar
               trips={filteredTrips}
+              onSelectTrip={(trip) => {
+                closeCalendar();
+                navigate(`/trips/${trip.id}`);
+              }}
               view={view}
               date={date}
               onViewChange={setView}

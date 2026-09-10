@@ -2,8 +2,6 @@ import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Chip, CollapsibleHeader, DirectionalIcon } from "@components";
 import type { Visit } from "@features/visits/types";
-import { TRIP_STATUS_COLOR_CLASSES } from "@features/trips/constants/trips";
-import type { TripStatus } from "@features/trips/types";
 
 const DEFAULT_BADGE_COLOR = "bg-muted/20 text-foreground";
 
@@ -12,7 +10,7 @@ interface VisitSectionProps {
   title: ReactNode;
   count?: number;
   visits: Visit[];
-  status?: TripStatus;
+  badgeColorClass?: string;
   onVisitClick?: (tripId: string) => void;
 }
 
@@ -21,17 +19,13 @@ export function VisitSection({
   title,
   count,
   visits,
-  status,
+  badgeColorClass = DEFAULT_BADGE_COLOR,
   onVisitClick,
 }: VisitSectionProps) {
   const { t } = useTranslation("countries");
   const [expanded, setExpanded] = useState(visits.length > 0);
 
   const sortedVisits = [...visits].reverse();
-
-  const badgeColorClass = status
-    ? (TRIP_STATUS_COLOR_CLASSES[status] ?? DEFAULT_BADGE_COLOR)
-    : DEFAULT_BADGE_COLOR;
 
   return (
     <div className="px-4">
