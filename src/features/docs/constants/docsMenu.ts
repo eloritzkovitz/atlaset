@@ -170,6 +170,18 @@ export const DOCS_GROUPS = {
         url: "/docs/trips/trips",
       },
       {
+        label: "Destinations",
+        file: "trips/destinations.md",
+        icon: ICONS.tripLocal,
+        url: "/docs/trips/destinations",
+      },
+      {
+        label: "Gallery",
+        file: "trips/gallery.md",
+        icon: ICONS.photoAlbum,
+        url: "/docs/trips/gallery",
+      },
+      {
         label: "Your Visits",
         file: "trips/visits.md",
         icon: ICONS.visits,
@@ -182,7 +194,7 @@ export const DOCS_GROUPS = {
         url: "/docs/trips/calendar",
       },
     ],
-  },  
+  },
   quizzes: {
     header: {
       label: "Quizzes",
@@ -296,7 +308,7 @@ export const DOCS = [
   ...DOCS_GROUPS.getStarted.items,
   ...DOCS_GROUPS.atlas.items,
   ...DOCS_GROUPS.explore.items,
-  ...DOCS_GROUPS.trips.items,  
+  ...DOCS_GROUPS.trips.items,
   ...DOCS_GROUPS.quizzes.items,
   ...DOCS_GROUPS.dashboard.items,
   ...DOCS_GROUPS.account.items,

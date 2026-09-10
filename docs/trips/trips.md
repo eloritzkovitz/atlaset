@@ -84,6 +84,18 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 - Use the `Trips` panel to create, edit, or delete `trips`.
 - Fill in the `trip name`, select `countries` (by `ISO code`), set `dates`, choose a `category` and add `notes` if desired.
 
+## **Viewing trip details**
+
+Open a trip from the `Trips` panel to view its details page. The page brings together the main information and content for the trip:
+
+- The trip header shows the trip's `name`, `dates`, `status`, `rating` and `favorite` state when available.
+- You can also navigate between trips in chronological order, or return to the table.
+- `Destinations` shows selected locations grouped by country and region alongside an interactive map.
+- `Gallery` shows uploaded trip photos and provides access to an external photo album when one is linked.
+- `Details` shows participants, categories and tags.
+- `Notes` shows the trip's additional notes.
+- Use the edit action in the trip header to update the trip.
+
 ## **Importing/exporting trips**
 
 - `Trips` can be easily imported from and exported to `JSON` or `CSV` files.
@@ -96,6 +108,8 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 
 ## **Learn More:**
 
+[Trip destinations](/docs/trips/destinations.md)  
+[Trip gallery](/docs/trips/gallery.md)  
 [Calendar](/docs/trips/calendar.md)  
 [Statistics](/docs/dashboard/statistics.md)  
 [Timeline](/docs/atlas/timeline.md)

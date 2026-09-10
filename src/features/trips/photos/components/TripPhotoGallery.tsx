@@ -41,7 +41,10 @@ export function TripPhotoGallery({
     <Card
       title={t("gallery.title", "Gallery")}
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <span className="text-sm text-muted">
+            {photos.length}/{MAX_TRIP_PHOTOS}
+          </span>
           <ActionButton
             url={photoAlbumUrl}
             icon={<ICONS.photoAlbum aria-hidden="true" />}
@@ -55,9 +58,6 @@ export function TripPhotoGallery({
             rounded
             className={!photoAlbumUrl ? "text-muted" : ""}
           />
-          <span className="text-sm text-muted">
-            {photos.length}/{MAX_TRIP_PHOTOS}
-          </span>
         </div>
       }
     >
