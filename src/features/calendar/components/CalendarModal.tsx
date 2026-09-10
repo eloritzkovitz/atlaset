@@ -5,7 +5,7 @@ import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
 import { useTrips } from "@features/trips/core/context/TripsContext";
 import { useTripFilters } from "@features/trips";
-import { useKeyHandler } from "@hooks";
+import { useArrowNavigation } from "@hooks";
 import { AppCalendar } from "./AppCalendar";
 import { type CalendarView, type TripEventTypeKey } from "../types";
 import { getNextCalendarDate } from "../utils/navigation";
@@ -30,18 +30,20 @@ export default function CalendarModal() {
     setFilters((prev) => ({ ...prev, [type]: !prev[type] }));
   };
 
-  // Handler for arrow keys
-  const handleArrow = useCallback(
-    (event: KeyboardEvent) => {
-      setDate((prev) =>
-        getNextCalendarDate(prev, view, event.key === "ArrowRight" ? 1 : -1),
-      );
-    },
-    [view],
-  );
+  const handlePrevious = useCallback(() => {
+    setDate((previousDate) => getNextCalendarDate(previousDate, view, -1));
+  }, [view]);
 
-  useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], {
-    enabled: true,
+  const handleNext = useCallback(() => {
+    setDate((previousDate) => getNextCalendarDate(previousDate, view, 1));
+  }, [view]);
+
+  useArrowNavigation({
+    isRTL: false,
+    canPrevious: true,
+    canNext: true,
+    onPrevious: handlePrevious,
+    onNext: handleNext,
   });
 
   return (

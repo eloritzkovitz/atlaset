@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { useKeyHandler, useSwipeNavigation } from "@hooks";
+import { useArrowNavigation, useSwipeNavigation, useKeyHandler } from "@hooks";
 import { DirectionalIcon } from "../icons/DirectionalIcon";
 import { ActionButton } from "../../inputs/Button/ActionButton";
 import { Modal } from "../../overlay/Modal/Modal";
@@ -47,23 +47,16 @@ export function ImageViewer({
     isRTL,
   );
 
-  useKeyHandler(
-    (event) => {
-      if (event.key === "ArrowLeft") {
-        isRTL ? handleNext() : handlePrev();
-      }
+  useArrowNavigation({
+    enabled: isOpen,
+    isRTL,
+    canPrevious: currentIndex !== null && currentIndex > 0,
+    canNext: currentIndex !== null && currentIndex < images.length - 1,
+    onPrevious: handlePrev,
+    onNext: handleNext,
+  });
 
-      if (event.key === "ArrowRight") {
-        isRTL ? handlePrev() : handleNext();
-      }
-
-      if (event.key === "Escape") {
-        onClose();
-      }
-    },
-    ["ArrowLeft", "ArrowRight", "Escape"],
-    { enabled: isOpen },
-  );
+  useKeyHandler(onClose, ["Escape"], { enabled: isOpen });
 
   if (!isOpen || currentIndex === null) {
     return null;

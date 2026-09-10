@@ -18,15 +18,10 @@ beforeEach(() => {
     toBlob,
   });
 
-  vi.stubGlobal(
-    "Image",
-    class extends MockImage {
-      constructor() {
-        super();
-        image = this;
-      }
-    },
-  );
+  vi.stubGlobal("Image", function ImageConstructor() {
+    image = new MockImage();
+    return image;
+  });
 
   vi.stubGlobal("URL", {
     createObjectURL: () => "blob:test",

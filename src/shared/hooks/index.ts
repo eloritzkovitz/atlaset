@@ -27,6 +27,7 @@ export * from "./dom/usePageTitle";
 export * from "./dom/useScrollVisibility";
 
 // Input
+export * from "./input/useArrowNavigation";
 export * from "./input/useKeyHandler";
 export * from "./input/useSwipeNavigation";
 
