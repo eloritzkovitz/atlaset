@@ -8,6 +8,7 @@ import {
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCalendarNavigation } from "@features/calendar/hooks/useCalendarNavigation";
+import { formatDate } from "@utils";
 import { TripIndicators } from "../../core/components/TripIndicators";
 import { TripStatusChip } from "../../core/components/TripStatusChip";
 import type { Trip } from "../../core/types";
@@ -31,15 +32,13 @@ export function TripHeader({
   const { openTripInCalendar } = useCalendarNavigation();
   const { t } = useTranslation("trips");
 
-  const startDate = trip.startDate ? new Date(trip.startDate) : null;
-  const endDate = trip.endDate ? new Date(trip.endDate) : null;
+  const hasDates = trip.startDate && trip.endDate;
 
-  const dateRange =
-    startDate && endDate
-      ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
-      : startDate
-        ? startDate.toLocaleDateString()
-        : t("common:formatting.date.tbd");
+  const dateRange = trip.startDate
+    ? hasDates
+      ? `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`
+      : formatDate(trip.startDate)
+    : t("common:formatting.date.tbd");
 
   return (
     <>
@@ -87,7 +86,7 @@ export function TripHeader({
             <ICONS.tripDuration className="h-5 w-5" />
 
             <p className="font-medium">
-              {startDate && endDate
+              {hasDates
                 ? t("common:formatting.duration.days", {
                     count: trip.fullDays,
                   })

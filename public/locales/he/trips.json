@@ -16,7 +16,8 @@
     "categories": "קטגוריות",
     "status": "סטטוס",
     "tags": "תגיות",
-    "notes": "הערות"
+    "notes": "הערות",
+    "photoAlbumUrl": "קישור לאלבום תמונות"
   },
 
   "indicators": {
@@ -27,7 +28,8 @@
   "sections": {
     "overview": "סקירה",
     "details": "פרטים",
-    "destinations": "יעדים"
+    "destinations": "יעדים",
+    "photos": "תמונות"
   },
 
   "table": {
@@ -95,6 +97,7 @@
     "sharedDisabledTitle": "לא ניתן לערוך טיולים משותפים",
     "moreActions": "עוד פעולות",
     "viewTrip": "הצג טיול",
+    "viewPhotoAlbum": "הצג אלבום תמונות",
     "viewInCalendar": "הצג בלוח שנה",
     "editTrip": "ערוך טיול",
     "duplicate": "שכפול",
@@ -144,6 +147,15 @@
       }
     },
 
+    "photos": {
+      "photoAlt": "תמונה מטיול {{index}}",
+      "fileHint": "העלה/י תמונות כדי להציג את הטיול שלך. ניתן להעלות עד {{max}} תמונות בפורמט JPEG, PNG או WEBP.",
+      "limitReached": "הגעת למספר המירבי של תמונות ({{max}}).",
+      "invalidFileType": "פורמט תמונה לא נתמך. רק JPEG, PNG ו- WEBP מותרים.",
+      "uploadError": "לא ניתן היה להעלות חלק מהתמונות. אנא נסה/י שוב.",
+      "deleteError": "לא ניתן היה למחוק תמונה. אנא נסה/י שוב."
+    },
+
     "actions": {
       "saveChanges": "שמור שינויים",
       "addTrip": "הוסף טיול",
@@ -151,6 +163,12 @@
       "add": "הוסף",
       "remove": "הסר"
     }
+  },
+
+  "gallery": {
+    "title": "גלריה",
+    "openAlbum": "פתח/י את אלבום התמונות",
+    "noAlbum": "לא מקושר אלבום תמונות"
   },
 
   "categories": {

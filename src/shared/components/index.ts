@@ -31,6 +31,7 @@ export { Checkbox } from "./inputs/Checkbox/Checkbox";
 export { ColorSelectInput } from "./inputs/ColorSelectInput/ColorSelectInput";
 export { DateSelect } from "./inputs/DateSelect/DateSelect";
 export { DropdownSelectInput } from "./inputs/DropdownSelectInput/DropdownSelectInput";
+export { FileDropzone } from "./inputs/FileDropzone/FileDropzone";
 export { FloatingActionButton } from "./inputs/Button/FloatingActionButton";
 export { FormField } from "./inputs/FormField/FormField";
 export { HamburgerButton } from "./inputs/Button/HamburgerButton";
@@ -59,6 +60,9 @@ export { Branding } from "./media/branding/Branding";
 export { BrandingWithLabel } from "./media/branding/BrandingWithLabel";
 export { DashboardIcon } from "./media/icons/DashboardIcon";
 export { DirectionalIcon } from "./media/icons/DirectionalIcon";
+export { ImageGallery } from "./media/image/ImageGallery";
+export { ImageThumbnail } from "./media/image/ImageThumbnail";
+export { ImageViewer, type ImageViewerImage } from "./media/image/ImageViewer";
 
 // Layout components
 export { Container } from "./layout/Container";

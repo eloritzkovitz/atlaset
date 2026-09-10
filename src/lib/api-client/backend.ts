@@ -2,6 +2,8 @@
  * Utility functions for interacting with the backend API.
  */
 
+import { getIdToken } from "firebase/auth";
+import { auth } from "@lib/firebase";
 import { resolveBackendUrl } from "./env";
 
 /**
@@ -18,6 +20,34 @@ export function getBackendUrl(): string {
   }
 
   return backendUrl;
+}
+
+/**
+ * Sends an authenticated request to the backend API.
+ */
+export async function backendFetch(
+  path: string,
+  options: RequestInit = {},
+): Promise<Response> {
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error("Authentication required");
+  }
+
+  const idToken = await getIdToken(user);
+
+  const headers = new Headers(options.headers);
+  headers.set("Authorization", `Bearer ${idToken}`);
+
+  if (options.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  return fetch(`${getBackendUrl()}/api${path}`, {
+    ...options,
+    headers,
+  });
 }
 
 /**

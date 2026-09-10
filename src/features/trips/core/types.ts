@@ -3,6 +3,7 @@ import {
   ALL_TRIP_STATUSES,
   ALL_TRIP_TAGS,
 } from "./constants/trips";
+import type { TripPhoto } from "../photos/types";
 
 /** Represents a trip. */
 export type Trip = {
@@ -36,6 +37,10 @@ export type Trip = {
   notes?: string;
   /** Tags associated with the trip. */
   tags?: TripTag[];
+  /** Photos associated with the trip. */
+  photos?: TripPhoto[];
+  /** URL of an external photo album for the trip. */
+  photoAlbumUrl?: string;
 };
 
 /** Represents a shared trip reference. */

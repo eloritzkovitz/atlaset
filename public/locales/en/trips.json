@@ -16,7 +16,8 @@
     "categories": "Categories",
     "status": "Status",
     "tags": "Tags",
-    "notes": "Notes"
+    "notes": "Notes",
+    "photoAlbumUrl": "Photo Album URL"
   },
 
   "indicators": {
@@ -27,7 +28,8 @@
   "sections": {
     "overview": "Overview",
     "details": "Details",
-    "destinations": "Destinations"
+    "destinations": "Destinations",
+    "photos": "Photos"
   },
 
   "table": {
@@ -95,6 +97,7 @@
     "sharedDisabledTitle": "Shared trips cannot be edited",
     "moreActions": "More actions",
     "viewTrip": "View Trip",
+    "viewPhotoAlbum": "View Photo Album",
     "viewInCalendar": "View in Calendar",
     "editTrip": "Edit Trip",
     "duplicate": "Duplicate",
@@ -144,6 +147,15 @@
       }
     },
 
+    "photos": {
+      "photoAlt": "Trip photo {{index}}",
+      "fileHint": "Upload photos to showcase your trip. You can upload up to {{max}} photos in JPEG, PNG or WEBP format.",
+      "limitReached": "You have reached the maximum number of photos ({{max}}).",
+      "invalidFileType": "Invalid file type. Only JPEG, PNG and WEBP are allowed.",
+      "uploadError": "Some photos could not be uploaded. Please try again.",
+      "deleteError": "Failed to delete photo. Please try again."
+    },
+
     "actions": {
       "saveChanges": "Save Changes",
       "addTrip": "Add Trip",
@@ -151,6 +163,12 @@
       "edit": "Edit",
       "remove": "Remove"
     }
+  },
+
+  "gallery": {
+    "title": "Gallery",
+    "openAlbum": "Open photo album",
+    "noAlbum": "No photo album linked"
   },
 
   "categories": {

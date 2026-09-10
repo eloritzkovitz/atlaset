@@ -27,8 +27,9 @@ import { useTripFilters } from "../../core/hooks/useTripFilters";
 import type { Trip, TripCategory, TripTag } from "../../core/types";
 import { getAutoTripStatus } from "../../core/utils/trips";
 import "./TripModal.css";
+import { TripPhotosTab } from "./tabs/photos/TripPhotosTab";
 
-type TripTab = "overview" | "details" | "destinations";
+type TripTab = "overview" | "details" | "destinations" | "photos";
 
 interface TripModalProps {
   isOpen: boolean;
@@ -124,6 +125,10 @@ export function TripModal({
       value: "destinations",
       label: t("sections.destinations"),
     },
+    {
+      value: "photos",
+      label: t("sections.photos"),
+    },
   ];
 
   const isValid =
@@ -199,6 +204,10 @@ export function TripModal({
                   onEditLocations={destinationModal.open}
                   onChange={onChange}
                 />
+              )}
+
+              {activeTab === "photos" && (
+                <TripPhotosTab trip={trip} onChange={onChange} />
               )}
             </div>
           </div>

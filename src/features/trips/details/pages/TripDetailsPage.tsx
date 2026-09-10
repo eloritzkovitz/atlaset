@@ -11,6 +11,7 @@ import { EMPTY_NUMBER_ARRAY } from "@constants/arrays";
 import { usePageTitle } from "@hooks";
 import { TripDestinationsCard } from "../components/TripDestinationsCard";
 import { TripHeader } from "../components/TripHeader";
+import { TripPhotoGallery } from "../../photos/components/TripPhotoGallery";
 import { CategoriesList } from "../../core/components/CategoriesList";
 import { ParticipantsList } from "../../core/components/ParticipantsList";
 import { TagsList } from "../../core/components/TagsList";
@@ -97,6 +98,14 @@ export default function TripDetailsPage() {
           <TripDestinationsCard
             locations={locations}
             loading={locationsLoading}
+          />
+
+          {/* Photos */}
+          <TripPhotoGallery
+            tripId={trip.id}
+            photos={trip.photos ?? []}
+            photoAlbumUrl={trip.photoAlbumUrl}
+            readOnly
           />
 
           {/* Details */}

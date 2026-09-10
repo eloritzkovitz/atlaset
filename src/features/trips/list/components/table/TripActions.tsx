@@ -185,6 +185,19 @@ export const TripActions = forwardRef(function TripActions(
           {t("actions.viewTrip")}
         </MenuButton>
 
+        {trip.photoAlbumUrl && (
+          <MenuButton
+            onClick={() => {
+              window.open(trip.photoAlbumUrl, "_blank", "noopener,noreferrer");
+              handleCloseAll();
+            }}
+            icon={<ICONS.photoAlbum />}
+            className="w-full"
+          >
+            {t("actions.viewPhotoAlbum")}
+          </MenuButton>
+        )}
+
         {hasValidStartDate(trip) && (
           <MenuButton
             onClick={() => {

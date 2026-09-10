@@ -17,7 +17,9 @@ export * from "./files/canvas";
 export * from "./files/csv";
 export * from "./files/download";
 export * from "./files/json";
+export * from "./files/image";
 export * from "./files/svg";
+export * from "./files/upload";
 
 export * from "./primitives/array";
 export * from "./primitives/number";
