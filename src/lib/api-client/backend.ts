@@ -3,8 +3,8 @@
  */
 
 import { getIdToken } from "firebase/auth";
-import { auth } from "@lib/firebase";
 import { resolveBackendUrl } from "./env";
+import { auth } from "../firebase/config";
 
 /**
  * Resolves the configured backend URL.
