@@ -1,10 +1,23 @@
 import { useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import type { Map as LeafletMap } from "leaflet";
+import { Icon, type Map as LeafletMap } from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import type { Location } from "@lib/locations";
 import { MapBoundsController } from "./MapBoundsController";
 import { MapLocationController } from "./MapLocationController";
 import "leaflet/dist/leaflet.css";
+
+const locationMarkerIcon = new Icon({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 interface TripLocationsMapProps {
   locations: Location[];
@@ -51,6 +64,7 @@ export function TripLocationsMap({
       {locations.map((location) => (
         <Marker
           key={location.id}
+          icon={locationMarkerIcon}
           position={[location.latitude, location.longitude]}
           eventHandlers={{
             click: () => {
