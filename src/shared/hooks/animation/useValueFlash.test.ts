@@ -14,9 +14,12 @@ describe("useValueFlash", () => {
   });
 
   it("should flash successClass when value increases and clear it after 500ms", () => {
-    const { result, rerender } = renderHook(({ val }) => useValueFlash(val), {
-      initialProps: { val: 10 },
-    });
+    const { result, rerender } = renderHook(
+      ({ val }) => useValueFlash(true, val),
+      {
+        initialProps: { val: 10 },
+      },
+    );
 
     expect(result.current).toBe("");
 
@@ -30,9 +33,12 @@ describe("useValueFlash", () => {
   });
 
   it("should flash dangerClass when value decreases and clear it after 500ms", () => {
-    const { result, rerender } = renderHook(({ val }) => useValueFlash(val), {
-      initialProps: { val: 10 },
-    });
+    const { result, rerender } = renderHook(
+      ({ val }) => useValueFlash(true, val),
+      {
+        initialProps: { val: 10 },
+      },
+    );
 
     rerender({ val: 9 });
     expect(result.current).toBe("text-danger");
@@ -46,9 +52,12 @@ describe("useValueFlash", () => {
   it("should NOT flash any class if animations are disabled via accessibility settings", () => {
     mockAnimationsEnabled(false);
 
-    const { result, rerender } = renderHook(({ val }) => useValueFlash(val), {
-      initialProps: { val: 10 },
-    });
+    const { result, rerender } = renderHook(
+      ({ val }) => useValueFlash(false, val),
+      {
+        initialProps: { val: 10 },
+      },
+    );
 
     rerender({ val: 15 });
     expect(result.current).toBe("");

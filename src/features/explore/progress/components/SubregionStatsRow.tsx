@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useCountryData } from "@features/countries";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useAnimatedNumber } from "@hooks";
 import { formatFraction } from "@utils";
 import { RegionButton } from "./RegionButton";
 import type { SubregionStat } from "../types";
-import { translateSubregionLabel } from "@features/explore/core/utils/regionTranslation";
+import { translateSubregionLabel } from "../../core/utils/regionTranslation";
 
 interface SubregionStatsRowProps {
   subregion: SubregionStat;
@@ -16,7 +17,13 @@ export function SubregionStatsRow({
   subregion,
   onClick,
 }: SubregionStatsRowProps) {
-  const animatedVisited = useAnimatedNumber(subregion.subregionVisited, 640);
+  const { animationsEnabled } = useAccessibility();
+
+  const animatedVisited = useAnimatedNumber(
+    animationsEnabled,
+    subregion.subregionVisited,
+    640,
+  );
   const { t } = useTranslation("countries");
   const { subregionToRegion } = useCountryData();
   const label = translateSubregionLabel(

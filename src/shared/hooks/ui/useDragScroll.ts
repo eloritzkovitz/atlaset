@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { useEventListener } from "@hooks";
+import { useEventListener } from "../dom/useEventListener";
 
 /**
  * Enables horizontal drag-to-scroll for a scrollable container.

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { useAccessibility } from "@features/settings/accessibility";
 
 /**
  * Animates a number from 0 to target over the specified duration.
+ * @param animationsEnabled - Whether animations are enabled based on user accessibility settings.
  * @param target - The target number to animate to.
  * @param duration - Duration of the animation in milliseconds.
  * @returns The animated number value.
  */
-export function useAnimatedNumber(target: number, duration = 640) {
-  const { animationsEnabled } = useAccessibility();
-
+export function useAnimatedNumber(
+  animationsEnabled: boolean,
+  target: number,
+  duration = 640,
+) {
   const [value, setValue] = useState(0);
 
   // Reset and animate whenever target changes

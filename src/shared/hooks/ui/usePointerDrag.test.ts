@@ -1,156 +1,192 @@
-Object.defineProperty(window, "innerWidth", { value: 1000, writable: true });
-Object.defineProperty(window, "innerHeight", { value: 800, writable: true });
-
-import { renderHook, act, waitFor } from "@testing-library/react";
+import type { RefObject } from "react";
+import { act, renderHook } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { usePointerDrag } from "./usePointerDrag";
 
-const makeEl = () => {
+type HookResult = ReturnType<typeof usePointerDrag>;
+
+Object.defineProperties(window, {
+  innerWidth: { value: 1000, writable: true },
+  innerHeight: { value: 800, writable: true },
+});
+
+const createRef = (): RefObject<Element | null> => {
   const el = document.createElement("div");
-  Object.defineProperty(el, "offsetWidth", { value: 200, configurable: true });
-  Object.defineProperty(el, "offsetHeight", { value: 100, configurable: true });
-  el.getBoundingClientRect = () =>
-    ({
-      x: 0,
-      y: 0,
-      width: 200,
-      height: 100,
-      top: 0,
-      left: 0,
-      bottom: 100,
-      right: 200,
-    }) as DOMRect;
-  return el as unknown as HTMLElement;
+
+  Object.defineProperties(el, {
+    offsetWidth: { value: 200 },
+    offsetHeight: { value: 100 },
+  });
+
+  return { current: el };
 };
-const mount = (dr = true, open = false) => {
-  const el = makeEl();
-  const { result, rerender, unmount } = renderHook(
-    ({ dr, open }) => usePointerDrag(dr, open),
-    { initialProps: { dr, open } },
-  );
-  act(() => result.current.setModalDomRef(el));
-  return { result, rerender, unmount, el };
+
+const mount = (open = false) => {
+  const hook = renderHook(({ open }) => usePointerDrag(true, open), {
+    initialProps: { open },
+  });
+
+  act(() => hook.result.current.setModalDomRef(createRef().current));
+
+  return hook;
 };
-const down = (r: any, x = 500, y = 400, b = 0) =>
+
+const down = (
+  result: { current: HookResult },
+  options: Partial<PointerEventInit> = {},
+) =>
   act(() =>
-    r.current.handlePointerDown({
-      pointerType: "mouse",
-      button: b,
-      clientX: x,
-      clientY: y,
+    result.current.handlePointerDown(
+      new PointerEvent("pointerdown", {
+        pointerType: "mouse",
+        button: 0,
+        clientX: 500,
+        clientY: 400,
+        ...options,
+      }) as unknown as React.PointerEvent<Element>,
+    ),
+  );
+
+const move = () =>
+  window.dispatchEvent(
+    new PointerEvent("pointermove", {
+      clientX: 600,
+      clientY: 500,
     }),
   );
 
+afterEach(() => {
+  vi.restoreAllMocks();
+  document.body.style.userSelect = "";
+});
+
 describe("usePointerDrag", () => {
-  it("centers on open", () => {
+  it("handles styles and centering", () => {
+    const disabled = renderHook(() => usePointerDrag(false, false));
+    expect(disabled.result.current.modalStyle).toEqual({});
+
     const { result, rerender } = mount();
-    rerender({ dr: true, open: true });
+    expect(result.current.modalStyle.position).toBe("fixed");
+
+    rerender({ open: true });
+
     expect(result.current.modalOffset).toEqual({ x: 400, y: 350 });
   });
 
-  it("centers using getBoundingClientRect for non-HTMLElements", () => {
-    const { result, rerender } = mount();
+  it("centers non-HTML elements", () => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.getBoundingClientRect = () =>
-      ({
-        width: 300,
-        height: 150,
-        x: 0,
-        y: 0,
-        top: 0,
-        left: 0,
-        bottom: 150,
-        right: 300,
-      }) as DOMRect;
-    act(() => result.current.setModalDomRef(svg as unknown as Element));
-    rerender({ dr: true, open: true });
-    expect(result.current.modalOffset).toEqual({ x: 350, y: 325 });
+
+    vi.spyOn(svg, "getBoundingClientRect").mockReturnValue({
+      width: 300,
+      height: 150,
+    } as DOMRect);
+
+    const hook = renderHook(({ open }) => usePointerDrag(true, open), {
+      initialProps: { open: false },
+    });
+
+    act(() => hook.result.current.setModalDomRef(svg));
+    hook.rerender({ open: true });
+
+    expect(hook.result.current.modalOffset).toEqual({
+      x: 350,
+      y: 325,
+    });
   });
 
-  it("no drag if disabled", () => {
-    const { result } = renderHook(() => usePointerDrag(false, true));
-    down(result, 100, 100);
-    expect(result.current.dragging).toBe(false);
-  });
+  it("handles pointer down guards", () => {
+    const disabled = renderHook(() => usePointerDrag(false, true));
+    down(disabled.result);
+    expect(disabled.result.current.dragging).toBe(false);
 
-  it("starts dragging", async () => {
     const { result, rerender } = mount();
-    rerender({ dr: true, open: true });
+    rerender({ open: true });
+
+    down(result, { button: 1 });
+    expect(result.current.dragging).toBe(false);
+
     down(result);
-    await waitFor(() => expect(result.current.dragging).toBe(true));
+    expect(result.current.dragging).toBe(true);
   });
 
-  it("resets on close", async () => {
+  it("updates and clears pending frames", () => {
+    let frame: FrameRequestCallback | undefined;
+
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      frame = cb;
+      return 123;
+    });
+
     const { result, rerender } = mount();
-    rerender({ dr: true, open: true });
-    await waitFor(() => expect(result.current.modalOffset).not.toBe(null));
+    rerender({ open: true });
     down(result);
-    await waitFor(() => expect(result.current.dragging).toBe(true));
-    rerender({ dr: true, open: false });
+
+    act(() => {
+      move();
+      move();
+    });
+
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
+
+    act(() => frame?.(0));
+
+    expect(result.current.modalOffset).toEqual({ x: 500, y: 450 });
+
+    down(result);
+    act(move);
+    act(() => window.dispatchEvent(new PointerEvent("pointerup")));
+
     expect(result.current.dragging).toBe(false);
+
+    // Executes updatePosition after pointerup cleared dragState.current.
+    act(() => frame?.(0));
+  });
+
+  it("cancels frames on pointer up and close", () => {
+    const cancel = vi.spyOn(window, "cancelAnimationFrame");
+
+    vi.spyOn(window, "requestAnimationFrame").mockReturnValue(123);
+
+    const { result, rerender } = mount();
+    rerender({ open: true });
+    down(result);
+
+    act(move);
+    act(() => window.dispatchEvent(new PointerEvent("pointerup")));
+
+    expect(cancel).toHaveBeenCalledWith(123);
+
+    down(result);
+    act(move);
+    rerender({ open: false });
+
+    expect(cancel).toHaveBeenCalledWith(123);
     expect(result.current.modalOffset).toBe(null);
   });
 
-  it("stops on pointerup", async () => {
-    const { result, rerender } = mount();
-    rerender({ dr: true, open: true });
-    down(result);
-    await waitFor(() => expect(result.current.dragging).toBe(true));
-    act(() => window.dispatchEvent(new PointerEvent("pointerup")));
-    await waitFor(() => expect(result.current.dragging).toBe(false));
-  });
+  it("ignores disabled and idle events", () => {
+    const idle = renderHook(() => usePointerDrag(true, false));
+    const disabled = renderHook(() => usePointerDrag(false, false));
 
-  it("moves on pointermove", async () => {
-    const orig = window.requestAnimationFrame;
-    window.requestAnimationFrame = (cb: FrameRequestCallback) => {
-      cb(0);
-      return 1;
-    };
-    const { result, rerender } = mount();
-    rerender({ dr: true, open: true });
-    down(result);
-    await waitFor(() => expect(result.current.dragging).toBe(true));
-    act(() =>
-      window.dispatchEvent(
-        new PointerEvent("pointermove", { clientX: 600, clientY: 500 }),
-      ),
-    );
-    await waitFor(() =>
-      expect(result.current.modalOffset).toEqual({ x: 500, y: 450 }),
-    );
-    window.requestAnimationFrame = orig;
-  });
-
-  it("cleans up raf on pointerup", () => {
-    const raf = vi.spyOn(window, "requestAnimationFrame").mockReturnValue(5678);
-    const caf = vi.spyOn(window, "cancelAnimationFrame");
-    const { result, rerender } = mount();
-    rerender({ dr: true, open: true });
-    down(result);
-    act(() =>
-      window.dispatchEvent(
-        new PointerEvent("pointermove", { clientX: 600, clientY: 500 }),
-      ),
-    );
-    act(() => window.dispatchEvent(new PointerEvent("pointerup")));
-    expect(caf).toHaveBeenCalledWith(5678);
-    raf.mockRestore();
-    caf.mockRestore();
-  });
-
-  it("ignores non-left buttons", () => {
-    const { result, rerender } = mount();
-    rerender({ dr: true, open: true });
-    down(result, 500, 400, 1);
-    expect(result.current.dragging).toBe(false);
-  });
-
-  it("setModalDomRef accepts null", () => {
-    const { result } = renderHook(() => usePointerDrag(true, false));
-    const el = makeEl();
     act(() => {
-      result.current.setModalDomRef(el);
-      result.current.setModalDomRef(null);
+      move();
+      window.dispatchEvent(new PointerEvent("pointerup"));
     });
-    expect(true).toBe(true);
+
+    expect(idle.result.current.dragging).toBe(false);
+    expect(disabled.result.current.dragging).toBe(false);
+  });
+
+  it("handles missing refs", () => {
+    const { result, rerender } = renderHook(
+      ({ open }) => usePointerDrag(true, open),
+      { initialProps: { open: false } },
+    );
+
+    rerender({ open: true });
+
+    expect(result.current.modalOffset).toBe(null);
+
+    act(() => result.current.setModalDomRef(null));
   });
 });

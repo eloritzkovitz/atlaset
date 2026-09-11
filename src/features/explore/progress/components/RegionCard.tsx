@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { Card } from "@components";
 import { RegionIcon } from "@features/countries";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useAnimatedNumber } from "@hooks";
 import { formatFraction } from "@utils";
 import { RegionButton } from "./RegionButton";
 import { SubregionStatsRow } from "./SubregionStatsRow";
 import type { SubregionStat } from "../types";
-import { translateRegionLabel } from "@features/explore/core/utils/regionTranslation";
+import { translateRegionLabel } from "../../core/utils/regionTranslation";
 
 interface RegionCardProps {
   region: string;
@@ -28,7 +29,9 @@ export function RegionCard({
   onRegionClick,
   onSubregionClick,
 }: RegionCardProps) {
-  const animatedVisited = useAnimatedNumber(visited, 640);
+  const { animationsEnabled } = useAccessibility();
+
+  const animatedVisited = useAnimatedNumber(animationsEnabled, visited, 640);
   const { t: tCountries } = useTranslation("countries");
   const { t: tExplore } = useTranslation("explore");
 

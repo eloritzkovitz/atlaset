@@ -1,7 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Card } from "@components";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useAnimatedNumber } from "@hooks";
 import { formatPercent } from "@utils";
-import { useTranslation } from "react-i18next";
 
 interface WorldExplorationCardProps {
   visited: number;
@@ -17,9 +18,10 @@ export function WorldExplorationCard({
   loading = false,
   onShowAllCountries,
 }: WorldExplorationCardProps) {
-  const animatedVisited = useAnimatedNumber(visited, 640);
+  const { animationsEnabled } = useAccessibility();
   const { t } = useTranslation("explore");
 
+  const animatedVisited = useAnimatedNumber(animationsEnabled, visited, 640);
   const formattedPercent = formatPercent(animatedVisited, total, {
     decimals: 1,
   });

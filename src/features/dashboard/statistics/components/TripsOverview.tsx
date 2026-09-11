@@ -8,15 +8,17 @@ import {
   FaNoteSticky,
 } from "react-icons/fa6";
 import { Card, Chip, SectionHeader } from "@components";
+import { ICONS } from "@constants/icons";
 import { CountryWithFlag } from "@features/countries";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useAnimatedNumber } from "@hooks";
 import { TripList } from "./TripList";
 import { TripTypeChip } from "./TripTypeChip";
 import { useTripCategoryData } from "../hooks/useTripCategoryData";
 import { useTripsStats } from "../hooks/useTripsStats";
-import { ICONS } from "@constants/icons";
 
 export function TripsOverview() {
+  const { animationsEnabled } = useAccessibility();
   const { t } = useTranslation("dashboard");
 
   const { statusData, typeData } = useTripCategoryData();
@@ -33,9 +35,13 @@ export function TripsOverview() {
   } = useTripsStats();
 
   // Animated numbers for display
-  const animatedTotalTrips = useAnimatedNumber(totalTrips);
-  const animatedTotalDays = useAnimatedNumber(totalDaysTraveling ?? 0);
+  const animatedTotalTrips = useAnimatedNumber(animationsEnabled, totalTrips);
+  const animatedTotalDays = useAnimatedNumber(
+    animationsEnabled,
+    totalDaysTraveling ?? 0,
+  );
   const animatedAvgDuration = useAnimatedNumber(
+    animationsEnabled,
     Math.round((averageTripDuration ?? 0) * 10),
   );
   const formattedAvgDuration = (animatedAvgDuration / 10).toFixed(1);

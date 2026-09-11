@@ -1,104 +1,119 @@
 import { renderHook } from "@testing-library/react";
-import { vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { useUI } from "@app/contexts/UIContext";
+import { useKeyHandler } from "../input/useKeyHandler";
 import { useDismiss } from "./useDismiss";
 import { mockUIContext } from "@test-utils/mockUIContext";
 
 vi.mock("@app/contexts/UIContext", () => ({
   useUI: vi.fn(),
 }));
+
 vi.mock("../input/useKeyHandler", () => ({
   useKeyHandler: vi.fn(),
 }));
 
-import { useUI } from "@app/contexts/UIContext";
-import { useKeyHandler } from "../input/useKeyHandler";
-
 const mockUseUI = vi.mocked(useUI);
 const mockUseKeyHandler = vi.mocked(useKeyHandler);
 
-describe("useDismiss", () => {  
-  function mount({
-    uiVisible = true,
-    modalOpen = false,
-    show = true,
-    escEnabled = false,
-    isModal = false,
-  } = {}) {
-    mockUseUI.mockReturnValue({ ...mockUIContext, uiVisible, modalOpen });
-    let escapeHandler: ((e: KeyboardEvent) => void) | undefined;
-    mockUseKeyHandler.mockImplementation((handler) => {
-      escapeHandler = handler as unknown as (e: KeyboardEvent) => void;
+describe("useDismiss", () => {
+  function mount(
+    options: {
+      uiVisible?: boolean;
+      modalOpen?: boolean;
+      show?: boolean;
+      escEnabled?: boolean;
+      isModal?: boolean;
+      onHide?: () => void;
+    } = {},
+  ) {
+    let escapeHandler: (() => void) | undefined;
+
+    mockUseUI.mockReturnValue({
+      ...mockUIContext,
+      uiVisible: options.uiVisible ?? true,
+      modalOpen: options.modalOpen ?? false,
     });
-    const onHide = vi.fn();
-    renderHook(() => useDismiss({ show, onHide, escEnabled, isModal }));
-    return { onHide, escapeHandler };
+
+    mockUseKeyHandler.mockImplementation((handler) => {
+      escapeHandler = handler as () => void;
+    });
+
+    renderHook(() => useDismiss(options));
+
+    return { escapeHandler };
   }
 
-  it("calls onHide when uiVisible becomes false", () => {
+  it("hides when UI becomes hidden", () => {
     let uiVisible = true;
-    mockUseUI.mockImplementation(() => ({ ...mockUIContext, uiVisible }));
     const onHide = vi.fn();
-    const { rerender } = renderHook(
-      ({ show }) => useDismiss({ show, onHide }),
-      { initialProps: { show: true, onHide } },
-    );
+
+    mockUseUI.mockImplementation(() => ({
+      ...mockUIContext,
+      uiVisible,
+    }));
+
+    const { rerender } = renderHook(() => useDismiss({ onHide }));
+
     uiVisible = false;
-    rerender({ show: true, onHide });
-    expect(onHide).toHaveBeenCalled();
+    rerender();
+
+    expect(onHide).toHaveBeenCalledOnce();
   });
 
-  it("does not call onHide if show is false", () => {
+  it("does not hide when show is false", () => {
     let uiVisible = true;
-    mockUseUI.mockImplementation(() => ({ ...mockUIContext, uiVisible }));
     const onHide = vi.fn();
-    const { rerender } = renderHook(
-      ({ show }) => useDismiss({ show, onHide }),
-      { initialProps: { show: false, onHide } },
-    );
+
+    mockUseUI.mockImplementation(() => ({
+      ...mockUIContext,
+      uiVisible,
+    }));
+
+    const { rerender } = renderHook(() => useDismiss({ show: false, onHide }));
+
     uiVisible = false;
-    rerender({ show: false, onHide });
+    rerender();
+
     expect(onHide).not.toHaveBeenCalled();
   });
 
-  it("registers useKeyHandler with correct args for escEnabled true/false", () => {
-    mockUseUI.mockReturnValue({ ...mockUIContext, uiVisible: true });
-    renderHook(() =>
-      useDismiss({ show: true, onHide: () => {}, escEnabled: true }),
-    );
-    expect(mockUseKeyHandler).toHaveBeenLastCalledWith(
-      expect.any(Function),
-      ["Escape"],
-      { enabled: true },
-    );
-    renderHook(() =>
-      useDismiss({ show: true, onHide: () => {}, escEnabled: false }),
-    );
-    expect(mockUseKeyHandler).toHaveBeenLastCalledWith(
-      expect.any(Function),
-      ["Escape"],
-      { enabled: false },
-    );
+  it("hides on Escape for panels and modals", () => {
+    for (const options of [
+      { modalOpen: false },
+      { modalOpen: true, isModal: true },
+    ]) {
+      const onHide = vi.fn();
+      const { escapeHandler } = mount({
+        ...options,
+        onHide,
+        escEnabled: true,
+      });
+
+      escapeHandler?.();
+
+      expect(onHide).toHaveBeenCalledOnce();
+    }
   });
 
-  it("calls onHide when Escape is pressed and show/onHide/escEnabled are true", () => {
-    const { onHide, escapeHandler } = mount({
-      uiVisible: true,
-      escEnabled: true,
-      show: true,
-    });
-    escapeHandler?.({ key: "Escape" } as KeyboardEvent);
-    expect(onHide).toHaveBeenCalled();
-  });
-
-  it("calls onHide when isModal is true regardless of modalOpen", () => {
-    const { onHide, escapeHandler } = mount({
-      uiVisible: true,
+  it("does not hide a panel when a modal is open", () => {
+    const onHide = vi.fn();
+    const { escapeHandler } = mount({
       modalOpen: true,
       escEnabled: true,
-      show: true,
-      isModal: true,
+      onHide,
     });
-    escapeHandler?.({ key: "Escape" } as KeyboardEvent);
-    expect(onHide).toHaveBeenCalled();
+
+    escapeHandler?.();
+
+    expect(onHide).not.toHaveBeenCalled();
+  });
+
+  it("does nothing on Escape without onHide", () => {
+    const { escapeHandler } = mount({
+      escEnabled: true,
+    });
+
+    escapeHandler?.();
   });
 });

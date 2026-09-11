@@ -1,98 +1,60 @@
 import { renderHook, act } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { useSwipeNavigation } from "./useSwipeNavigation";
 
+const touchStart = (x: number) =>
+  ({
+    touches: [{ clientX: x }],
+  }) as unknown as React.TouchEvent;
+
+const touchEnd = (x: number) =>
+  ({
+    changedTouches: [{ clientX: x }],
+  }) as unknown as React.TouchEvent;
+
 describe("useSwipeNavigation", () => {
-  it("calls onNext for left swipe (LTR)", () => {
-    const onPrev = vitest.fn();
-    const onNext = vitest.fn();
-    const { result } = renderHook(() =>
-      useSwipeNavigation(onPrev, onNext, false),
-    );
+  it("handles LTR swipes", () => {
+    const onPrev = vi.fn();
+    const onNext = vi.fn();
+    const { result } = renderHook(() => useSwipeNavigation(onPrev, onNext));
 
-    act(() => {
-      result.current.handleTouchStart({ touches: [{ clientX: 100 }] } as never);
-    });
-    act(() => {
-      result.current.handleTouchEnd({
-        changedTouches: [{ clientX: 30 }],
-      } as never);
-    });
-    expect(onNext).toHaveBeenCalled();
-    expect(onPrev).not.toHaveBeenCalled();
+    act(() => result.current.handleTouchStart(touchStart(500)));
+    act(() => result.current.handleTouchEnd(touchEnd(400)));
+
+    act(() => result.current.handleTouchStart(touchStart(500)));
+    act(() => result.current.handleTouchEnd(touchEnd(600)));
+
+    expect(onNext).toHaveBeenCalledOnce();
+    expect(onPrev).toHaveBeenCalledOnce();
   });
 
-  it("calls onPrev for right swipe (LTR)", () => {
-    const onPrev = vitest.fn();
-    const onNext = vitest.fn();
-    const { result } = renderHook(() =>
-      useSwipeNavigation(onPrev, onNext, false),
-    );
-
-    act(() => {
-      result.current.handleTouchStart({ touches: [{ clientX: 100 }] } as never);
-    });
-    act(() => {
-      result.current.handleTouchEnd({
-        changedTouches: [{ clientX: 180 }],
-      } as never);
-    });
-    expect(onPrev).toHaveBeenCalled();
-    expect(onNext).not.toHaveBeenCalled();
-  });
-
-  it("calls onPrev for left swipe (RTL)", () => {
-    const onPrev = vitest.fn();
-    const onNext = vitest.fn();
+  it("handles RTL swipes", () => {
+    const onPrev = vi.fn();
+    const onNext = vi.fn();
     const { result } = renderHook(() =>
       useSwipeNavigation(onPrev, onNext, true),
     );
 
-    act(() => {
-      result.current.handleTouchStart({ touches: [{ clientX: 100 }] } as never);
-    });
-    act(() => {
-      result.current.handleTouchEnd({
-        changedTouches: [{ clientX: 30 }],
-      } as never);
-    });
-    expect(onPrev).toHaveBeenCalled();
-    expect(onNext).not.toHaveBeenCalled();
+    act(() => result.current.handleTouchStart(touchStart(500)));
+    act(() => result.current.handleTouchEnd(touchEnd(400)));
+
+    act(() => result.current.handleTouchStart(touchStart(500)));
+    act(() => result.current.handleTouchEnd(touchEnd(600)));
+
+    expect(onPrev).toHaveBeenCalledOnce();
+    expect(onNext).toHaveBeenCalledOnce();
   });
 
-  it("calls onNext for right swipe (RTL)", () => {
-    const onPrev = vitest.fn();
-    const onNext = vitest.fn();
-    const { result } = renderHook(() =>
-      useSwipeNavigation(onPrev, onNext, true),
-    );
+  it("ignores short and missing swipes", () => {
+    const onPrev = vi.fn();
+    const onNext = vi.fn();
+    const { result } = renderHook(() => useSwipeNavigation(onPrev, onNext));
 
-    act(() => {
-      result.current.handleTouchStart({ touches: [{ clientX: 100 }] } as never);
-    });
-    act(() => {
-      result.current.handleTouchEnd({
-        changedTouches: [{ clientX: 180 }],
-      } as never);
-    });
-    expect(onNext).toHaveBeenCalled();
-    expect(onPrev).not.toHaveBeenCalled();
-  });
+    act(() => result.current.handleTouchEnd(touchEnd(400)));
 
-  it("does not call callbacks for small swipes", () => {
-    const onPrev = vitest.fn();
-    const onNext = vitest.fn();
-    const { result } = renderHook(() =>
-      useSwipeNavigation(onPrev, onNext, false),
-    );
+    act(() => result.current.handleTouchStart(touchStart(500)));
+    act(() => result.current.handleTouchEnd(touchEnd(460)));
 
-    act(() => {
-      result.current.handleTouchStart({ touches: [{ clientX: 100 }] } as never);
-    });
-    act(() => {
-      result.current.handleTouchEnd({
-        changedTouches: [{ clientX: 90 }],
-      } as never);
-    });
     expect(onPrev).not.toHaveBeenCalled();
     expect(onNext).not.toHaveBeenCalled();
   });

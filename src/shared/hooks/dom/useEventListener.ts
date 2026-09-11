@@ -15,6 +15,7 @@ export function useEventListener<T extends Event = Event>(
 ) {
   const savedHandler = useRef(handler);
 
+  /* v8 ignore next -- SSR fallback */
   const useIsomorphicLayoutEffect =
     typeof window !== "undefined" ? useLayoutEffect : useEffect;
 

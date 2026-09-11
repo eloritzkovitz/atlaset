@@ -8,6 +8,7 @@ import {
   NotificationsDropdown,
   useNotifications,
 } from "@features/notifications";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useModalAnimation, useScreenSize } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
@@ -16,9 +17,11 @@ import { AuthButtons } from "../AuthButtons";
 
 /** Renders the top navigation header actions. */
 export function HeaderActions({ fixed = true }: { fixed?: boolean } = {}) {
+  const { animationsEnabled } = useAccessibility();
   const { user } = useAuth();
   const { toggleSearch, toggleHelp } = useUI();
-  const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
+  const { isOpen, closing, closeModal, setIsOpen } =
+    useModalAnimation(animationsEnabled);
   const { unreadCount } = useNotifications(user?.uid);
   const { t } = useTranslation("common");
 

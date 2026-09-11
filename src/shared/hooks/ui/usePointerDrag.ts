@@ -17,6 +17,9 @@ import type { Point } from "@types";
  */
 export function usePointerDrag(draggable: boolean, isOpen: boolean) {
   const dragState = useRef<Point | null>(null);
+  const animationFrameId = useRef<number | null>(null);
+  const latestPos = useRef<Point>({ x: 0, y: 0 });
+
   const [dragging, setDragging] = useState(false);
   const modalDomRef = useRef<Element | null>(null);
   const [modalOffset, setModalOffset] = useState<Point | null>(null);
@@ -27,6 +30,7 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
       const el = modalDomRef.current;
       let width: number;
       let height: number;
+
       if (el instanceof HTMLElement) {
         width = el.offsetWidth;
         height = el.offsetHeight;
@@ -35,18 +39,18 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
         width = rect.width;
         height = rect.height;
       }
+
       const x = window.innerWidth / 2 - width / 2;
       const y = window.innerHeight / 2 - height / 2;
+
       setModalOffset({ x, y });
     }
   }, [isOpen, modalOffset]);
 
   // Compute the style for the modal (for draggable)
   const modalStyle = useMemo(() => {
-    // If not draggable, no special styles needed
     if (!draggable) return {};
 
-    // If draggable but no offset yet, use default fixed positioning
     if (!modalOffset) {
       return {
         position: "fixed" as React.CSSProperties["position"],
@@ -56,7 +60,6 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
       };
     }
 
-    // If draggable and we have an offset, apply transform
     return {
       position: "fixed" as React.CSSProperties["position"],
       left: `${modalOffset.x}px`,
@@ -74,10 +77,12 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
     (e: React.PointerEvent<Element>) => {
       if (!draggable || !modalOffset) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
+
       dragState.current = {
         x: e.clientX - modalOffset.x,
         y: e.clientY - modalOffset.y,
       };
+
       setDragging(true);
       document.body.style.userSelect = "none";
     },
@@ -90,41 +95,56 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
       dragState.current = null;
       setModalOffset(null);
       setDragging(false);
+
+      if (animationFrameId.current != null) {
+        window.cancelAnimationFrame(animationFrameId.current);
+        animationFrameId.current = null;
+      }
+
+      document.body.style.userSelect = "";
     }
   }, [isOpen]);
 
   // Handle pointer move and pointer up events for dragging
-  let animationFrameId: number | null = null;
-  const latestPos = { x: 0, y: 0 };
   const updatePosition = () => {
     if (dragState.current) {
-      const x = latestPos.x - dragState.current.x;
-      const y = latestPos.y - dragState.current.y;
+      const x = latestPos.current.x - dragState.current.x;
+      const y = latestPos.current.y - dragState.current.y;
+
       setModalOffset({ x, y });
     }
-    animationFrameId = null;
+
+    animationFrameId.current = null;
   };
+
   const handlePointerMove = (e: Event) => {
     if (!draggable) return;
+
     const pointerEvent = e as PointerEvent;
-    latestPos.x = pointerEvent.clientX;
-    latestPos.y = pointerEvent.clientY;
-    if (dragState.current) {
-      if (animationFrameId == null) {
-        animationFrameId = window.requestAnimationFrame(updatePosition);
-      }
+
+    latestPos.current = {
+      x: pointerEvent.clientX,
+      y: pointerEvent.clientY,
+    };
+
+    if (dragState.current && animationFrameId.current == null) {
+      animationFrameId.current = window.requestAnimationFrame(updatePosition);
     }
   };
+
   const handlePointerUp = () => {
     if (!draggable) return;
+
     if (dragState.current) {
       dragState.current = null;
       setDragging(false);
     }
+
     document.body.style.userSelect = "";
-    if (animationFrameId != null) {
-      window.cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
+
+    if (animationFrameId.current != null) {
+      window.cancelAnimationFrame(animationFrameId.current);
+      animationFrameId.current = null;
     }
   };
 

@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 
-export interface UseQueryParamOptions<T extends string> {
-  defaultValue?: T;
+export interface UseQueryParamOptions {
   replace?: boolean;
 }
 
@@ -15,27 +14,26 @@ export interface UseQueryParamOptions<T extends string> {
  */
 export function useQueryParam<T extends string>(
   key: string,
-  defaultValue: T,
-  options: Omit<UseQueryParamOptions<T>, "defaultValue"> = {},
+  defaultValue: NoInfer<T>,
+  options: UseQueryParamOptions = {},
 ): [T, (newValue: T) => void] {
   const { replace = true } = options;
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Read current value from search params, falling back to defaultValue
-  const paramVal = searchParams.get(key);
-  const currentValue = (paramVal !== null ? paramVal : defaultValue) as T;
+  const currentValue = (searchParams.get(key) ?? defaultValue) as T;
 
-  // Setter function to update or delete search param
   const setValue = useCallback(
     (newValue: T) => {
       setSearchParams(
         (prev) => {
           const next = new URLSearchParams(prev);
+
           if (newValue === defaultValue) {
             next.delete(key);
           } else {
             next.set(key, newValue);
           }
+
           return next;
         },
         { replace },

@@ -1,62 +1,71 @@
 import { render } from "@testing-library/react";
 import { useRef } from "react";
-import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAutoScrollFocus } from "./useAutoScrollFocus";
 
 function TestHarness({
   selector,
   enabled = true,
+  centerInline = true,
 }: {
   selector: string | null;
   enabled?: boolean;
+  centerInline?: boolean;
 }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  useAutoScrollFocus(ref, selector, { enabled, centerInline: true });
+  const ref = useRef<HTMLDivElement>(null);
+
+  useAutoScrollFocus(ref, selector, { enabled, centerInline });
+
   return (
     <div ref={ref}>
-      <button data-seg-value="foo">Foo</button>
+      <button data-target="foo">Foo</button>
     </div>
   );
 }
 
 describe("useAutoScrollFocus", () => {
-  let scrollSpy = vi.fn();
-  let focusSpy = vi.fn();
+  const scrollIntoView = vi.fn();
+  const focus = vi.fn();
 
   beforeEach(() => {
-    scrollSpy = vi.fn();
-    focusSpy = vi.fn();
-    HTMLElement.prototype.scrollIntoView = scrollSpy;
-    HTMLElement.prototype.focus = focusSpy;
+    HTMLElement.prototype.scrollIntoView = scrollIntoView;
+    HTMLElement.prototype.focus = focus;
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
   });
 
-  it("scrolls and focuses the target element when it is present and enabled", () => {
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
+  it("scrolls and focuses the target", () => {
+    render(<TestHarness selector='[data-target="foo"]' />);
 
-    expect(scrollSpy).toHaveBeenCalledWith({
+    expect(scrollIntoView).toHaveBeenCalledWith({
       behavior: "smooth",
       inline: "center",
       block: "nearest",
     });
-    expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true });
   });
 
-  it("does absolutely nothing when disabled", () => {
-    render(<TestHarness selector='[data-seg-value="foo"]' enabled={false} />);
+  it("uses nearest inline scrolling when centerInline is false", () => {
+    render(<TestHarness selector='[data-target="foo"]' centerInline={false} />);
 
-    expect(scrollSpy).not.toHaveBeenCalled();
-    expect(focusSpy).not.toHaveBeenCalled();
+    expect(scrollIntoView).toHaveBeenCalledWith({
+      behavior: "smooth",
+      inline: "nearest",
+      block: "nearest",
+    });
   });
 
-  it("bails out gracefully when the selector is null or element isn't found", () => {
-    const { rerender } = render(<TestHarness selector={null} />);
-    expect(scrollSpy).not.toHaveBeenCalled();
+  it("does nothing when disabled, selector is null, or target is missing", () => {
+    const { rerender } = render(
+      <TestHarness selector='[data-target="foo"]' enabled={false} />,
+    );
 
-    rerender(<TestHarness selector='[data-seg-value="missing"]' />);
-    expect(scrollSpy).not.toHaveBeenCalled();
+    rerender(<TestHarness selector={null} />);
+    rerender(<TestHarness selector='[data-target="missing"]' />);
+
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(focus).not.toHaveBeenCalled();
   });
 });

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, ActionButton } from "@components";
 import { useAudio } from "@app/contexts/AudioContext";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useAnimatedNumber } from "@hooks";
 import { formatPercent, formatTimeSeconds } from "@utils";
 
@@ -24,15 +25,16 @@ export function GameOverCard({
   onPlayAgain,
   onReturn,
 }: GameOverCardProps) {
+  const { animationsEnabled } = useAccessibility();
   const { play } = useAudio();
   const navigate = useNavigate();
   const handleReturn = onReturn || (() => navigate("/quizzes"));
 
   const isComplete = type === "complete";
 
-  const animatedScore = useAnimatedNumber(score ?? 0, 640);
-  const animatedStreak = useAnimatedNumber(streak ?? 0, 640);
-  const animatedTime = useAnimatedNumber(timeUsed ?? 0, 640);
+  const animatedScore = useAnimatedNumber(animationsEnabled, score ?? 0, 640);
+  const animatedStreak = useAnimatedNumber(animationsEnabled, streak ?? 0, 640);
+  const animatedTime = useAnimatedNumber(animationsEnabled, timeUsed ?? 0, 640);
 
   // Validate inputs for percentage calculations
   const hasValidScore =

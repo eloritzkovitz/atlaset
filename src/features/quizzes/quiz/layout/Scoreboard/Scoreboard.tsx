@@ -23,8 +23,8 @@ export function Scoreboard({
   const { animationsEnabled } = useAccessibility();
   const { t } = useTranslation("quizzes");
 
-  const scoreClass = useValueFlash(score);
-  const streakClass = useValueFlash(streak);
+  const scoreClass = useValueFlash(animationsEnabled, score);
+  const streakClass = useValueFlash(animationsEnabled, streak);
   const timeDanger = animationsEnabled && shouldTriggerTimerFlash(timeLeft);
 
   return (

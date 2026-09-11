@@ -24,7 +24,7 @@ export function SortSelect<K extends string>({
   keyGroup,
   showLabel = false,
 }: SortSelectProps<K>) {
-  const { isOpen, closing, setIsOpen, closeModal } = useModalAnimation();
+  const { isOpen, closing, setIsOpen, closeModal } = useModalAnimation(true);
   const { t } = useTranslation("common");
 
   const btnRef = useRef<HTMLDivElement>(null);

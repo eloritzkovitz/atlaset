@@ -36,71 +36,85 @@ export function useListNavigation<T>({
     (e) => {
       if (!items.length) return;
 
-      // Start from hovered item if present, else selected
+      // Find the index of the currently selected or hovered item
       const currentKey = hoveredKey || selectedKey;
       let currentIndex = items.findIndex((item) => getKey(item) === currentKey);
-      if (currentIndex === -1) currentIndex = 0;
 
-      const scrollTo = (key: string) => {
+      if (currentIndex === -1) {
+        currentIndex = 0;
+      }
+
+      // Navigates to the item at the specified index, updates selection and hover state, and scrolls it into view
+      const navigateTo = (index: number) => {
+        const key = getKey(items[index]);
+        onSelect(key);
+        onHover(key);
         setTimeout(() => {
-          const el = document.getElementById(key);
-          el?.scrollIntoView({ block: "nearest" });
+          document.getElementById(key)?.scrollIntoView({
+            block: "nearest",
+          });
         }, 0);
       };
 
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        const nextIndex =
-          currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-        const nextKey = getKey(items[nextIndex]);
-        onSelect(nextKey);
-        onHover(nextKey);
-        scrollTo(nextKey);
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        const prevIndex =
-          currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-        const prevKey = getKey(items[prevIndex]);
-        onSelect(prevKey);
-        onHover(prevKey);
-        scrollTo(prevKey);
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        const item = items[currentIndex];
-        if (item && onItemInfo) {
-          onItemInfo(item);
+      switch (e.key) {
+        case "ArrowDown": {
+          e.preventDefault();
+          const nextIndex =
+            currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+          navigateTo(nextIndex);
+          break;
         }
-      } else if (e.key === "Home") {
-        e.preventDefault();
-        const firstKey = getKey(items[0]);
-        onSelect(firstKey);
-        onHover(firstKey);
-        scrollTo(firstKey);
-      } else if (e.key === "End") {
-        e.preventDefault();
-        const lastKey = getKey(items[items.length - 1]);
-        onSelect(lastKey);
-        onHover(lastKey);
-        scrollTo(lastKey);
-      } else if (e.key === "PageDown") {
-        e.preventDefault();
-        const pageSize = 10;
-        const nextIndex = Math.min(currentIndex + pageSize, items.length - 1);
-        const nextKey = getKey(items[nextIndex]);
-        onSelect(nextKey);
-        onHover(nextKey);
-        scrollTo(nextKey);
-      } else if (e.key === "PageUp") {
-        e.preventDefault();
-        const pageSize = 10;
-        const prevIndex = Math.max(currentIndex - pageSize, 0);
-        const prevKey = getKey(items[prevIndex]);
-        onSelect(prevKey);
-        onHover(prevKey);
-        scrollTo(prevKey);
+
+        case "ArrowUp": {
+          e.preventDefault();
+          const previousIndex =
+            currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+          navigateTo(previousIndex);
+          break;
+        }
+
+        case "Enter": {
+          e.preventDefault();
+          const item = items[currentIndex];
+          if (item && onItemInfo) {
+            onItemInfo(item);
+          }
+          break;
+        }
+
+        case "Home": {
+          e.preventDefault();
+          navigateTo(0);
+          break;
+        }
+
+        case "End": {
+          e.preventDefault();
+          navigateTo(items.length - 1);
+          break;
+        }
+
+        case "PageDown": {
+          e.preventDefault();
+          const pageSize = 10;
+          const nextIndex = Math.min(currentIndex + pageSize, items.length - 1);
+          navigateTo(nextIndex);
+          break;
+        }
+
+        case "PageUp": {
+          e.preventDefault();
+          const pageSize = 10;
+          const previousIndex = Math.max(currentIndex - pageSize, 0);
+          navigateTo(previousIndex);
+          break;
+        }
+
+        default:
+          break;
       }
     },
     ["ArrowDown", "ArrowUp", "Enter", "Home", "End", "PageDown", "PageUp"],
-    { enabled: enabled },
+    { enabled },
   );
 }

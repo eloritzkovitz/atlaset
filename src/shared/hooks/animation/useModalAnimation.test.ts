@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mockAnimationsEnabled } from "@test-utils/settingsMocks";
 import { useModalAnimation } from "./useModalAnimation";
 
@@ -15,14 +15,14 @@ describe("useModalAnimation", () => {
 
   describe("Standard Animated Path", () => {
     it("opens the modal", () => {
-      const { result } = renderHook(() => useModalAnimation());
+      const { result } = renderHook(() => useModalAnimation(true));
       act(() => result.current.openModal());
       expect(result.current.isOpen).toBe(true);
       expect(result.current.closing).toBe(false);
     });
 
     it("closes the modal with animation", () => {
-      const { result } = renderHook(() => useModalAnimation());
+      const { result } = renderHook(() => useModalAnimation(true));
       act(() => result.current.openModal());
       act(() => result.current.closeModal());
       expect(result.current.closing).toBe(true);
@@ -35,7 +35,7 @@ describe("useModalAnimation", () => {
     });
 
     it("can set isOpen directly", () => {
-      const { result } = renderHook(() => useModalAnimation());
+      const { result } = renderHook(() => useModalAnimation(true));
       act(() => result.current.setIsOpen(true));
       expect(result.current.isOpen).toBe(true);
       act(() => result.current.setIsOpen(false));
@@ -47,7 +47,7 @@ describe("useModalAnimation", () => {
     it("should close the modal instantly without asynchronous timer ticks when animations are disabled", () => {
       mockAnimationsEnabled(false);
 
-      const { result } = renderHook(() => useModalAnimation(200));
+      const { result } = renderHook(() => useModalAnimation(false, 200));
 
       act(() => result.current.openModal());
       expect(result.current.isOpen).toBe(true);

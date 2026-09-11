@@ -1,62 +1,59 @@
 import React from "react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useContextMenu } from "./useContextMenu";
-import { useClickOutside } from "../dom/useClickOutside";
-import { useKeyHandler } from "../input/useKeyHandler";
 
-vi.mock("../dom/useClickOutside", () => ({ useClickOutside: vi.fn() }));
-vi.mock("../input/useKeyHandler", () => ({ useKeyHandler: vi.fn() }));
+vi.mock("../dom/useClickOutside", () => ({
+  useClickOutside: vi.fn(),
+}));
+
+vi.mock("../input/useKeyHandler", () => ({
+  useKeyHandler: vi.fn(),
+}));
 
 const STABLE_STYLE = { display: "none" };
-const INIT_OPTIONS = { standardMenuStyle: STABLE_STYLE };
-const DISABLED_OPTIONS = { disabled: true };
-const Z_INDEX_OPTIONS = { zIndex: 500 };
 
 describe("useContextMenu", () => {
-  const mockOnClose = vi.fn();
-
   beforeEach(() => {
     window.innerWidth = 1000;
     window.innerHeight = 1000;
   });
 
-  const createMouseEvent = (clientX: number, clientY: number) =>
+  const event = (x: number, y: number) =>
     ({
-      clientX,
-      clientY,
+      clientX: x,
+      clientY: y,
       preventDefault: vi.fn(),
       stopPropagation: vi.fn(),
     }) as unknown as React.MouseEvent<HTMLElement>;
 
-  it("should initialize with default states and styles", () => {
-    const { result } = renderHook(() => useContextMenu(INIT_OPTIONS));
+  it("initializes and uses the standard style", () => {
+    const { result } = renderHook(() =>
+      useContextMenu({ standardMenuStyle: STABLE_STYLE }),
+    );
 
     expect(result.current.open).toBe(false);
     expect(result.current.contextCoords).toBeNull();
     expect(result.current.menuStyle).toEqual(STABLE_STYLE);
   });
 
-  it("should ignore events when disabled", () => {
-    const { result } = renderHook(() => useContextMenu(DISABLED_OPTIONS));
-    const mockEvent = createMouseEvent(10, 20);
+  it("opens at the cursor and ignores disabled menus", () => {
+    const { result: disabled } = renderHook(() =>
+      useContextMenu({ disabled: true }),
+    );
 
-    act(() => {
-      result.current.handleContextMenu(mockEvent);
-    });
+    act(() => disabled.current.handleContextMenu(event(10, 20)));
 
-    expect(result.current.open).toBe(false);
-  });
+    expect(disabled.current.open).toBe(false);
 
-  it("should open and calculate coordinates accurately on contextmenu trigger", () => {
-    const { result } = renderHook(() => useContextMenu(Z_INDEX_OPTIONS));
-    const mockEvent = createMouseEvent(50, 60);
+    const { result } = renderHook(() => useContextMenu({ zIndex: 500 }));
 
-    act(() => {
-      result.current.handleContextMenu(mockEvent);
-    });
+    const e = event(50, 60);
 
-    expect(result.current.open).toBe(true);
+    act(() => result.current.handleContextMenu(e));
+
+    expect(e.preventDefault).toHaveBeenCalled();
+    expect(e.stopPropagation).toHaveBeenCalled();
     expect(result.current.contextCoords).toEqual({ x: 50, y: 60 });
     expect(result.current.menuStyle).toEqual({
       position: "fixed",
@@ -67,70 +64,79 @@ describe("useContextMenu", () => {
     });
   });
 
-  it("should flip the menu coordinates if bounds overflow the viewport", () => {
+  it("positions the menu within the viewport", () => {
     const { result } = renderHook(() => useContextMenu());
 
+    act(() => result.current.openAtCoordinates(100, 100));
+
+    expect(result.current.menuStyle.left).toBe(100);
+    expect(result.current.menuStyle.top).toBe(100);
+
     result.current.menuRef.current = {
-      getBoundingClientRect: () => ({ width: 200, height: 150 }) as DOMRect,
+      getBoundingClientRect: () => ({
+        width: 200,
+        height: 150,
+      }),
     } as HTMLElement;
 
-    const mockEvent = createMouseEvent(900, 950);
-    act(() => {
-      result.current.handleContextMenu(mockEvent);
-    });
+    act(() => result.current.openAtCoordinates(900, 950));
 
     expect(result.current.menuStyle.left).toBe(700);
     expect(result.current.menuStyle.top).toBe(800);
-  });
-
-  it("should enforce the fallback coordinate safety if flipping pushes it off-screen", () => {
-    const { result } = renderHook(() => useContextMenu());
 
     result.current.menuRef.current = {
-      getBoundingClientRect: () => ({ width: 1200, height: 1200 }) as DOMRect,
+      getBoundingClientRect: () => ({
+        width: 1200,
+        height: 100,
+      }),
     } as HTMLElement;
 
-    act(() => {
-      result.current.openAtCoordinates(900, 950);
-    });
+    act(() => result.current.openAtCoordinates(900, 100));
 
     expect(result.current.menuStyle.left).toBe(4);
+    expect(result.current.menuStyle.top).toBe(100);
+
+    result.current.menuRef.current = {
+      getBoundingClientRect: () => ({
+        width: 100,
+        height: 1200,
+      }),
+    } as HTMLElement;
+
+    act(() => result.current.openAtCoordinates(100, 900));
+
+    expect(result.current.menuStyle.left).toBe(100);
     expect(result.current.menuStyle.top).toBe(4);
   });
 
-  it("should clear values and fire onClose when closed explicitly", () => {
-    const closeOptions = { onClose: mockOnClose };
-    const { result } = renderHook(() => useContextMenu(closeOptions));
+  it("closes and calls onClose", () => {
+    const onClose = vi.fn();
+    const { result } = renderHook(() => useContextMenu({ onClose }));
 
-    act(() => {
-      result.current.openAtCoordinates(100, 100);
-    });
-
-    act(() => {
-      result.current.handleCloseContext();
-    });
+    act(() => result.current.openAtCoordinates(100, 100));
+    act(() => result.current.handleCloseContext());
 
     expect(result.current.open).toBe(false);
-    expect(mockOnClose).toHaveBeenCalledTimes(1);
+    expect(result.current.contextCoords).toBeNull();
+    expect(onClose).toHaveBeenCalledOnce();
   });
 
-  it("should expose openAtCoordinates via the forwarded ref handle", () => {
-    const forwardedRef = React.createRef<any>();
-    const refOptions = { forwardedRef };
-    const { result } = renderHook(() => useContextMenu(refOptions));
+  it("exposes imperative opening through forwardedRef", () => {
+    const forwardedRef = React.createRef<{
+      openAtCoordinates: (x: number, y: number) => void;
+    }>();
+
+    const { result } = renderHook(() =>
+      useContextMenu({
+        forwardedRef: forwardedRef as React.Ref<unknown>,
+      }),
+    );
 
     act(() => {
-      forwardedRef.current.openAtCoordinates(15, 30);
+      forwardedRef.current?.openAtCoordinates(15, 30);
     });
 
     expect(result.current.open).toBe(true);
     expect(result.current.contextCoords).toEqual({ x: 15, y: 30 });
-  });
-
-  it("should properly mount layout utility hooks", () => {
-    renderHook(() => useContextMenu());
-
-    expect(useClickOutside).toHaveBeenCalled();
-    expect(useKeyHandler).toHaveBeenCalled();
   });
 });

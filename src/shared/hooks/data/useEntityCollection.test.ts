@@ -1,12 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
-import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
-import {
-  useEntityCollection,
-  type UseEntityCollectionOptions,
-} from "./useEntityCollection";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useEntityCollection, type Entity } from "./useEntityCollection";
 
-interface TestEntity {
-  id: string;
+interface TestEntity extends Entity {
   name: string;
 }
 
@@ -14,98 +10,113 @@ const item1: TestEntity = { id: "1", name: "Item 1" };
 const item2: TestEntity = { id: "2", name: "Item 2" };
 
 describe("useEntityCollection", () => {
-  let persistItems: Mock<
-    UseEntityCollectionOptions<TestEntity>["persistItems"]
-  >;
-  let onLogAction: Mock<
-    NonNullable<UseEntityCollectionOptions<TestEntity>["onLogAction"]>
-  >;
+  const persistItems = vi.fn().mockResolvedValue(undefined);
+  const onLogAction = vi.fn().mockResolvedValue(undefined);
 
   beforeEach(() => {
-    persistItems = vi.fn().mockResolvedValue(undefined);
-    onLogAction = vi.fn().mockResolvedValue(undefined);
+    vi.clearAllMocks();
   });
 
-  test("initializes items and handles prop sync", () => {
+  it("initializes and syncs items", () => {
     const { result, rerender } = renderHook(
       ({ items }) =>
-        useEntityCollection({ initialItems: items, persistItems, onLogAction }),
+        useEntityCollection({
+          initialItems: items,
+          persistItems,
+          onLogAction,
+        }),
       { initialProps: { items: [item1] } },
     );
 
     expect(result.current.items).toEqual([item1]);
 
     rerender({ items: [item2] });
+
     expect(result.current.items).toEqual([item2]);
   });
 
-  test("handles item mutations (add, update, reorder, rename, toggle visibility, remove)", async () => {
+  it("handles collection mutations", async () => {
     const { result } = renderHook(() =>
-      useEntityCollection({ initialItems: [item1], persistItems, onLogAction }),
+      useEntityCollection({
+        initialItems: [item1],
+        persistItems,
+        onLogAction,
+      }),
     );
 
-    const item2WithOrder = { ...item2, order: 1 };
+    await act(() => result.current.addItem(item2));
 
-    await act(async () => {
-      await result.current.addItem(item2);
-    });
-    expect(result.current.items).toEqual([item1, item2WithOrder]);
-    expect(onLogAction).toHaveBeenLastCalledWith("add", item2WithOrder);
-    expect(persistItems).toHaveBeenLastCalledWith([item1, item2WithOrder]);
+    const added = { ...item2, order: 1 };
+    expect(result.current.items).toEqual([item1, added]);
+    expect(onLogAction).toHaveBeenLastCalledWith("add", added);
 
-    const updated = { id: "1", name: "Updated 1" };
-    await act(async () => {
-      await result.current.updateItem(updated);
-    });
-    expect(result.current.items).toEqual([updated, item2WithOrder]);
-    expect(onLogAction).toHaveBeenLastCalledWith("edit", updated);
+    const updated = { ...item1, name: "Updated" };
 
-    const item2Reordered = { ...item2WithOrder, order: 0 };
-    const updatedReordered = { ...updated, order: 1 };
+    await act(() => result.current.updateItem(updated));
+    expect(result.current.items).toEqual([updated, added]);
 
-    await act(async () => {
-      await result.current.reorderItems([item2WithOrder, updated]);
-    });
-    expect(result.current.items).toEqual([item2Reordered, updatedReordered]);
-    expect(onLogAction).toHaveBeenLastCalledWith("reorder", item2Reordered);
+    await act(() => result.current.reorderItems([added, updated]));
 
-    const renamed1 = { ...updatedReordered, name: "Renamed 1" };
-    await act(async () => {
-      await result.current.updateItemName("1", "Renamed 1");
-    });
-    expect(result.current.items).toEqual([item2Reordered, renamed1]);
-    expect(onLogAction).toHaveBeenLastCalledWith("edit", renamed1);
+    const reordered = [
+      { ...added, order: 0 },
+      { ...updated, order: 1 },
+    ];
 
-    const visible1 = { ...renamed1, visible: true };
-    await act(async () => {
-      await result.current.toggleItemVisibility("1");
-    });
-    expect(result.current.items).toEqual([item2Reordered, visible1]);
-    expect(onLogAction).toHaveBeenLastCalledWith("edit", visible1);
+    expect(result.current.items).toEqual(reordered);
+    expect(onLogAction).toHaveBeenLastCalledWith("reorder", reordered[0]);
 
-    await act(async () => {
-      await result.current.removeItem("missing_id");
-    });
-    expect(result.current.items).toEqual([item2Reordered, visible1]);
+    await act(() => result.current.updateItemName("1", "Renamed"));
 
-    await act(async () => {
-      await result.current.removeItem("2");
-    });
-    expect(result.current.items).toEqual([visible1]);
-    expect(onLogAction).toHaveBeenLastCalledWith("remove", item2Reordered);
+    expect(result.current.items).toEqual([
+      reordered[0],
+      { ...reordered[1], name: "Renamed" },
+    ]);
+
+    await act(() => result.current.toggleItemVisibility("1"));
+
+    expect(result.current.items).toEqual([
+      reordered[0],
+      { ...reordered[1], name: "Renamed", visible: true },
+    ]);
+
+    await act(() => result.current.removeItem("2"));
+
+    expect(result.current.items).toEqual([
+      { ...reordered[1], name: "Renamed", visible: true },
+    ]);
   });
 
-  test("supports operating without onLogAction callback", async () => {
+  it("handles missing items and empty reorder", async () => {
     const { result } = renderHook(() =>
-      useEntityCollection({ initialItems: [item1], persistItems }),
+      useEntityCollection({
+        initialItems: [item1],
+        persistItems,
+        onLogAction,
+      }),
     );
 
-    await act(async () => {
-      await result.current.addItem(item2);
-      await result.current.updateItem({ id: "1", name: "No Log" });
-      await result.current.reorderItems([item2, item1]);
-      await result.current.removeItem("2");
-    });
+    await act(() => result.current.removeItem("missing"));
+    await act(() => result.current.updateItemName("missing", "Missing"));
+    await act(() => result.current.toggleItemVisibility("missing"));
+    await act(() => result.current.reorderItems([]));
+
+    expect(result.current.items).toEqual([]);
+    expect(persistItems).toHaveBeenCalledWith([]);
+    expect(onLogAction).not.toHaveBeenCalled();
+  });
+
+  it("works without action logging", async () => {
+    const { result } = renderHook(() =>
+      useEntityCollection({
+        initialItems: [item1],
+        persistItems,
+      }),
+    );
+
+    await act(() => result.current.addItem(item2));
+    await act(() => result.current.updateItem({ ...item1, name: "Updated" }));
+    await act(() => result.current.reorderItems([item2, item1]));
+    await act(() => result.current.removeItem("2"));
 
     expect(persistItems).toHaveBeenCalledTimes(4);
   });

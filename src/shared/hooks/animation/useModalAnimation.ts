@@ -1,14 +1,12 @@
 import { useCallback, useState } from "react";
-import { useAccessibility } from "@features/settings/accessibility";
 
 /**
  * Manages modal open/close state with animation support.
+ * @param animationsEnabled - Whether animations are enabled in accessibility settings.
  * @param duration - Duration of the close animation in milliseconds (default: 200ms).
  * @returns An object containing modal state and control functions.
  */
-export function useModalAnimation(duration = 200) {
-  const { animationsEnabled } = useAccessibility();
-
+export function useModalAnimation(animationsEnabled: boolean, duration = 200) {
   const [isOpen, setIsOpen] = useState(false);
   const [closing, setClosing] = useState(false);
 

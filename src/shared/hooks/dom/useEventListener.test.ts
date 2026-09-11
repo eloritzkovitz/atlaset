@@ -1,75 +1,60 @@
-import { vi } from "vitest";
 import { fireEvent, renderHook } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { useEventListener } from "./useEventListener";
 
 describe("useEventListener", () => {
-  it("should call handler on window event", () => {
-    const handler = vi.fn();
-    renderHook(() => useEventListener("resize", handler, window));
-    fireEvent(window, new Event("resize"));
-    expect(handler).toHaveBeenCalledTimes(1);
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
-  it("should call handler on element event", () => {
+  it("handles events and options", () => {
     const handler = vi.fn();
     const div = document.createElement("div");
-    renderHook(() => useEventListener("click", handler, div));
-    fireEvent.click(div);
-    expect(handler).toHaveBeenCalledTimes(1);
-  });
+    const addSpy = vi.spyOn(div, "addEventListener");
 
-  it("should support an array of event names", () => {
-    const handler = vi.fn();
-    const div = document.createElement("div");
     renderHook(() =>
-      useEventListener(["click", "keydown", "touchstart"], handler, div),
+      useEventListener(["click", "keydown"], handler, div, {
+        passive: true,
+      }),
     );
+
     fireEvent.click(div);
     fireEvent.keyDown(div, { key: "Enter" });
-    fireEvent.touchStart(div);
-    expect(handler).toHaveBeenCalledTimes(3);
+
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(addSpy).toHaveBeenCalledWith("click", expect.any(Function), {
+      passive: true,
+    });
   });
 
-  it("should pass options to addEventListener", () => {
-    const handler = vi.fn();
-    const div = document.createElement("div");
-    const addEventListenerSpy = vi.spyOn(div, "addEventListener");
-    renderHook(() =>
-      useEventListener("click", handler, div, { passive: true }),
-    );
-    expect(addEventListenerSpy).toHaveBeenCalledWith(
-      "click",
-      expect.any(Function),
-      { passive: true },
-    );
-    addEventListenerSpy.mockRestore();
-  });
-
-  it("should update handler if changed without re-subscribing", () => {
+  it("uses the latest handler", () => {
     let count = 0;
-    const handler = () => {
-      count += 1;
-    };
+
     const { rerender } = renderHook(
-      ({ h }) => useEventListener("resize", h, window),
+      ({ handler }) => useEventListener("click", handler, window),
       {
-        initialProps: { h: handler },
+        initialProps: {
+          handler: () => {
+            count += 1;
+          },
+        },
       },
     );
 
-    fireEvent(window, new Event("resize"));
-    expect(count).toBe(1);
+    fireEvent.click(window);
 
-    const handler2 = () => {
-      count += 10;
-    };
-    rerender({ h: handler2 });
+    rerender({
+      handler: () => {
+        count += 10;
+      },
+    });
 
-    fireEvent(window, new Event("resize"));
+    fireEvent.click(window);
+
     expect(count).toBe(11);
   });
 
-  it("should cleanup event listeners on unmount", () => {
+  it("cleans up listeners", () => {
     const handler = vi.fn();
     const div = document.createElement("div");
 
@@ -80,20 +65,30 @@ describe("useEventListener", () => {
     unmount();
 
     fireEvent.click(div);
-    fireEvent.keyDown(div, { key: "Enter" });
+    fireEvent.keyDown(div);
 
     expect(handler).not.toHaveBeenCalled();
   });
 
-  it("should gracefully handle null or invalid elements without throwing", () => {
+  it("falls back to window when element is omitted", () => {
     const handler = vi.fn();
-    expect(() => {
-      renderHook(() => useEventListener("click", handler, null));
-    }).not.toThrow();
-    expect(() => {
-      renderHook(() =>
-        useEventListener("click", handler, {} as unknown as EventTarget),
-      );
-    }).not.toThrow();
+
+    renderHook(() => useEventListener("resize", handler));
+
+    fireEvent(window, new Event("resize"));
+
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
+  it("handles null and invalid elements", () => {
+    const handler = vi.fn();
+
+    expect(() =>
+      renderHook(() => useEventListener("click", handler, null)),
+    ).not.toThrow();
+
+    expect(() =>
+      renderHook(() => useEventListener("click", handler, {} as EventTarget)),
+    ).not.toThrow();
   });
 });

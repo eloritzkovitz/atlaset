@@ -1,8 +1,8 @@
 import { renderHook } from "@testing-library/react";
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useMenuPosition } from "./useMenuPosition";
 
-function mockRect({
+function rect({
   top = 0,
   bottom = 40,
   right = 100,
@@ -16,10 +16,7 @@ function mockRect({
     left: right - width,
     width,
     height,
-    x: right - width,
-    y: top,
-    toJSON: () => {},
-  } as unknown as DOMRect;
+  } as DOMRect;
 }
 
 describe("useMenuPosition", () => {
@@ -29,8 +26,9 @@ describe("useMenuPosition", () => {
   beforeEach(() => {
     btn = document.createElement("div");
     menu = document.createElement("div");
-    document.body.appendChild(btn);
-    document.body.appendChild(menu);
+
+    vi.spyOn(btn, "getBoundingClientRect").mockReturnValue(rect());
+    vi.spyOn(menu, "getBoundingClientRect").mockReturnValue(rect());
   });
 
   afterEach(() => {
@@ -41,145 +39,206 @@ describe("useMenuPosition", () => {
     vi.restoreAllMocks();
   });
 
-  const runTest = (opts: {
-    btnRect?: Parameters<typeof mockRect>[0];
-    menuRect?: Parameters<typeof mockRect>[0];
-    args?: any[];
-    rtl?: boolean;
-    windowHeight?: number;
-    expectedLeft: number;
-    expectedTop: number;
-  }) => {
-    const dirVal = opts.rtl ? "rtl" : "ltr";
-
-    document.dir = dirVal;
-    document.body.dir = dirVal;
-    document.documentElement.setAttribute("dir", dirVal);
-    document.body.setAttribute("dir", dirVal);
-
-    vi.spyOn(btn, "getBoundingClientRect").mockReturnValue(
-      mockRect(opts.btnRect),
+  it("positions adjacent and overlay menus", () => {
+    vi.mocked(btn.getBoundingClientRect).mockReturnValue(
+      rect({ top: 100, bottom: 140, right: 200, width: 100 }),
     );
-    vi.spyOn(menu, "getBoundingClientRect").mockReturnValue(
-      mockRect(opts.menuRect),
+    vi.mocked(menu.getBoundingClientRect).mockReturnValue(
+      rect({ width: 80, height: 50 }),
     );
 
-    if (opts.windowHeight !== undefined) {
-      vi.stubGlobal("innerHeight", opts.windowHeight);
-    }
+    document.documentElement.dir = "ltr";
 
-    const { result } = renderHook(() =>
-      useMenuPosition(
-        true,
-        { current: btn },
-        { current: menu },
-        ...(opts.args || []),
-      ),
-    );
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          10,
+          "right",
+          "adjacent",
+        ),
+      ).result.current.left,
+    ).toBe(200);
 
-    expect(result.current.left).toBe(opts.expectedLeft);
-    expect(result.current.top).toBe(opts.expectedTop);
-  };
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "left",
+          "adjacent",
+        ),
+      ).result.current.left,
+    ).toBe(20);
 
-  it("calculates basic positioning and placement variants", () => {
-    runTest({
-      btnRect: { top: 100, bottom: 140, right: 200, width: 100 },
-      menuRect: { height: 40, width: 100 },
-      expectedLeft: 200,
-      expectedTop: 100,
-    });
+    document.documentElement.dir = "rtl";
 
-    runTest({
-      btnRect: { top: 200, bottom: 240, right: 200, width: 100 },
-      menuRect: { height: 50, width: 100 },
-      args: [10, "top"],
-      expectedLeft: 100,
-      expectedTop: 200 - 50 - 10,
-    });
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "right",
+          "adjacent",
+        ),
+      ).result.current.left,
+    ).toBe(20);
 
-    runTest({
-      btnRect: { top: 100, bottom: 140, right: 200, width: 100 },
-      menuRect: { height: 40, width: 100 },
-      args: [0, "left", "overlay"],
-      expectedLeft: 0,
-      expectedTop: 100,
-    });
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "left",
+          "adjacent",
+        ),
+      ).result.current.left,
+    ).toBe(200);
 
-    runTest({
-      btnRect: { top: 100, bottom: 140, right: 200, width: 100 },
-      menuRect: { height: 40, width: 100 },
-      args: [0, "right", "overlay"],
-      expectedLeft: 100,
-      expectedTop: 100,
-    });
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "left",
+          "overlay",
+        ),
+      ).result.current.left,
+    ).toBe(20);
 
-    runTest({
-      btnRect: { top: 100, bottom: 140, right: 200, width: 100 },
-      menuRect: { height: 40, width: 100 },
-      args: [0, "left", "adjacent"],
-      expectedLeft: 0,
-      expectedTop: 100,
-    });
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "right",
+          "overlay",
+        ),
+      ).result.current.left,
+    ).toBe(100);
   });
 
-  it("handles RTL direction swapping correctly", () => {
-    runTest({
-      btnRect: { top: 100, bottom: 140, right: 200, width: 100 },
-      menuRect: { height: 40, width: 100 },
-      rtl: true,
-      args: [0, "right", "adjacent"],
-      expectedLeft: 0,
-      expectedTop: 100,
-    });
+  it("positions a top menu with and without an offset", () => {
+    vi.mocked(btn.getBoundingClientRect).mockReturnValue(
+      rect({ top: 200, bottom: 240, right: 200, width: 100 }),
+    );
+    vi.mocked(menu.getBoundingClientRect).mockReturnValue(
+      rect({ width: 100, height: 50 }),
+    );
 
-    runTest({
-      btnRect: { top: 100, bottom: 140, right: 300, width: 150 },
-      menuRect: { height: 40, width: 120 },
-      rtl: true,
-      expectedLeft: 30,
-      expectedTop: 100,
-    });
+    expect(
+      renderHook(() =>
+        useMenuPosition(true, { current: btn }, { current: menu }, 10, "top"),
+      ).result.current.top,
+    ).toBe(140);
+
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "top",
+        ),
+      ).result.current.top,
+    ).toBe(150);
   });
 
-  it("flips above when space below is constrained", () => {
-    runTest({
-      btnRect: { top: 500, bottom: 540, right: 200, width: 100 },
-      menuRect: { height: 100, width: 100 },
-      windowHeight: 550,
-      expectedLeft: 200,
-      expectedTop: 500 - 100,
-    });
+  it("uses document.dir and body.dir fallbacks", () => {
+    document.documentElement.removeAttribute("dir");
+    document.dir = "rtl";
+
+    vi.mocked(btn.getBoundingClientRect).mockReturnValue(
+      rect({ right: 200, width: 100 }),
+    );
+    vi.mocked(menu.getBoundingClientRect).mockReturnValue(rect({ width: 80 }));
+
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "right",
+          "adjacent",
+        ),
+      ).result.current.left,
+    ).toBe(20);
+
+    document.dir = "";
+    document.body.removeAttribute("dir");
+    document.body.dir = "rtl";
+
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "right",
+          "adjacent",
+        ),
+      ).result.current.left,
+    ).toBe(20);
   });
 
-  it("handles width options and inactive states", () => {
-    vi.spyOn(btn, "getBoundingClientRect").mockReturnValue(
-      mockRect({ top: 100, bottom: 140, right: 200, width: 120 }),
+  it("flips above when there is not enough space below", () => {
+    vi.stubGlobal("innerHeight", 800);
+
+    vi.mocked(btn.getBoundingClientRect).mockReturnValue(
+      rect({ top: 700, bottom: 740, right: 200 }),
     );
-    vi.spyOn(menu, "getBoundingClientRect").mockReturnValue(
-      mockRect({ height: 40, width: 80 }),
+    vi.mocked(menu.getBoundingClientRect).mockReturnValue(
+      rect({ width: 80, height: 100 }),
     );
 
-    const { result: r1 } = renderHook(() =>
-      useMenuPosition(
-        true,
-        { current: btn },
-        { current: menu },
-        0,
-        "right",
-        undefined,
-        false,
-      ),
-    );
-    expect(r1.current.width).toBeUndefined();
+    expect(
+      renderHook(() =>
+        useMenuPosition(true, { current: btn }, { current: menu }),
+      ).result.current.top,
+    ).toBe(600);
+  });
 
-    const { result: r2 } = renderHook(() =>
-      useMenuPosition(false, { current: btn }, { current: menu }),
-    );
-    expect(r2.current).toEqual({});
+  it("handles width, closed state, and missing refs", () => {
+    expect(
+      renderHook(() =>
+        useMenuPosition(
+          true,
+          { current: btn },
+          { current: menu },
+          undefined,
+          "right",
+          "adjacent",
+          false,
+        ),
+      ).result.current.width,
+    ).toBeUndefined();
 
-    const { result: r3 } = renderHook(() =>
-      useMenuPosition(true, { current: null }, { current: menu }),
-    );
-    expect(r3.current).toEqual({});
+    expect(
+      renderHook(() =>
+        useMenuPosition(false, { current: btn }, { current: menu }),
+      ).result.current,
+    ).toEqual({});
+
+    expect(
+      renderHook(() =>
+        useMenuPosition(true, { current: null }, { current: null }),
+      ).result.current,
+    ).toEqual({});
   });
 });

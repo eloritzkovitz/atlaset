@@ -1,12 +1,9 @@
 import { renderHook } from "@testing-library/react";
-import { useListNavigation } from "./useListNavigation";
-import { vi, beforeEach, afterEach, describe, it, expect } from "vitest";
-
-vi.mock("../input/useKeyHandler", () => ({
-  useKeyHandler: vi.fn(),
-}));
-
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useKeyHandler } from "../input/useKeyHandler";
+import { useListNavigation } from "./useListNavigation";
+
+vi.mock("../input/useKeyHandler", () => ({ useKeyHandler: vi.fn() }));
 
 const items = [
   { id: "A", name: "Alpha" },
@@ -14,58 +11,19 @@ const items = [
   { id: "C", name: "Charlie" },
 ];
 
-type Item = (typeof items)[0];
+type Item = (typeof items)[number];
 
 describe("useListNavigation", () => {
-  let onSelect: (key: string | null) => void;
-  let onHover: (key: string | null) => void;
-  let onItemInfo: (item: Item) => void;
-  let scrollSpy: ReturnType<typeof vi.fn>;
-  let getElementByIdSpy: ReturnType<typeof vi.fn>;
-
-  function getDefaultProps() {
-    return {
-      items,
-      getKey: (item: Item) => item.id,
-      selectedKey: "A",
-      hoveredKey: null,
-      onSelect,
-      onHover,
-      enabled: true,
-    };
-  }
-
-  function renderNavigationHook(overrides = {}) {
-    return renderHook(() =>
-      useListNavigation<Item>({
-        ...getDefaultProps(),
-        ...overrides,
-      }),
-    );
-  }
-
-  function triggerKey(key: string, props = {}) {
-    const handler = vi.mocked(useKeyHandler).mock.calls[0][0];
-    handler({
-      key,
-      preventDefault: vi.fn(),
-      ...props,
-    } as unknown as KeyboardEvent);
-    vi.runAllTimers();
-  }
+  const onSelect = vi.fn();
+  const onHover = vi.fn();
+  const onItemInfo = vi.fn();
 
   beforeEach(() => {
-    onSelect = vi.fn();
-    onHover = vi.fn();
-    onItemInfo = vi.fn();
-    scrollSpy = vi.fn();
-    getElementByIdSpy = vi
-      .fn()
-      .mockImplementation((id) => (id ? { scrollIntoView: scrollSpy } : null));
-    vi.spyOn(document, "getElementById").mockImplementation(
-      getElementByIdSpy as unknown as (id: string) => HTMLElement | null,
-    );
+    vi.clearAllMocks();
     vi.useFakeTimers();
+    vi.spyOn(document, "getElementById").mockReturnValue({
+      scrollIntoView: vi.fn(),
+    } as unknown as HTMLElement);
   });
 
   afterEach(() => {
@@ -73,89 +31,103 @@ describe("useListNavigation", () => {
     vi.useRealTimers();
   });
 
-  it("navigates down with ArrowDown", () => {
-    renderNavigationHook({ onSelect, onHover });
-    triggerKey("ArrowDown");
+  const renderNavigation = (
+    overrides: Partial<Parameters<typeof useListNavigation<Item>>[0]> = {},
+  ) =>
+    renderHook(() =>
+      useListNavigation<Item>({
+        items,
+        getKey: (item) => item.id,
+        selectedKey: "A",
+        hoveredKey: null,
+        onSelect,
+        onHover,
+        ...overrides,
+      }),
+    );
+
+  const trigger = (key: string) => {
+    vi.mocked(useKeyHandler).mock.calls[0][0]({
+      key,
+      preventDefault: vi.fn(),
+    } as unknown as KeyboardEvent);
+
+    vi.runAllTimers();
+  };
+
+  it.each([
+    ["ArrowDown", "A", "B"],
+    ["ArrowUp", "B", "A"],
+    ["Home", "C", "A"],
+    ["End", "A", "C"],
+    ["PageDown", "A", "C"],
+    ["PageUp", "C", "A"],
+    ["PageUp", "B", "A"],
+  ])("handles %s", (key, current, expected) => {
+    renderNavigation({ selectedKey: current });
+    trigger(key);
+
+    expect(onSelect).toHaveBeenCalledWith(expected);
+    expect(onHover).toHaveBeenCalledWith(expected);
+  });
+
+  it("wraps arrow navigation", () => {
+    renderNavigation({ selectedKey: "A" });
+    trigger("ArrowUp");
+    expect(onSelect).toHaveBeenCalledWith("C");
+
+    vi.clearAllMocks();
+
+    renderNavigation({ selectedKey: "C" });
+    trigger("ArrowDown");
+    expect(onSelect).toHaveBeenCalledWith("A");
+  });
+
+  it("uses hovered item and defaults missing key", () => {
+    renderNavigation({ hoveredKey: "B" });
+    trigger("ArrowDown");
+    expect(onSelect).toHaveBeenCalledWith("C");
+
+    vi.clearAllMocks();
+
+    renderNavigation({ selectedKey: "missing" });
+    trigger("ArrowDown");
     expect(onSelect).toHaveBeenCalledWith("B");
-    expect(onHover).toHaveBeenCalledWith("B");
-    expect(getElementByIdSpy).toHaveBeenCalledWith("B");
-    expect(scrollSpy).toHaveBeenCalled();
   });
 
-  it("wraps to first on ArrowDown at end", () => {
-    renderNavigationHook({ selectedKey: "C", onSelect, onHover });
-    triggerKey("ArrowDown");
-    expect(onSelect).toHaveBeenCalledWith("A");
-    expect(onHover).toHaveBeenCalledWith("A");
-  });
+  it("handles Enter", () => {
+    renderNavigation({ selectedKey: "B", onItemInfo });
+    trigger("Enter");
 
-  it("navigates up with ArrowUp", () => {
-    renderNavigationHook({ selectedKey: "B", onSelect, onHover });
-    triggerKey("ArrowUp");
-    expect(onSelect).toHaveBeenCalledWith("A");
-    expect(onHover).toHaveBeenCalledWith("A");
-    expect(getElementByIdSpy).toHaveBeenCalledWith("A");
-    expect(scrollSpy).toHaveBeenCalled();
-  });
-
-  it("wraps to last on ArrowUp at start", () => {
-    renderNavigationHook({ selectedKey: "A", onSelect, onHover });
-    triggerKey("ArrowUp");
-    expect(onSelect).toHaveBeenCalledWith("C");
-    expect(onHover).toHaveBeenCalledWith("C");
-  });
-
-  it("selects first with Home", () => {
-    renderNavigationHook({ selectedKey: "C", onSelect, onHover });
-    triggerKey("Home");
-    expect(onSelect).toHaveBeenCalledWith("A");
-    expect(onHover).toHaveBeenCalledWith("A");
-    expect(getElementByIdSpy).toHaveBeenCalledWith("A");
-    expect(scrollSpy).toHaveBeenCalled();
-  });
-
-  it("selects last with End", () => {
-    renderNavigationHook({ selectedKey: "A", onSelect, onHover });
-    triggerKey("End");
-    expect(onSelect).toHaveBeenCalledWith("C");
-    expect(onHover).toHaveBeenCalledWith("C");
-    expect(getElementByIdSpy).toHaveBeenCalledWith("C");
-    expect(scrollSpy).toHaveBeenCalled();
-  });
-
-  it("pages down with PageDown", () => {
-    renderNavigationHook({ selectedKey: "A", onSelect, onHover });
-    triggerKey("PageDown");
-    expect(onSelect).toHaveBeenCalledWith("C");
-    expect(onHover).toHaveBeenCalledWith("C");
-    expect(getElementByIdSpy).toHaveBeenCalledWith("C");
-    expect(scrollSpy).toHaveBeenCalled();
-  });
-
-  it("pages up with PageUp", () => {
-    renderNavigationHook({ selectedKey: "C", onSelect, onHover });
-    triggerKey("PageUp");
-    expect(onSelect).toHaveBeenCalledWith("A");
-    expect(onHover).toHaveBeenCalledWith("A");
-    expect(getElementByIdSpy).toHaveBeenCalledWith("A");
-    expect(scrollSpy).toHaveBeenCalled();
-  });
-
-  it("calls onItemInfo on Enter", () => {
-    renderNavigationHook({ selectedKey: "B", onSelect, onHover, onItemInfo });
-    triggerKey("Enter");
     expect(onItemInfo).toHaveBeenCalledWith(items[1]);
+
+    vi.clearAllMocks();
+
+    renderNavigation({ selectedKey: "B" });
+    trigger("Enter");
+
+    expect(onItemInfo).not.toHaveBeenCalled();
   });
 
-  it("does nothing if items is empty", () => {
-    renderNavigationHook({ items: [], onSelect, onHover });
-    triggerKey("ArrowDown");
+  it("ignores unsupported keys", () => {
+    renderNavigation();
+    trigger("Escape");
+
     expect(onSelect).not.toHaveBeenCalled();
     expect(onHover).not.toHaveBeenCalled();
+    expect(onItemInfo).not.toHaveBeenCalled();
   });
 
-  it("does nothing if enabled is false", () => {
-    renderNavigationHook({ enabled: false, onSelect, onHover });
+  it("handles empty and disabled navigation", () => {
+    renderNavigation({ items: [] });
+    trigger("ArrowDown");
+
+    expect(onSelect).not.toHaveBeenCalled();
+
+    vi.clearAllMocks();
+
+    renderNavigation({ enabled: false });
+
     expect(useKeyHandler).toHaveBeenCalledWith(
       expect.any(Function),
       ["ArrowDown", "ArrowUp", "Enter", "Home", "End", "PageDown", "PageUp"],

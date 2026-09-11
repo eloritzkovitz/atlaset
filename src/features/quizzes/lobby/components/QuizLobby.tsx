@@ -4,6 +4,7 @@ import { FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import type { RootState } from "@app/store";
+import { useAccessibility } from "@features/settings/accessibility";
 import {
   useDisclosure,
   useFlyTransition,
@@ -27,6 +28,7 @@ const ROWS = [
 ];
 
 export function QuizLobby() {
+  const { animationsEnabled } = useAccessibility();
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,7 +56,11 @@ export function QuizLobby() {
     animationClass,
     show: triggerFlyIn,
     hide: triggerFlyOut,
-  } = useFlyTransition({ duration: 500, initialVisible: true });
+  } = useFlyTransition({
+    animationsEnabled,
+    duration: 500,
+    initialVisible: true,
+  });
 
   // Settings fly/fly-back transition
   useEffect(() => {
@@ -83,6 +89,7 @@ export function QuizLobby() {
     dismissable: true,
   });
 
+  // Automatically hide the hint after 4 seconds
   useEffect(() => {
     if (leaderboardHint) {
       const timeout = setTimeout(() => setLeaderboardHint(null), 4000);

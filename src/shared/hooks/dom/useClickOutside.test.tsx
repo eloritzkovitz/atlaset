@@ -1,22 +1,32 @@
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import { useRef, useState, type RefObject } from "react";
+import { describe, expect, it } from "vitest";
 import { useClickOutside } from "./useClickOutside";
+
+type TestOptions = {
+  click?: boolean;
+  escape?: boolean;
+  scroll?: boolean;
+  resize?: boolean;
+};
 
 function TestComponent({
   enabled = true,
   options = {},
 }: {
   enabled?: boolean;
-  options?: any;
+  options?: TestOptions;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [outside, setOutside] = useState(false);
+
   useClickOutside(
     [ref as RefObject<HTMLElement>],
     () => setOutside(true),
     enabled,
     options,
   );
+
   return (
     <div>
       <div data-testid="inside" ref={ref}>
@@ -29,77 +39,84 @@ function TestComponent({
 }
 
 describe("useClickOutside", () => {
-  const renderComp = (props: any = {}) => render(<TestComponent {...props} />);
+  const renderComp = (props?: { enabled?: boolean; options?: TestOptions }) =>
+    render(<TestComponent {...props} />);
 
-  it.each(["mousedown", "pointerdown"])(
-    "%s: inside vs outside",
-    (eventType) => {
+  it.each(["mouseDown", "pointerDown"] as const)(
+    "%s triggers only outside",
+    (event) => {
       const { getByTestId } = renderComp();
-      const eventMap: Record<string, keyof typeof fireEvent> = {
-        mousedown: "mouseDown",
-        pointerdown: "pointerDown",
-      };
-      const fn = fireEvent[eventMap[eventType]] as (el: Element) => void;
-      fn(getByTestId("inside"));
+
+      fireEvent[event](getByTestId("inside"));
       expect(getByTestId("result").textContent).toBe("inside");
-      fn(getByTestId("outside"));
+
+      fireEvent[event](getByTestId("outside"));
       expect(getByTestId("result").textContent).toBe("outside");
     },
   );
 
-  it("scroll behavior: default disabled, enabled true", () => {
-    const d1 = renderComp();
-    fireEvent.scroll(d1.getByTestId("outside"));
-    expect(d1.getByTestId("result").textContent).toBe("inside");
-    d1.unmount();
+  it("handles scroll and resize", () => {
+    const { getByTestId, unmount } = renderComp({
+      options: { scroll: true, resize: true },
+    });
 
-    const d2 = renderComp({ options: { scroll: true } });
-    fireEvent.scroll(d2.getByTestId("outside"));
-    expect(d2.getByTestId("result").textContent).toBe("outside");
-    d2.unmount();
-  });
-
-  it("resize behavior: enabled vs disabled", () => {
-    const r1 = renderComp({ options: { resize: true } });
-    fireEvent.resize(window);
-    expect(r1.getByTestId("result").textContent).toBe("outside");
-    r1.unmount();
-
-    const r2 = renderComp({ options: { resize: false } });
-    fireEvent.resize(window);
-    expect(r2.getByTestId("result").textContent).toBe("inside");
-    r2.unmount();
-  });
-
-  it("Escape key and escape option", () => {
-    const d = renderComp();
-    fireEvent.keyDown(window, { key: "Escape" });
-    expect(d.getByTestId("result").textContent).toBe("outside");
-    d.unmount();
-
-    const d2 = renderComp({ options: { escape: false } });
-    fireEvent.keyDown(window, { key: "Escape" });
-    expect(d2.getByTestId("result").textContent).toBe("inside");
-    d2.unmount();
-  });
-
-  it("does not call when disabled", () => {
-    const { getByTestId } = renderComp({ enabled: false });
-    fireEvent.mouseDown(getByTestId("outside"));
+    fireEvent.scroll(getByTestId("inside"));
     expect(getByTestId("result").textContent).toBe("inside");
+
+    fireEvent.scroll(getByTestId("outside"));
+    expect(getByTestId("result").textContent).toBe("outside");
+
+    unmount();
+
+    const second = renderComp({ options: { resize: true } });
+
+    fireEvent.resize(window);
+    expect(second.getByTestId("result").textContent).toBe("outside");
+
+    second.unmount();
   });
 
-  it("scroll on window triggers when scroll option is true", () => {
-    const d = renderComp({ options: { scroll: true } });
+  it("handles disabled options", () => {
+    const { getByTestId, unmount } = renderComp({
+      options: {
+        click: false,
+        scroll: false,
+        resize: false,
+        escape: false,
+      },
+    });
+
+    fireEvent.mouseDown(getByTestId("outside"));
     fireEvent.scroll(window);
-    expect(d.getByTestId("result").textContent).toBe("outside");
-    d.unmount();
+    fireEvent.resize(window);
+    fireEvent.keyDown(window, { key: "Escape" });
+
+    expect(getByTestId("result").textContent).toBe("inside");
+
+    unmount();
+
+    const disabled = renderComp({ enabled: false });
+
+    fireEvent.mouseDown(disabled.getByTestId("outside"));
+
+    expect(disabled.getByTestId("result").textContent).toBe("inside");
   });
 
-  it("keydown non-Escape does not trigger onOutside", () => {
-    const d = renderComp();
+  it("handles Escape and ignores other keys", () => {
+    const { getByTestId, unmount } = renderComp();
+
     fireEvent.keyDown(window, { key: "Enter" });
-    expect(d.getByTestId("result").textContent).toBe("inside");
-    d.unmount();
+    expect(getByTestId("result").textContent).toBe("inside");
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(getByTestId("result").textContent).toBe("outside");
+
+    unmount();
+
+    const disabled = renderComp({ options: { escape: false } });
+
+    fireEvent.keyDown(window, { key: "Escape" });
+
+    expect(disabled.getByTestId("result").textContent).toBe("inside");
   });
 });
