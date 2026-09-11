@@ -23,7 +23,7 @@ import { useTripEditor } from "../../editor/hooks/useTripEditor";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();
-  const { trips, loading } = useTrips();
+  const { trips, loading, sharedTripIds } = useTrips();
   const { t } = useTranslation("trips");
 
   const { tripId } = useParams<{ tripId: string }>();
@@ -78,6 +78,7 @@ export default function TripDetailsPage() {
           <TripHeader
             trip={trip}
             onEdit={() => handleEdit(trip)}
+            sharedWithMe={sharedTripIds.has(trip.id)}
             navigation={{
               previous: previousTrip
                 ? {

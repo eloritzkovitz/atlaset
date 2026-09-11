@@ -17,7 +17,7 @@ const emptyTrip: Trip = {
  * Manages the state and handlers for creating and editing trips.
  */
 export function useTripEditor() {
-  const { addTrip, editTrip, trips } = useTrips();
+  const { addTrip, editTrip, trips, sharedTripIds } = useTrips();
 
   const modal = useDisclosure<Trip>();
 
@@ -29,9 +29,10 @@ export function useTripEditor() {
   // Edit a trip
   const handleEdit = useCallback(
     (selectedTrip: Trip) => {
+      if (sharedTripIds.has(selectedTrip.id)) return;
       modal.open({ ...selectedTrip });
     },
-    [modal],
+    [modal, sharedTripIds],
   );
 
   // Save a trip (either add or edit)

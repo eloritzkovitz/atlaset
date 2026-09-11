@@ -63,6 +63,7 @@ export function TripHeader({
               className="!w-full !rounded-full text-text hover:bg-surface-hover"
               onClick={onEdit}
               icon={<ICONS.edit className="h-4 w-4" />}
+              disabled={sharedWithMe}
             >
               {t("actions.editTrip", "Edit trip")}
             </ActionButton>
