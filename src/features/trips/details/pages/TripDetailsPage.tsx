@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Card,
   Container,
+  EmptyListMessage,
   LoadingSpinner,
   PageHeader,
   SectionHeader,
@@ -129,10 +130,13 @@ export default function TripDetailsPage() {
 
           {/* Notes */}
           <Card title={t("fields.notes", "Notes")}>
-            <p className="whitespace-pre-line text-muted">
-              {trip.notes ||
-                t("editor.overview.noNotes", "No notes available.")}
-            </p>
+            {trip.notes ? (
+              <p className="whitespace-pre-line text-muted">{trip.notes}</p>
+            ) : (
+              <EmptyListMessage
+                message={t("editor.overview.noNotes", "No notes available.")}
+              />
+            )}
           </Card>
         </div>
       </Container>
