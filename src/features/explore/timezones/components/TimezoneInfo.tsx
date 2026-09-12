@@ -99,22 +99,18 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
       groups={[
         {
           isoCodes: standardIsoGroups.sovereignIsoCodes,
-          navigationCountryIsoCodes: standardIsoGroups.sovereignIsoCodes,
           labelKey: "timezones.timezoneInfo.usingStandardTime",
         },
         {
           isoCodes: standardIsoGroups.dependencyIsoCodes,
-          navigationCountryIsoCodes: standardIsoGroups.dependencyIsoCodes,
           labelKey: "timezones.timezoneInfo.dependenciesUsingStandardTime",
         },
         {
           isoCodes: dstIsoGroups.sovereignIsoCodes,
-          navigationCountryIsoCodes: dstIsoGroups.sovereignIsoCodes,
           labelKey: "timezones.timezoneInfo.usingDST",
         },
         {
           isoCodes: dstIsoGroups.dependencyIsoCodes,
-          navigationCountryIsoCodes: dstIsoGroups.dependencyIsoCodes,
           labelKey: "timezones.timezoneInfo.dependenciesUsingDST",
         },
       ]}

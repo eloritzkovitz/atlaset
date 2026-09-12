@@ -140,12 +140,10 @@ export function AchievementInfo() {
             groups={[
               {
                 isoCodes: isoGroups.sovereignIsoCodes,
-                navigationCountryIsoCodes: isoGroups.sovereignIsoCodes,
                 label: primaryGroupLabel,
               },
               {
                 isoCodes: isoGroups.dependencyIsoCodes,
-                navigationCountryIsoCodes: isoGroups.dependencyIsoCodes,
                 label: dependencyGroupLabel,
               },
             ]}

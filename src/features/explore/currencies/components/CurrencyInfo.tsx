@@ -61,12 +61,10 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       groups={[
         {
           isoCodes: isoGroups.sovereignIsoCodes,
-          navigationCountryIsoCodes: isoGroups.sovereignIsoCodes,
           labelKey: "currencies.currencyInfo.usingCurrency",
         },
         {
           isoCodes: isoGroups.dependencyIsoCodes,
-          navigationCountryIsoCodes: isoGroups.dependencyIsoCodes,
           labelKey: "currencies.currencyInfo.dependenciesUsingCurrency",
         },
       ]}

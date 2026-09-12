@@ -71,12 +71,10 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
       groups={[
         {
           isoCodes: isoGroups.sovereignIsoCodes,
-          navigationCountryIsoCodes: isoGroups.sovereignIsoCodes,
           labelKey: "languages.languageInfo.usingLanguage",
         },
         {
           isoCodes: isoGroups.dependencyIsoCodes,
-          navigationCountryIsoCodes: isoGroups.dependencyIsoCodes,
           labelKey: "languages.languageInfo.dependenciesUsingLanguage",
         },
       ]}

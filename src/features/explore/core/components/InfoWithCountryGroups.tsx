@@ -25,6 +25,7 @@ interface InfoWithCountryGroupsProps {
   visited?: (iso: string) => boolean;
 }
 
+/** Renders a list of countries grouped by region or other criteria. */
 export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   title,
   subtitle,
@@ -54,10 +55,15 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
     }));
   };
 
-  // Determine if any groups have countries to display
   const hasAnyGroups = groups.some((g) => g.isoCodes.length > 0);
 
   const shouldRenderGrid = viewMode === "grid";
+
+  // Handle country selection and invoke the provided callback
+  const handleCountrySelect = (
+    iso: string,
+    navigationCountryIsoCodes?: string[],
+  ) => onSelectCountry?.(iso, navigationCountryIsoCodes);
 
   // Renders a group of countries based on the view mode
   const renderGroup = (
@@ -78,7 +84,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
           expanded={expanded}
           onToggle={onToggle}
           onSelectCountry={(iso) =>
-            onSelectCountry?.(iso, navigationCountryIsoCodes)
+            handleCountrySelect(iso, navigationCountryIsoCodes)
           }
         />
       );
@@ -97,7 +103,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
           size="64"
           isHighlighted={visited}
           onCountryClick={(iso) =>
-            onSelectCountry?.(iso, navigationCountryIsoCodes)
+            handleCountrySelect(iso, navigationCountryIsoCodes)
           }
         />
       </CollapsibleHeader>
@@ -126,6 +132,8 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
 
       {groups.map((section, idx) => {
         const groupKey = `section-${idx}`;
+        const navigationCountryIsoCodes =
+          section.navigationCountryIsoCodes ?? section.isoCodes;
 
         const resolvedLabel =
           section.label ??
@@ -140,7 +148,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
               section.isoCodes,
               isExpanded(groupKey),
               () => toggleExpanded(groupKey),
-              section.navigationCountryIsoCodes,
+              navigationCountryIsoCodes,
             )}
           </React.Fragment>
         );
