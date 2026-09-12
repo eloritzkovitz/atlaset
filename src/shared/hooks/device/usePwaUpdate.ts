@@ -22,7 +22,8 @@ export function handlePwaUpdateMessage(
 export function usePwaUpdate() {
   const [needRefreshState, setNeedRefreshState] = useState(false);
   const bcRef = useRef<BroadcastChannel | null>(null);
-  const initialCheckRef = useRef(true);
+  const launchCheckRef = useRef<"pending" | "settled">("pending");
+  const launchUpdateStartedRef = useRef(false);
 
   const {
     needRefresh: [pwaNeedRefresh],
@@ -50,13 +51,23 @@ export function usePwaUpdate() {
 
   // Sync state with Workbox & Online status
   useEffect(() => {
-    if (initialCheckRef.current) {
-      initialCheckRef.current = false;
+    if (!pwaNeedRefresh) {
+      launchUpdateStartedRef.current = false;
+    }
+
+    if (launchCheckRef.current === "pending") {
       if (pwaNeedRefresh && navigator.onLine) {
-        void pwaUpdateServiceWorker(true);
+        if (!launchUpdateStartedRef.current) {
+          launchUpdateStartedRef.current = true;
+          void pwaUpdateServiceWorker(true);
+        }
+      } else {
+        launchCheckRef.current = "settled";
       }
       return;
     }
+
+    if (launchUpdateStartedRef.current) return;
 
     if (pwaNeedRefresh && navigator.onLine) {
       setNeedRefreshState(true);
