@@ -22,14 +22,15 @@ import { ParticipantSelectModal } from "./selects/ParticipantSelectModal";
 import { TagSelectModal } from "./selects/TagSelectModal";
 import { TripDestinationsTab } from "./tabs/destinations/TripDestinationsTab";
 import { TripDetailsTab } from "./tabs/details/TripDetailsTab";
+import { TripItineraryTab } from "./tabs/itinerary/TripItineraryTab";
 import { TripOverviewTab } from "./tabs/overview/TripOverviewTab";
+import { TripPhotosTab } from "./tabs/photos/TripPhotosTab";
 import { useTripFilters } from "../../core/hooks/useTripFilters";
 import type { Trip, TripCategory, TripTag } from "../../core/types";
 import { getAutoTripStatus } from "../../core/utils/trips";
 import "./TripModal.css";
-import { TripPhotosTab } from "./tabs/photos/TripPhotosTab";
 
-type TripTab = "overview" | "details" | "destinations" | "photos";
+type TripTab = "overview" | "details" | "destinations" | "itinerary" | "photos";
 
 interface TripModalProps {
   isOpen: boolean;
@@ -126,6 +127,10 @@ export function TripModal({
       label: t("sections.destinations"),
     },
     {
+      value: "itinerary",
+      label: t("sections.itinerary"),
+    },
+    {
       value: "photos",
       label: t("sections.photos"),
     },
@@ -204,6 +209,10 @@ export function TripModal({
                   onEditLocations={destinationModal.open}
                   onChange={onChange}
                 />
+              )}
+
+              {activeTab === "itinerary" && (
+                <TripItineraryTab trip={trip} onChange={onChange} />
               )}
 
               {activeTab === "photos" && (

@@ -41,6 +41,8 @@ export type Trip = {
   photos?: TripPhoto[];
   /** URL of an external photo album for the trip. */
   photoAlbumUrl?: string;
+  /** URL of a Google Maps link for the trip. */
+  googleMapsUrl?: string;
 };
 
 /** Represents a shared trip reference. */

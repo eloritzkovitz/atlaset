@@ -3,6 +3,7 @@
 ## 2026-09-12
 
 - **[feature]** **Trips | Photos:** Added options to reorder photos in the gallery
+- **[feature]** **Trips:** Added option to embed Google My Maps maps in trips
 
 ## 2026-09-10
 

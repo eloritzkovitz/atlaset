@@ -21,6 +21,7 @@ import { useTripLocations } from "../../core/hooks/useTripLocations";
 import { useTripNavigation } from "../../core/hooks/useTripNavigation";
 import { TripModal } from "../../editor/components/TripModal";
 import { useTripEditor } from "../../editor/hooks/useTripEditor";
+import { TripGoogleMap } from "../components/TripsGoogleMap";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();
@@ -101,6 +102,9 @@ export default function TripDetailsPage() {
             locations={locations}
             loading={locationsLoading}
           />
+
+          {/* Google My Map */}
+          {trip.googleMapsUrl && <TripGoogleMap url={trip.googleMapsUrl} />}
 
           {/* Photos */}
           <TripPhotoGallery

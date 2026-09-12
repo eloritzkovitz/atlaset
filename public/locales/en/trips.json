@@ -17,7 +17,8 @@
     "status": "Status",
     "tags": "Tags",
     "notes": "Notes",
-    "photoAlbumUrl": "Photo Album URL"
+    "photoAlbumUrl": "Photo Album URL",
+    "googleMapUrl": "Google Maps URL"
   },
 
   "indicators": {
@@ -29,6 +30,7 @@
     "overview": "Overview",
     "details": "Details",
     "destinations": "Destinations",
+    "itinerary": "Itinerary",
     "photos": "Photos"
   },
 

@@ -17,7 +17,8 @@
     "status": "סטטוס",
     "tags": "תגיות",
     "notes": "הערות",
-    "photoAlbumUrl": "קישור לאלבום תמונות"
+    "photoAlbumUrl": "קישור לאלבום תמונות",
+    "googleMapUrl": "קישור ל-Google Maps"
   },
 
   "indicators": {
@@ -29,6 +30,7 @@
     "overview": "סקירה",
     "details": "פרטים",
     "destinations": "יעדים",
+    "itinerary": "מסלול",
     "photos": "תמונות"
   },
 
