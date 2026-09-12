@@ -46,10 +46,6 @@ export default defineConfig({
         import.meta.dirname,
         "src/shared/test-utils/mockPwa.ts",
       ),
-      "virtual:pwa-register": path.resolve(
-        import.meta.dirname,
-        "src/shared/test-utils/mockPwa.ts",
-      ),
     },
   },
 });
