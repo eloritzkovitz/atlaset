@@ -175,7 +175,8 @@
   "gallery": {
     "title": "Gallery",
     "openAlbum": "Open photo album",
-    "noAlbum": "No photo album linked"
+    "noAlbum": "No photo album linked",
+    "noPhotos": "No photos available."
   },
 
   "categories": {

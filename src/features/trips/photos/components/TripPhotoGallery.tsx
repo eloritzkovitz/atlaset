@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   Card,
+  EmptyListMessage,
   ErrorMessage,
   FileDropzone,
   ImageGallery,
@@ -28,7 +29,7 @@ export function TripPhotoGallery({
   readOnly = false,
 }: TripPhotoGalleryProps) {
   const { t } = useTranslation("trips");
-  
+
   const {
     canUpload,
     draggedIndex,
@@ -48,7 +49,6 @@ export function TripPhotoGallery({
     enabled: !readOnly,
   });
 
-  // Returns props for a photo item in the gallery, including drag-and-drop handlers
   function getPhotoItemProps(index: number) {
     return {
       draggable: true,
@@ -127,6 +127,12 @@ export function TripPhotoGallery({
           getItemProps={
             !readOnly ? (index) => getPhotoItemProps(index) : undefined
           }
+        />
+      )}
+
+      {photos.length === 0 && readOnly && (
+        <EmptyListMessage
+          message={t("gallery.empty", "No photos added yet.")}
         />
       )}
 
