@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SplashScreen, PwaUpdateUiHint, UIHintContainer } from "@components";
+import { SplashScreen, UIHintContainer } from "@components";
 import { CookieConsentModal } from "@features/settings/privacy/components/CookieConsentModal";
 import { useSettings } from "@features/settings";
 import { useAnalytics } from "@features/settings/privacy/hooks/useAnalytics";
@@ -60,7 +60,6 @@ export default function App() {
         <CookieConsentModal />
         <MigrationModal />
         <UIHintContainer />
-        <PwaUpdateUiHint />
         <AppRoutes />
       </AppBootstrap>
     </AppProviders>
