@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-12
+
+- **[feature]** **Trips | Photos:** Added options to reorder photos in the gallery
+
 ## 2026-09-10
 
 - **[feature]** **Trips:** Added trip destinations by using GeoNames locations

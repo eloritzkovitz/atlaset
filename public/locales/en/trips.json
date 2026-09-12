@@ -153,7 +153,14 @@
       "limitReached": "You have reached the maximum number of photos ({{max}}).",
       "invalidFileType": "Invalid file type. Only JPEG, PNG and WEBP are allowed.",
       "uploadError": "Some photos could not be uploaded. Please try again.",
-      "deleteError": "Failed to delete photo. Please try again."
+      "deleteError": "Failed to delete photo. Please try again.",
+
+      "actions": {
+        "moveUp": "Move photo up",
+        "moveDown": "Move photo down",
+        "delete": "Delete photo",
+        "confirmDelete": "Confirm deletion"
+      }
     },
 
     "actions": {

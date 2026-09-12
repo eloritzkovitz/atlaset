@@ -1,9 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { FaSpinner } from "react-icons/fa6";
-import { ActionButton, Card, FileDropzone, ImageGallery } from "@components";
+import {
+  ActionButton,
+  Card,
+  ErrorMessage,
+  FileDropzone,
+  ImageGallery,
+} from "@components";
 import { ICONS } from "@constants/icons";
-import { TRIP_PHOTO_ACCEPT } from "../constants/tripPhotos";
-import { MAX_TRIP_PHOTOS } from "../constants/tripPhotos";
+import { MAX_TRIP_PHOTOS, TRIP_PHOTO_ACCEPT } from "../constants/tripPhotos";
+import { TripPhotoActions } from "./TripPhotoActions";
 import { useTripPhotoManager } from "../hooks/useTripPhotoManager";
 import type { TripPhoto } from "../types";
 
@@ -23,10 +28,16 @@ export function TripPhotoGallery({
   readOnly = false,
 }: TripPhotoGalleryProps) {
   const { t } = useTranslation("trips");
+  
   const {
     canUpload,
+    draggedIndex,
     error,
     handleFiles,
+    handleDragEnd,
+    handleDragOver,
+    handleDragStart,
+    handleMove,
     handleRemove,
     isUploading,
     removingPhotoId,
@@ -36,6 +47,26 @@ export function TripPhotoGallery({
     onChange,
     enabled: !readOnly,
   });
+
+  // Returns props for a photo item in the gallery, including drag-and-drop handlers
+  function getPhotoItemProps(index: number) {
+    return {
+      draggable: true,
+      onPointerDown: (event: React.PointerEvent<HTMLDivElement>) =>
+        event.stopPropagation(),
+      onDragStart: () => handleDragStart(index),
+      onDragOver: (event: React.DragEvent<HTMLDivElement>) =>
+        handleDragOver(
+          event as unknown as React.DragEvent<HTMLLIElement>,
+          index,
+        ),
+      onDragEnd: handleDragEnd,
+      className:
+        draggedIndex === index
+          ? "cursor-grabbing ring-dashed opacity-50"
+          : "cursor-grab",
+    };
+  }
 
   return (
     <Card
@@ -61,11 +92,7 @@ export function TripPhotoGallery({
         </div>
       }
     >
-      {error && (
-        <p className="mt-3 text-sm text-danger" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <ErrorMessage error={error} />}
 
       {photos.length > 0 && (
         <ImageGallery
@@ -85,30 +112,20 @@ export function TripPhotoGallery({
                   }
 
                   return (
-                    <ActionButton
-                      ariaLabel={t("actions.remove", "Remove")}
-                      disabled={isUploading || removingPhotoId !== null}
-                      variant="custom"
-                      rounded
-                      icon={
-                        removingPhotoId === photo.publicId ? (
-                          <FaSpinner
-                            className="h-4 w-4 animate-spin"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          <ICONS.remove
-                            className="h-4 w-4"
-                            aria-hidden="true"
-                          />
-                        )
-                      }
-                      className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-md bg-black/65 text-white opacity-100 shadow-sm transition-opacity hover:bg-danger focus-visible:opacity-100 disabled:cursor-not-allowed disabled:opacity-50 sm:opacity-0 sm:group-hover:opacity-100"
-                      onClick={() => void handleRemove(photo)}
+                    <TripPhotoActions
+                      index={index}
+                      photoCount={photos.length}
+                      isRemoving={removingPhotoId === photo.publicId}
+                      removeDisabled={isUploading || removingPhotoId !== null}
+                      onMove={(offset) => handleMove(index, offset)}
+                      onRemove={() => void handleRemove(photo)}
                     />
                   );
                 }
               : undefined
+          }
+          getItemProps={
+            !readOnly ? (index) => getPhotoItemProps(index) : undefined
           }
         />
       )}

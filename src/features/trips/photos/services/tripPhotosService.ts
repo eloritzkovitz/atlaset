@@ -10,6 +10,7 @@ import type { TripPhoto } from "../types";
  * Service for managing trip photos, including uploading and deleting photos.
  */
 export const tripPhotosService = {
+  /** Uploads a new trip photo. */
   async upload(tripId: string, file: File): Promise<TripPhoto> {
     const signature = await this.getUploadSignature(tripId);
 
@@ -25,6 +26,7 @@ export const tripPhotosService = {
     };
   },
 
+  /** Deletes a trip photo. */
   async delete(tripId: string, publicId: string): Promise<void> {
     const response = await backendFetch("/media/image", {
       method: "DELETE",
@@ -39,6 +41,7 @@ export const tripPhotosService = {
     }
   },
 
+  /** Gets an upload signature for a trip. */
   async getUploadSignature(tripId: string): Promise<CloudinaryUploadSignature> {
     const response = await backendFetch("/media/upload-signature", {
       method: "POST",

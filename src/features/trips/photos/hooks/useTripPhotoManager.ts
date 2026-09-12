@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDragReorder } from "@hooks";
 import { getUploadableFiles } from "@utils";
 import {
   ACCEPTED_TRIP_PHOTO_TYPES,
@@ -16,7 +17,7 @@ interface UseTripPhotoManagerOptions {
 }
 
 /**
- * Manages the state and actions for uploading and removing trip photos.
+ * Manages the state and actions for trip photos.
  */
 export function useTripPhotoManager({
   tripId,
@@ -28,7 +29,6 @@ export function useTripPhotoManager({
   const [isUploading, setIsUploading] = useState(false);
   const [removingPhotoId, setRemovingPhotoId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
   const canUpload = enabled && photos.length < MAX_TRIP_PHOTOS;
 
   // Handle file uploads
@@ -97,12 +97,40 @@ export function useTripPhotoManager({
     }
   };
 
+  // Handle reordering of photos
+  const setReorderedPhotos = (newPhotos: TripPhoto[]) => {
+    if (enabled) {
+      onChange?.(newPhotos);
+    }
+  };
+
+  const { draggedIndex, handleDragStart, handleDragOver, handleDragEnd } =
+    useDragReorder(photos, setReorderedPhotos);
+
+  // Handle moving a photo up or down in the list
+  function handleMove(index: number, offset: number) {
+    const targetIndex = index + offset;
+    if (!enabled || targetIndex < 0 || targetIndex >= photos.length) {
+      return;
+    }
+
+    const reorderedPhotos = [...photos];
+    const [photo] = reorderedPhotos.splice(index, 1);
+    reorderedPhotos.splice(targetIndex, 0, photo);
+    setReorderedPhotos(reorderedPhotos);
+  }
+
   return {
     canUpload,
+    draggedIndex,
     error,
-    handleFiles,
-    handleRemove,
     isUploading,
     removingPhotoId,
+    handleFiles,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    handleMove,
+    handleRemove,
   };
 }
