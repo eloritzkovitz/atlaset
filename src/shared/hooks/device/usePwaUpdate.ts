@@ -1,6 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
+export function handlePwaUpdateMessage(
+  event: MessageEvent,
+  isOnline: boolean,
+  onUpdateAvailable: (value: boolean) => void,
+  reload: () => void,
+) {
+  if (event.data?.type === "update-available" && isOnline) {
+    onUpdateAvailable(true);
+  }
+  if (event.data?.type === "reload-now") {
+    reload();
+  }
+}
+
 /**
  * Detects PWA updates via service worker events.
  * @returns Object with needRefresh flag and updateServiceWorker function
@@ -18,12 +32,14 @@ export function usePwaUpdate() {
       registration: ServiceWorkerRegistration | undefined,
     ) {
       if (registration) {
-        setInterval(
+        const intervalId = setInterval(
           () => {
             registration.update();
           },
           15 * 60 * 1000,
         );
+
+        return () => clearInterval(intervalId);
       }
     },
     onRegisterError(error: unknown) {
@@ -54,12 +70,12 @@ export function usePwaUpdate() {
     const bc = bcRef.current;
 
     const handleMessage = (ev: MessageEvent) => {
-      if (ev.data?.type === "update-available" && navigator.onLine) {
-        setNeedRefreshState(true);
-      }
-      if (ev.data?.type === "reload-now") {
-        window.location.reload();
-      }
+      handlePwaUpdateMessage(
+        ev,
+        navigator.onLine,
+        setNeedRefreshState,
+        window.location.reload,
+      );
     };
 
     try {
@@ -80,13 +96,14 @@ export function usePwaUpdate() {
   }, []);
 
   // Update trigger that alerts all open tabs to reload
-  const updateServiceWorker = useCallback(() => {
+  const updateServiceWorker = useCallback(async () => {
+    await pwaUpdateServiceWorker(true);
+
     try {
       bcRef.current?.postMessage({ type: "reload-now" });
     } catch {
       // ignore
     }
-    pwaUpdateServiceWorker(true);
   }, [pwaUpdateServiceWorker]);
 
   return {

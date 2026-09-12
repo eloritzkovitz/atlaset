@@ -1,8 +1,9 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { usePwaUpdate } from "./usePwaUpdate";
+import { handlePwaUpdateMessage, usePwaUpdate } from "./usePwaUpdate";
 
 const mockUpdateServiceWorker = vi.fn();
+const mockReload = vi.fn();
 let mockNeedRefreshState = false;
 let registeredOptions: any = null;
 
@@ -53,19 +54,32 @@ describe("usePwaUpdate", () => {
     registeredOptions = null;
     mockUpdateServiceWorker.mockReset();
 
-    (window as any).location = { reload: vi.fn() };
-    (global as any).BroadcastChannel = MockBroadcastChannel;
-
-    Object.defineProperty(window, "navigator", {
-      value: { ...window.navigator, onLine: true },
-      writable: true,
+    Object.defineProperty(window, "location", {
       configurable: true,
+      value: { reload: mockReload },
+    });
+    Object.defineProperty(window, "BroadcastChannel", {
+      configurable: true,
+      writable: true,
+      value: MockBroadcastChannel,
+    });
+    Object.defineProperty(globalThis, "BroadcastChannel", {
+      configurable: true,
+      writable: true,
+      value: MockBroadcastChannel,
+    });
+
+    Object.defineProperty(navigator, "onLine", {
+      configurable: true,
+      value: true,
     });
   });
 
   afterEach(() => {
     vi.useRealTimers();
-    delete (global as any).BroadcastChannel;
+    mockReload.mockReset();
+    delete (window as any).BroadcastChannel;
+    delete (globalThis as any).BroadcastChannel;
     MockBroadcastChannel.instances = [];
   });
 
@@ -90,7 +104,7 @@ describe("usePwaUpdate", () => {
   });
 
   it("prevents setting needRefresh when offline", () => {
-    Object.defineProperty(window.navigator, "onLine", {
+    Object.defineProperty(navigator, "onLine", {
       value: false,
       configurable: true,
     });
@@ -114,15 +128,25 @@ describe("usePwaUpdate", () => {
     act(() => {
       bc.postMessage({ type: "reload-now" });
     });
-    expect(window.location.reload).toHaveBeenCalled();
+    expect(mockReload).toHaveBeenCalled();
   });
 
   it("handles BroadcastChannel failure gracefully", () => {
-    (global as any).BroadcastChannel = class {
+    const unavailableBroadcastChannel = class {
       constructor() {
         throw new Error("BC not supported");
       }
     };
+    Object.defineProperty(globalThis, "BroadcastChannel", {
+      configurable: true,
+      writable: true,
+      value: unavailableBroadcastChannel,
+    });
+    Object.defineProperty(window, "BroadcastChannel", {
+      configurable: true,
+      writable: true,
+      value: unavailableBroadcastChannel,
+    });
 
     mockNeedRefreshState = true;
     const { result } = renderHook(() => usePwaUpdate());
@@ -131,18 +155,26 @@ describe("usePwaUpdate", () => {
     expect(() => act(() => result.current.updateServiceWorker())).not.toThrow();
   });
 
-  it("responds to cross-tab BroadcastChannel messages for update and reload", () => {
-    const { result } = renderHook(() => usePwaUpdate());
-    const bc = new MockBroadcastChannel();
+  it("handles an update announcement from another tab", () => {
+    const onUpdateAvailable = vi.fn();
 
-    act(() => {
-      bc.postMessage({ type: "update-available" });
-    });
-    expect(result.current.needRefresh).toBe(true);
+    handlePwaUpdateMessage(
+      { data: { type: "update-available" } } as MessageEvent,
+      true,
+      onUpdateAvailable,
+      mockReload,
+    );
 
-    act(() => {
-      bc.postMessage({ type: "reload-now" });
-    });
-    expect(window.location.reload).toHaveBeenCalled();
+    expect(onUpdateAvailable).toHaveBeenCalledOnce();
+
+    handlePwaUpdateMessage(
+      { data: { type: "reload-now" } } as MessageEvent,
+      true,
+      onUpdateAvailable,
+      mockReload,
+    );
+
+    expect(mockReload).toHaveBeenCalledOnce();
   });
+
 });
