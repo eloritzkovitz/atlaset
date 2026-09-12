@@ -11,12 +11,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
       workbox: {
         cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
         dontCacheBustURLsMatching: /\.[a-f0-9]{8}\./,
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },

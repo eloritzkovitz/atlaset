@@ -22,6 +22,7 @@ export function handlePwaUpdateMessage(
 export function usePwaUpdate() {
   const [needRefreshState, setNeedRefreshState] = useState(false);
   const bcRef = useRef<BroadcastChannel | null>(null);
+  const initialCheckRef = useRef(true);
 
   const {
     needRefresh: [pwaNeedRefresh],
@@ -49,6 +50,14 @@ export function usePwaUpdate() {
 
   // Sync state with Workbox & Online status
   useEffect(() => {
+    if (initialCheckRef.current) {
+      initialCheckRef.current = false;
+      if (pwaNeedRefresh && navigator.onLine) {
+        void pwaUpdateServiceWorker(true);
+      }
+      return;
+    }
+
     if (pwaNeedRefresh && navigator.onLine) {
       setNeedRefreshState(true);
       try {
@@ -57,7 +66,7 @@ export function usePwaUpdate() {
         // ignore
       }
     }
-  }, [pwaNeedRefresh]);
+  }, [pwaNeedRefresh, pwaUpdateServiceWorker]);
 
   // Setup BroadcastChannel for cross-tab communication
   useEffect(() => {

@@ -83,11 +83,12 @@ describe("usePwaUpdate", () => {
     MockBroadcastChannel.instances = [];
   });
 
-  it("syncs needRefresh state when online and schedules registration intervals", () => {
+  it("updates silently when a waiting version exists at launch", () => {
     mockNeedRefreshState = true;
     const { result } = renderHook(() => usePwaUpdate());
 
-    expect(result.current.needRefresh).toBe(true);
+    expect(result.current.needRefresh).toBe(false);
+    expect(mockUpdateServiceWorker).toHaveBeenCalledWith(true);
 
     const mockRegistration = { update: vi.fn() };
     registeredOptions?.onRegisteredSW(
@@ -101,6 +102,16 @@ describe("usePwaUpdate", () => {
     expect(() =>
       registeredOptions?.onRegisterError(new Error("SW error")),
     ).not.toThrow();
+  });
+
+  it("shows the update state when a version arrives after launch", () => {
+    const { result, rerender } = renderHook(() => usePwaUpdate());
+
+    mockNeedRefreshState = true;
+    rerender();
+
+    expect(result.current.needRefresh).toBe(true);
+    expect(mockUpdateServiceWorker).not.toHaveBeenCalled();
   });
 
   it("prevents setting needRefresh when offline", () => {
@@ -151,7 +162,8 @@ describe("usePwaUpdate", () => {
     mockNeedRefreshState = true;
     const { result } = renderHook(() => usePwaUpdate());
 
-    expect(result.current.needRefresh).toBe(true);
+    expect(result.current.needRefresh).toBe(false);
+    expect(mockUpdateServiceWorker).toHaveBeenCalledWith(true);
     expect(() => act(() => result.current.updateServiceWorker())).not.toThrow();
   });
 
@@ -176,5 +188,4 @@ describe("usePwaUpdate", () => {
 
     expect(mockReload).toHaveBeenCalledOnce();
   });
-
 });
