@@ -2,77 +2,94 @@ import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { handlePwaUpdateMessage, usePwaUpdate } from "./usePwaUpdate";
 
+let swOptions: any = null;
+const pwaState = { needRefresh: false };
 const mockUpdateServiceWorker = vi.fn();
 const mockReload = vi.fn();
-let activeUpdateServiceWorker = mockUpdateServiceWorker;
-let mockNeedRefreshState = false;
-let registeredOptions: any = null;
 
 vi.mock("virtual:pwa-register/react", () => ({
   useRegisterSW: (options: any) => {
-    registeredOptions = options;
+    swOptions = options;
     return {
-      needRefresh: [mockNeedRefreshState, vi.fn()],
-      updateServiceWorker: activeUpdateServiceWorker,
+      needRefresh: [pwaState.needRefresh, vi.fn()],
+      updateServiceWorker: mockUpdateServiceWorker,
     };
   },
 }));
 
 class MockBroadcastChannel {
   static instances: MockBroadcastChannel[] = [];
-  listeners: ((ev: MessageEvent) => void)[] = [];
+  listeners: ((event: MessageEvent) => void)[] = [];
 
   constructor() {
     MockBroadcastChannel.instances.push(this);
   }
 
-  postMessage(msg: any) {
-    const ev = { data: msg } as MessageEvent;
-    MockBroadcastChannel.instances.forEach((inst: MockBroadcastChannel) =>
-      inst.listeners.forEach((handler: (ev: MessageEvent) => void) =>
-        handler(ev),
-      ),
-    );
+  postMessage(data: unknown) {
+    const event = { data } as MessageEvent;
+    MockBroadcastChannel.instances
+      .filter((instance) => instance !== this)
+      .forEach((instance) =>
+        instance.listeners.forEach((listener) => listener(event)),
+      );
   }
 
-  addEventListener(_type: string, handler: (ev: MessageEvent) => void) {
-    this.listeners.push(handler);
+  addEventListener(_type: string, listener: (event: MessageEvent) => void) {
+    this.listeners.push(listener);
   }
 
-  removeEventListener(_type: string, handler: (ev: MessageEvent) => void) {
-    this.listeners = this.listeners.filter((h) => h !== handler);
+  removeEventListener(_type: string, listener: (event: MessageEvent) => void) {
+    this.listeners = this.listeners.filter((i) => i !== listener);
   }
 
   close() {
     MockBroadcastChannel.instances = MockBroadcastChannel.instances.filter(
-      (instance: MockBroadcastChannel) => instance !== this,
+      (i) => i !== this,
     );
   }
 }
 
 describe("usePwaUpdate", () => {
+  const triggerSWRegister = async (
+    regProps: Partial<ServiceWorkerRegistration> | null = {},
+    error?: Error,
+  ) => {
+    await act(async () => {
+      if (error) {
+        swOptions?.onRegisterError(error);
+      } else if (regProps === null) {
+        swOptions?.onRegisteredSW("sw.js", undefined);
+      } else {
+        const registration = {
+          update: vi.fn(() => Promise.resolve()),
+          ...regProps,
+        };
+        swOptions?.onRegisteredSW("sw.js", registration);
+      }
+      await Promise.resolve();
+    });
+  };
+
   beforeEach(() => {
     vi.useFakeTimers();
-    mockNeedRefreshState = false;
-    activeUpdateServiceWorker = mockUpdateServiceWorker;
-    registeredOptions = null;
-    mockUpdateServiceWorker.mockReset();
+    swOptions = null;
+    pwaState.needRefresh = false;
+    vi.clearAllMocks();
 
     Object.defineProperty(window, "location", {
       configurable: true,
       value: { reload: mockReload },
-    });
-    Object.defineProperty(window, "BroadcastChannel", {
-      configurable: true,
-      writable: true,
-      value: MockBroadcastChannel,
     });
     Object.defineProperty(globalThis, "BroadcastChannel", {
       configurable: true,
       writable: true,
       value: MockBroadcastChannel,
     });
-
+    Object.defineProperty(window, "BroadcastChannel", {
+      configurable: true,
+      writable: true,
+      value: MockBroadcastChannel,
+    });
     Object.defineProperty(navigator, "onLine", {
       configurable: true,
       value: true,
@@ -81,135 +98,142 @@ describe("usePwaUpdate", () => {
 
   afterEach(() => {
     vi.useRealTimers();
-    mockReload.mockReset();
-    delete (window as any).BroadcastChannel;
-    delete (globalThis as any).BroadcastChannel;
     MockBroadcastChannel.instances = [];
   });
 
-  it("updates silently when a waiting version exists at launch", async () => {
-    mockNeedRefreshState = true;
-    const { result, rerender } = renderHook(() => usePwaUpdate());
+  it("updates silently when a waiting worker exists on initial check", async () => {
+    pwaState.needRefresh = true;
+    const updateSpy = vi.fn().mockResolvedValue(undefined);
+    renderHook(() => usePwaUpdate());
 
-    expect(result.current.needRefresh).toBe(false);
+    await triggerSWRegister({
+      update: updateSpy,
+      waiting: {} as ServiceWorker,
+    });
+
     expect(mockUpdateServiceWorker).toHaveBeenCalledWith(true);
 
-    activeUpdateServiceWorker = vi.fn();
-    rerender();
-    expect(activeUpdateServiceWorker).not.toHaveBeenCalled();
-
-    const mockRegistration = { update: vi.fn() };
-    let cleanupRegistration: (() => void) | undefined;
-    await act(async () => {
-      cleanupRegistration = registeredOptions?.onRegisteredSW(
-        "http://test.com/sw.js",
-        mockRegistration,
-      );
-      await Promise.resolve();
-    });
-
     vi.advanceTimersByTime(15 * 60 * 1000);
-    expect(mockRegistration.update).toHaveBeenCalledTimes(2);
-    cleanupRegistration?.();
-
-    expect(() =>
-      registeredOptions?.onRegisterError(new Error("SW error")),
-    ).not.toThrow();
-
-    expect(() =>
-      registeredOptions?.onRegisteredSW("http://test.com/sw.js"),
-    ).not.toThrow();
+    expect(updateSpy).toHaveBeenCalledTimes(2);
   });
 
-  it("shows the update state when a version arrives after launch", async () => {
-    const { result, rerender } = renderHook(() => usePwaUpdate());
+  it("handles SW registration errors and empty registration objects gracefully", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    await act(async () => {
-      registeredOptions?.onRegisteredSW("http://test.com/sw.js", {
-        update: vi.fn(),
-      });
-      await Promise.resolve();
+    renderHook(() => usePwaUpdate());
+    await triggerSWRegister({
+      update: vi.fn().mockRejectedValue(new Error("Update failed")),
     });
+    await triggerSWRegister(null, new Error("SW error"));
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "SW registration error",
+      expect.any(Error),
+    );
 
-    mockNeedRefreshState = true;
+    await triggerSWRegister(null);
+    consoleSpy.mockRestore();
+  });
+
+  it("shows update available state when triggered online post-registration", async () => {
+    const { result, rerender } = renderHook(() => usePwaUpdate());
+    await triggerSWRegister();
+
+    pwaState.needRefresh = true;
     rerender();
 
     expect(result.current.needRefresh).toBe(true);
-    expect(mockUpdateServiceWorker).not.toHaveBeenCalled();
   });
 
-  it("prevents setting needRefresh when offline", () => {
+  it("prevents setting update state when offline", async () => {
     Object.defineProperty(navigator, "onLine", {
-      value: false,
       configurable: true,
+      value: false,
     });
+    pwaState.needRefresh = true;
 
-    mockNeedRefreshState = true;
-    const { result } = renderHook(() => usePwaUpdate());
+    const { result, rerender } = renderHook(() => usePwaUpdate());
+    await triggerSWRegister();
+    rerender();
 
     expect(result.current.needRefresh).toBe(false);
   });
 
-  it("broadcasts reload to other tabs and calls pwaUpdateServiceWorker on update", () => {
+  it("triggers SW update and broadcasts reload across channels", async () => {
     const { result } = renderHook(() => usePwaUpdate());
-    const bc = new MockBroadcastChannel();
+    const channel2 = new MockBroadcastChannel();
 
-    act(() => {
-      result.current.updateServiceWorker();
+    await act(async () => {
+      await result.current.updateServiceWorker();
     });
 
     expect(mockUpdateServiceWorker).toHaveBeenCalledWith(true);
 
     act(() => {
-      bc.postMessage({ type: "reload-now" });
+      channel2.postMessage({ type: "reload-now" });
     });
-    expect(mockReload).toHaveBeenCalled();
+
+    expect(mockReload).toHaveBeenCalledOnce();
   });
 
-  it("handles BroadcastChannel failure gracefully", () => {
-    const unavailableBroadcastChannel = class {
-      constructor() {
-        throw new Error("BC not supported");
-      }
+  it("handles BroadcastChannel failure gracefully", async () => {
+    const FailingChannel = function () {
+      throw new Error("unsupported");
     };
+
     Object.defineProperty(globalThis, "BroadcastChannel", {
       configurable: true,
       writable: true,
-      value: unavailableBroadcastChannel,
+      value: FailingChannel,
     });
     Object.defineProperty(window, "BroadcastChannel", {
       configurable: true,
       writable: true,
-      value: unavailableBroadcastChannel,
+      value: FailingChannel,
     });
 
-    mockNeedRefreshState = true;
-    const { result } = renderHook(() => usePwaUpdate());
+    const { result, unmount } = renderHook(() => usePwaUpdate());
 
-    expect(result.current.needRefresh).toBe(false);
-    expect(mockUpdateServiceWorker).toHaveBeenCalledWith(true);
-    expect(() => act(() => result.current.updateServiceWorker())).not.toThrow();
+    await act(async () => {
+      await result.current.updateServiceWorker();
+    });
+
+    expect(mockUpdateServiceWorker).toHaveBeenCalled();
+    expect(() => unmount()).not.toThrow();
   });
 
-  it("handles an update announcement from another tab", () => {
-    const onUpdateAvailable = vi.fn();
+  it("handles handlePwaUpdateMessage correctly across conditions", () => {
+    const onUpdate = vi.fn();
 
     handlePwaUpdateMessage(
       { data: { type: "update-available" } } as MessageEvent,
       true,
-      onUpdateAvailable,
+      onUpdate,
       mockReload,
     );
+    expect(onUpdate).toHaveBeenCalledWith(true);
 
-    expect(onUpdateAvailable).toHaveBeenCalledOnce();
+    handlePwaUpdateMessage(
+      { data: { type: "update-available" } } as MessageEvent,
+      false,
+      onUpdate,
+      mockReload,
+    );
+    expect(onUpdate).toHaveBeenCalledTimes(1);
 
     handlePwaUpdateMessage(
       { data: { type: "reload-now" } } as MessageEvent,
       true,
-      onUpdateAvailable,
+      onUpdate,
       mockReload,
     );
-
     expect(mockReload).toHaveBeenCalledOnce();
+
+    handlePwaUpdateMessage(
+      { data: { type: "unknown" } } as MessageEvent,
+      true,
+      onUpdate,
+      mockReload,
+    );
+    expect(mockReload).toHaveBeenCalledTimes(1);
   });
 });

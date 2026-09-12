@@ -21,9 +21,9 @@ export function handlePwaUpdateMessage(
  */
 export function usePwaUpdate() {
   const [needRefreshState, setNeedRefreshState] = useState(false);
-  const [initialCheckComplete, setInitialCheckComplete] = useState(false);
   const bcRef = useRef<BroadcastChannel | null>(null);
-  const launchUpdateStartedRef = useRef(false);
+  const registrationReadyRef = useRef(false);
+  const initialCheckRef = useRef(true);
 
   const {
     needRefresh: [pwaNeedRefresh],
@@ -34,42 +34,53 @@ export function usePwaUpdate() {
       registration: ServiceWorkerRegistration | undefined,
     ) {
       if (registration) {
-        void Promise.resolve(registration.update()).finally(() => {
-          setInitialCheckComplete(true);
-        });
+        void registration
+          .update()
+          .then(() => {
+            if (
+              initialCheckRef.current &&
+              registration.waiting &&
+              navigator.onLine
+            ) {
+              void pwaUpdateServiceWorker(true);
+            }
+
+            initialCheckRef.current = false;
+            registrationReadyRef.current = true;
+          })
+          .catch(() => {
+            initialCheckRef.current = false;
+            registrationReadyRef.current = true;
+          });
 
         const intervalId = setInterval(
           () => {
-            registration.update();
+            void registration.update();
           },
           15 * 60 * 1000,
         );
 
         return () => clearInterval(intervalId);
       }
+
+      initialCheckRef.current = false;
+      registrationReadyRef.current = true;
     },
     onRegisterError(error: unknown) {
       console.error("SW registration error", error);
+      initialCheckRef.current = false;
+      registrationReadyRef.current = true;
     },
   });
 
   // Sync state with Workbox & Online status
   useEffect(() => {
-    if (!pwaNeedRefresh) {
-      launchUpdateStartedRef.current = false;
-    }
-
-    if (pwaNeedRefresh && navigator.onLine && !initialCheckComplete) {
-      if (!launchUpdateStartedRef.current) {
-        launchUpdateStartedRef.current = true;
-        void pwaUpdateServiceWorker(true);
-      }
-      return;
-    }
-
-    if (launchUpdateStartedRef.current) return;
-
-    if (pwaNeedRefresh && navigator.onLine) {
+    if (
+      pwaNeedRefresh &&
+      navigator.onLine &&
+      registrationReadyRef.current &&
+      !initialCheckRef.current
+    ) {
       setNeedRefreshState(true);
       try {
         bcRef.current?.postMessage({ type: "update-available" });
@@ -77,7 +88,7 @@ export function usePwaUpdate() {
         // ignore
       }
     }
-  }, [initialCheckComplete, pwaNeedRefresh, pwaUpdateServiceWorker]);
+  }, [pwaNeedRefresh]);
 
   // Setup BroadcastChannel for cross-tab communication
   useEffect(() => {
