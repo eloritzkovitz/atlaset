@@ -21,8 +21,8 @@ export function handlePwaUpdateMessage(
  */
 export function usePwaUpdate() {
   const [needRefreshState, setNeedRefreshState] = useState(false);
+  const [initialCheckComplete, setInitialCheckComplete] = useState(false);
   const bcRef = useRef<BroadcastChannel | null>(null);
-  const launchCheckRef = useRef<"pending" | "settled">("pending");
   const launchUpdateStartedRef = useRef(false);
 
   const {
@@ -34,6 +34,10 @@ export function usePwaUpdate() {
       registration: ServiceWorkerRegistration | undefined,
     ) {
       if (registration) {
+        void Promise.resolve(registration.update()).finally(() => {
+          setInitialCheckComplete(true);
+        });
+
         const intervalId = setInterval(
           () => {
             registration.update();
@@ -55,14 +59,10 @@ export function usePwaUpdate() {
       launchUpdateStartedRef.current = false;
     }
 
-    if (launchCheckRef.current === "pending") {
-      if (pwaNeedRefresh && navigator.onLine) {
-        if (!launchUpdateStartedRef.current) {
-          launchUpdateStartedRef.current = true;
-          void pwaUpdateServiceWorker(true);
-        }
-      } else {
-        launchCheckRef.current = "settled";
+    if (pwaNeedRefresh && navigator.onLine && !initialCheckComplete) {
+      if (!launchUpdateStartedRef.current) {
+        launchUpdateStartedRef.current = true;
+        void pwaUpdateServiceWorker(true);
       }
       return;
     }
@@ -77,7 +77,7 @@ export function usePwaUpdate() {
         // ignore
       }
     }
-  }, [pwaNeedRefresh, pwaUpdateServiceWorker]);
+  }, [initialCheckComplete, pwaNeedRefresh, pwaUpdateServiceWorker]);
 
   // Setup BroadcastChannel for cross-tab communication
   useEffect(() => {
