@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { UserAvatar, useUserProfile } from "@features/user/profile";
+import { UserAvatar } from "@features/user/core";
+import { useUserProfile } from "@features/user/profile";
 
 interface ParticipantAvatarProps {
   uid: string;

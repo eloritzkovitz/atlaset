@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { ModalSelect } from "@components";
 import { ICONS } from "@constants/icons";
-import { UserAvatar, type UserProfile } from "@features/user/profile";
+import { UserAvatar } from "@features/user/core";
+import { type UserProfile } from "@features/user/profile";
 
 interface ParticipantOption {
   value: string;

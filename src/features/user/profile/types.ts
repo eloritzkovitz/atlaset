@@ -58,16 +58,15 @@ export type UsernameValidationStatus =
   | "taken"
   | "invalid";
 
+/** Represents a country tracking comparison list. */
+type CountryTrackingComparisonList = {
+  shared: string[];
+  currentUser: string[];
+  otherUser: string[];
+};
+
 /** Represents the comparison of two users' country tracking data. */
 export type CountryTrackingComparison = {
-  visited: {
-    shared: string[];
-    currentUser: string[];
-    otherUser: string[];
-  };
-  wantToVisit: {
-    shared: string[];
-    currentUser: string[];
-    otherUser: string[];
-  };
+  visited: CountryTrackingComparisonList;
+  wantToVisit: CountryTrackingComparisonList;
 };
