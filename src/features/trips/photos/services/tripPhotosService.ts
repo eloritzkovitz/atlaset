@@ -1,4 +1,4 @@
-import { backendFetch } from "@lib/api-client";
+import { fetchFromBackend } from "@lib/api-client";
 import {
   uploadImageToCloudinary,
   type CloudinaryUploadSignature,
@@ -28,7 +28,7 @@ export const tripPhotosService = {
 
   /** Deletes a trip photo. */
   async delete(tripId: string, publicId: string): Promise<void> {
-    const response = await backendFetch("/media/image", {
+    const response = await fetchFromBackend("/media/image", {
       method: "DELETE",
       body: JSON.stringify({
         tripId,
@@ -43,7 +43,7 @@ export const tripPhotosService = {
 
   /** Gets an upload signature for a trip. */
   async getUploadSignature(tripId: string): Promise<CloudinaryUploadSignature> {
-    const response = await backendFetch("/media/upload-signature", {
+    const response = await fetchFromBackend("/media/upload-signature", {
       method: "POST",
       body: JSON.stringify({
         tripId,

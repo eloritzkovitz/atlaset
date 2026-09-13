@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Calendar, dateFnsLocalizer, type View } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { enUS } from "date-fns/locale/en-US";
-import { TRIP_TYPE_COLORS, type Trip } from "@features/trips";
+import { TRIP_TYPE_CONFIG, type Trip } from "@features/trips";
 import { isLocalTrip, isUpcomingTrip } from "@features/trips/core/utils/trips";
 import { useHomeCountry } from "@features/user/profile";
 import { darkenHexColor } from "@utils";
@@ -67,8 +67,8 @@ export function AppCalendar({
           allDay: true,
           resource: trip,
           color: isLocalTrip(trip, homeCountry)
-            ? TRIP_TYPE_COLORS[0]
-            : TRIP_TYPE_COLORS[1],
+            ? TRIP_TYPE_CONFIG.local.color
+            : TRIP_TYPE_CONFIG.abroad.color,
         })),
     [trips, homeCountry],
   );

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ChipList } from "@components";
 import { capitalizeWords } from "@utils";
-import { TRIP_CATEGORY_ICONS } from "../constants/tripCategoryIcons";
+import { CategoryIcon } from "./CategoryIcon";
 import type { TripCategory } from "../types";
 
 interface CategoriesListProps {
@@ -29,10 +29,10 @@ export function CategoriesList({
       limit={limit}
       removable={removable}
       onRemove={onRemove}
-      renderItem={(cat) => (
+      renderItem={(category) => (
         <span className="flex items-center gap-1">
-          {TRIP_CATEGORY_ICONS[cat] ?? null}
-          <span>{formatCategory(cat)}</span>
+          <CategoryIcon category={category} />
+          <span>{formatCategory(category)}</span>
         </span>
       )}
       getTooltipLabel={formatCategory}

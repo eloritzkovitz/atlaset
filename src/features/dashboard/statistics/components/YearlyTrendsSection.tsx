@@ -7,13 +7,10 @@ import {
   translateColumns,
   type SegmentedToggleOption,
 } from "@components";
-import {
-  TRIP_TYPE_COLORS,
-  TRIP_TYPE_LABELS,
-  TRIP_TYPE_COLOR_CLASSES,
-} from "@features/trips";
+import { TRIP_TYPE_CONFIG } from "@features/trips";
 import { YEAR_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByYearStats } from "../hooks/useTripsByYearStats";
+import type { YearFilter } from "../types";
 
 const TripsBarChart = lazy(() => import("./TripsByYearBarChart"));
 
@@ -24,9 +21,7 @@ export function YearlyTrendsSection() {
     "both",
   );
 
-  const yearFilterOptions = useMemo<
-    SegmentedToggleOption<"both" | "local" | "abroad">[]
-  >(
+  const yearFilterOptions = useMemo<SegmentedToggleOption<YearFilter>[]>(
     () => [
       {
         value: "both",
@@ -37,13 +32,17 @@ export function YearlyTrendsSection() {
       },
       {
         value: "local",
-        label: t("trips:types.local", { defaultValue: TRIP_TYPE_LABELS[0] }),
-        colorClass: TRIP_TYPE_COLOR_CLASSES[0],
+        label: t("trips:types.local", {
+          defaultValue: TRIP_TYPE_CONFIG.local.label,
+        }),
+        colorClass: TRIP_TYPE_CONFIG.local.colorClass,
       },
       {
         value: "abroad",
-        label: t("trips:types.abroad", { defaultValue: TRIP_TYPE_LABELS[1] }),
-        colorClass: TRIP_TYPE_COLOR_CLASSES[1],
+        label: t("trips:types.abroad", {
+          defaultValue: TRIP_TYPE_CONFIG.abroad.label,
+        }),
+        colorClass: TRIP_TYPE_CONFIG.abroad.colorClass,
       },
     ],
     [t],
@@ -98,10 +97,13 @@ export function YearlyTrendsSection() {
               </div>
             }
           >
-            <TripsBarChart
+           <TripsBarChart
               data={tripsByYearData}
               filter={yearFilter}
-              tripTypeColors={TRIP_TYPE_COLORS}
+              tripTypeColors={{
+                local: TRIP_TYPE_CONFIG.local.color,
+                abroad: TRIP_TYPE_CONFIG.abroad.color,
+              }}
             />
           </Suspense>
         </div>

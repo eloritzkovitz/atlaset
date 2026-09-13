@@ -11,8 +11,8 @@ import {
 import { CountryWithFlag, type Country } from "@features/countries";
 import type { FilterOption, Option } from "@types";
 import { isAllowedOption, isStringOption } from "@utils";
-import { TRIP_CATEGORY_ICONS } from "../../../core/constants/tripCategoryIcons";
-import { ALL_TRIP_CATEGORIES } from "../../../core/constants/trips";
+import { CategoryIcon } from "../../../core/components/CategoryIcon";
+import { ALL_TRIP_CATEGORIES } from "../../../core/constants/categories";
 import { useTrips } from "../../../core/context/TripsContext";
 import type {
   Trip,
@@ -238,7 +238,7 @@ export function TripsTableHeaders({
                 renderOption={(opt) =>
                   "value" in opt ? (
                     <span className="flex items-center gap-2">
-                      {TRIP_CATEGORY_ICONS[opt.value] ?? null}
+                      <CategoryIcon category={opt.value} />
                       <span>{opt.label}</span>
                     </span>
                   ) : null

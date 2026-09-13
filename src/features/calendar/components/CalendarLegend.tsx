@@ -1,6 +1,6 @@
 import React from "react";
 import { Checkbox, SectionHeader } from "@components";
-import { TRIP_TYPE_COLORS, TRIP_TYPE_LABELS } from "@features/trips";
+import { TRIP_TYPE_CONFIG } from "@features/trips";
 import { type TripEventTypeKey } from "../types";
 
 interface CalendarLegendProps {
@@ -18,14 +18,14 @@ export const CalendarLegend: React.FC<CalendarLegendProps> = ({
       <Checkbox
         checked={shown.local}
         onChange={() => onToggle("local")}
-        label={TRIP_TYPE_LABELS[0]}
-        color={TRIP_TYPE_COLORS[0]}
+        label={TRIP_TYPE_CONFIG.local.label}
+        color={TRIP_TYPE_CONFIG.local.color}
       />
       <Checkbox
         checked={shown.abroad}
         onChange={() => onToggle("abroad")}
-        label={TRIP_TYPE_LABELS[1]}
-        color={TRIP_TYPE_COLORS[1]}
+        label={TRIP_TYPE_CONFIG.abroad.label}
+        color={TRIP_TYPE_CONFIG.abroad.color}
       />
       <Checkbox
         checked={shown.upcoming}

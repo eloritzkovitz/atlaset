@@ -27,3 +27,6 @@ export type YearRow = {
   abroad: number;
   total: number;
 };
+
+/** Represents the filter for the yearly statistics. */
+export type YearFilter = "both" | "local" | "abroad";

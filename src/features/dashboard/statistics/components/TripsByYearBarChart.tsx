@@ -9,11 +9,12 @@ import {
   type TooltipContentProps,
 } from "recharts";
 import { useTranslation } from "react-i18next";
-import { TRIP_TYPE_LABELS } from "@features/trips";
+import { TRIP_TYPE_CONFIG } from "@features/trips";
+import type { YearFilter } from "../types";
 
 function CustomTooltip(
   props: TooltipContentProps<number, string>,
-  tripTypeColors: string[],
+  tripTypeColors: { local: string; abroad: string },
 ) {
   const { active, payload = [], label } = props;
   if (!active || !payload.length) return null;
@@ -40,7 +41,9 @@ function CustomTooltip(
           }
           style={{
             color:
-              entry.dataKey === "local" ? tripTypeColors[0] : tripTypeColors[1],
+              entry.dataKey === "local"
+                ? tripTypeColors.local
+                : tripTypeColors.abroad,
             fontWeight: 500,
             marginBottom: 2,
           }}
@@ -54,8 +57,11 @@ function CustomTooltip(
 
 interface TripsBarChartProps {
   data: Record<string, unknown>[];
-  filter: "both" | "local" | "abroad";
-  tripTypeColors: string[];
+  filter: YearFilter;
+  tripTypeColors: {
+    local: string;
+    abroad: string;
+  };
 }
 
 export default function TripsBarChart({
@@ -83,8 +89,10 @@ export default function TripsBarChart({
           <Bar
             dataKey="local"
             stackId="a"
-            fill={tripTypeColors[0]}
-            name={t("trips:types.local", { defaultValue: TRIP_TYPE_LABELS[0] })}
+            fill={tripTypeColors.local}
+            name={t("trips:types.local", {
+              defaultValue: TRIP_TYPE_CONFIG.local.label,
+            })}
             activeBar={{ fill: "#22c55e" }}
           />
         )}
@@ -92,9 +100,9 @@ export default function TripsBarChart({
           <Bar
             dataKey="abroad"
             stackId="a"
-            fill={tripTypeColors[1]}
+            fill={tripTypeColors.abroad}
             name={t("trips:types.abroad", {
-              defaultValue: TRIP_TYPE_LABELS[1],
+              defaultValue: TRIP_TYPE_CONFIG.abroad.label,
             })}
             activeBar={{ fill: "#7c3aed" }}
           />

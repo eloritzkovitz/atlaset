@@ -8,6 +8,7 @@ import { auth } from "../firebase/config";
 
 /**
  * Resolves the configured backend URL.
+ * @returns The backend URL as a string.
  * @throws If the backend URL is not configured.
  */
 export function getBackendUrl(): string {
@@ -24,8 +25,12 @@ export function getBackendUrl(): string {
 
 /**
  * Sends an authenticated request to the backend API.
+ * @param path - The API endpoint path.
+ * @param options - Optional fetch options, including method, headers, and body.
+ * @returns A promise that resolves to the fetch Response object.
+ * @throws If the user is not authenticated or if the fetch fails.
  */
-export async function backendFetch(
+export async function fetchFromBackend(
   path: string,
   options: RequestInit = {},
 ): Promise<Response> {

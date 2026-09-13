@@ -1,5 +1,8 @@
 // Constants
-export * from "./constants/trips";
+export * from "./constants/categories";
+export * from "./constants/statuses";
+export * from "./constants/tags";
+export * from "./constants/types";
 
 // Context
 export { TripsContext, useTrips } from "./context/TripsContext";

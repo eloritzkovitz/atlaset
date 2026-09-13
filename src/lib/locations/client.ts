@@ -1,5 +1,5 @@
 import type { Location } from "./types";
-import { backendFetch } from "../api-client/backend";
+import { fetchFromBackend } from "../api-client/backend";
 
 interface LocationsResponse {
   locations: Location[];
@@ -20,7 +20,7 @@ export async function fetchLocationsByIds(
     ids: locationIds.join(","),
   });
 
-  const response = await backendFetch(`/locations?${params.toString()}`, {
+  const response = await fetchFromBackend(`/locations?${params.toString()}`, {
     signal,
   });
 
@@ -54,7 +54,7 @@ export async function fetchSearchLocations(
     lang: language,
   });
 
-  const response = await backendFetch(
+  const response = await fetchFromBackend(
     `/locations/search?${params.toString()}`,
     { signal },
   );

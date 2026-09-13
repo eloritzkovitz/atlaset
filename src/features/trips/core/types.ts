@@ -1,8 +1,6 @@
-import {
-  ALL_TRIP_CATEGORIES,
-  ALL_TRIP_STATUSES,
-  ALL_TRIP_TAGS,
-} from "./constants/trips";
+import { ALL_TRIP_CATEGORIES } from "./constants/categories";
+import { ALL_TRIP_STATUSES } from "./constants/statuses";
+import { ALL_TRIP_TAGS } from "./constants/tags";
 import type { TripPhoto } from "../photos/types";
 
 /** Represents a trip. */
@@ -51,16 +49,16 @@ export type SharedTrip = {
   tripId: string;
 };
 
-/** Represents a trip category */
+/** Represents a trip category. */
 export type TripCategory = (typeof ALL_TRIP_CATEGORIES)[number];
 
-/** Represents the current status of a trip */
+/** Represents the current status of a trip. */
 export type TripStatus = (typeof ALL_TRIP_STATUSES)[number];
 
-/** Represents a tag associated with a trip */
+/** Represents a tag associated with a trip. */
 export type TripTag = (typeof ALL_TRIP_TAGS)[number];
 
-/** Sort keys for trips */
+/** Sort keys for trips. */
 export type TripSortByKey =
   | "name"
   | "rating"
@@ -74,10 +72,10 @@ export type TripSortByKey =
   | "status"
   | "tags";
 
-/** Sort by options for trips */
+/** Sort by options for trips. */
 export type TripSortBy = `${TripSortByKey}-asc` | `${TripSortByKey}-desc`;
 
-/** Filter keys for trips */
+/** Filter keys for trips. */
 export type TripFilters = {
   name: string;
   rating: number | null;
@@ -89,7 +87,7 @@ export type TripFilters = {
   tags: TripTag[];
 };
 
-/** Filter state for trips */
+/** Filter state for trips. */
 export type TripFilterState = TripFilters & {
   local: boolean;
   abroad: boolean;

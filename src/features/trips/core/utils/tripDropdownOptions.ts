@@ -11,11 +11,9 @@ import {
   extractUniqueValues,
   toDropdownOptions,
 } from "@utils";
-import {
-  ALL_TRIP_CATEGORIES,
-  ALL_TRIP_STATUSES,
-  ALL_TRIP_TAGS,
-} from "../../core/constants/trips";
+import { ALL_TRIP_CATEGORIES } from "../../core/constants/categories";
+import { ALL_TRIP_STATUSES } from "../../core/constants/statuses";
+import { ALL_TRIP_TAGS } from "../../core/constants/tags";
 import type { Trip, TripCategory, TripTag } from "../../core/types";
 
 /**

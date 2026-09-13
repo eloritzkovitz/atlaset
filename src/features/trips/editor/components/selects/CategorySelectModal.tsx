@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ModalSelect } from "@components";
 import { ICONS } from "@constants/icons";
-import { TRIP_CATEGORY_ICONS } from "../../../core/constants/tripCategoryIcons";
+import { CategoryIcon } from "../../../core/components/CategoryIcon";
 import type { TripCategory } from "../../../core/types";
 
 interface CategoryOption {
@@ -47,7 +47,7 @@ export function CategorySelectModal({
       onClose={onClose}
       renderItem={(opt) => (
         <div className="flex items-center gap-2">
-          {TRIP_CATEGORY_ICONS[opt.value] ?? null}
+          <CategoryIcon category={opt.value} />
           <span>{opt.label}</span>
         </div>
       )}
