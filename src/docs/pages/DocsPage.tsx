@@ -4,11 +4,11 @@ import { SidebarLayout } from "@app/layouts/app/SidebarLayout";
 import { MarkdownFileRenderer } from "@components";
 import { usePageTitle } from "@hooks";
 import { useMarkdownFile } from "@lib/markdown";
-import { getDocsMarkdownComponents } from "../components/DocsMarkdownComponents";
 import { DocsNotFound } from "../components/DocsNotFound";
 import { DocsPanelMenu } from "../components/DocsPanelMenu";
 import { WelcomeDocsSection } from "../components/WelcomeSection";
 import { DOCS_PATH } from "../constants/docsMenu";
+import { getDocsMarkdownComponents } from "../markdown/DocsMarkdownComponents";
 import { getDocBySlug, getSlugFromPath, navigateToDoc } from "../utils/docs";
 
 export default function DocsPage() {

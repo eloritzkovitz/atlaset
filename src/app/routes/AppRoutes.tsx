@@ -19,7 +19,7 @@ const AtlasProviders = lazy(
   () => import("@features/atlas/core/providers/AtlasProviders"),
 );
 
-const DocsPage = lazy(() => import("@features/docs/pages/DocsPage"));
+const DocsPage = lazy(() => import("@docs/pages/DocsPage"));
 
 const DashboardPage = lazy(
   () => import("@features/dashboard/overview/pages/DashboardPage"),

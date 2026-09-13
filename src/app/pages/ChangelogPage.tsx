@@ -1,5 +1,5 @@
 import { MarkdownFileRenderer } from "@components";
-import { changelogMarkdownComponents } from "@features/docs";
+import { changelogMarkdownComponents } from "@docs";
 import { usePageTitle } from "@hooks";
 import { useMarkdownFile } from "@lib/markdown";
 

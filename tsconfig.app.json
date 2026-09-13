@@ -16,6 +16,8 @@
       "@config/*": ["./src/shared/config/*"],
       "@constants": ["./src/shared/constants/index.ts"],
       "@constants/*": ["./src/shared/constants/*"],
+      "@docs": ["./src/docs/index.ts"],
+      "@docs/*": ["./src/docs/*"],
       "@features": ["./src/features/index.ts"],
       "@features/*": ["./src/features/*"],
       "@hooks": ["./src/shared/hooks/index.ts"],
