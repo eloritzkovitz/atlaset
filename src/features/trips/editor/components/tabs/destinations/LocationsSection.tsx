@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { TripLocationsList } from "@features/trips/core/components/TripLocationsList";
 import type { Location } from "@lib/locations";
+import { TripLocationsList } from "../../../../locations/components/TripLocationsList";
 
 interface LocationsSectionProps {
   locations: Location[];

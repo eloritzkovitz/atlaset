@@ -2,8 +2,8 @@ import { EMPTY_NUMBER_ARRAY } from "@constants/arrays";
 import type { Country } from "@features/countries/types";
 import { CountriesSection } from "./CountriesSection";
 import { LocationsSection } from "./LocationsSection";
-import { useTripLocations } from "../../../../core/hooks/useTripLocations";
 import type { Trip } from "../../../../core/types";
+import { useTripLocations } from "../../../../locations/hooks/useTripLocations";
 
 interface TripDestinationsTabProps {
   trip: Trip;

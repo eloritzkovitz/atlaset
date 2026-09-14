@@ -17,11 +17,11 @@ import { TripPhotoGallery } from "../../photos/components/TripPhotoGallery";
 import { CategoriesList } from "../../core/components/CategoriesList";
 import { TagsList } from "../../core/components/TagsList";
 import { useTrips } from "../../core/context/TripsContext";
-import { useTripLocations } from "../../core/hooks/useTripLocations";
 import { useTripNavigation } from "../../core/hooks/useTripNavigation";
 import { useTripPermissions } from "../../core/hooks/useTripPermissions";
 import { TripModal } from "../../editor/components/TripModal";
 import { useTripEditor } from "../../editor/hooks/useTripEditor";
+import { useTripLocations } from "../../locations/hooks/useTripLocations";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();
