@@ -28,6 +28,7 @@ import {
   canRestore,
   hasValidStartDate,
 } from "../../../core/utils/trips";
+import { useTripPermissions } from "@features/trips/core/hooks/useTripPermissions";
 
 interface TripActionsProps {
   trip: Trip;
@@ -39,10 +40,8 @@ export const TripActions = forwardRef(function TripActions(
   ref,
 ) {
   const navigate = useNavigate();
-
   const { t } = useTranslation("trips");
   const {
-    sharedTripIds,
     markCompleted,
     markCancelled,
     restoreTrip,
@@ -58,6 +57,9 @@ export const TripActions = forwardRef(function TripActions(
 
   const btnRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
+
+  // Determine user permissions
+  const { isOwner, canEdit } = useTripPermissions(trip);
 
   const {
     hoverHandlers: rateMenuHoverHandlers,
@@ -124,8 +126,6 @@ export const TripActions = forwardRef(function TripActions(
       contextCoords ? contextCoords.y : (rateMenuStyle.top as number),
     );
 
-  const isShared = sharedTripIds?.has(trip.id);
-
   const menuActions = useMenuActions(
     {
       onEdit: () => onEdit(trip),
@@ -139,7 +139,7 @@ export const TripActions = forwardRef(function TripActions(
     setOpen,
   );
 
-  if (isShared) {
+  if (!canEdit) {
     return (
       <ActionButton
         ariaLabel={t("actions.sharedDisabledTitle")}
@@ -213,18 +213,20 @@ export const TripActions = forwardRef(function TripActions(
 
         <Separator className="my-2" />
 
-        <MenuButton
-          onClick={() => {
-            menuActions.onEdit?.();
-            handleCloseAll();
-          }}
-          icon={<ICONS.edit />}
-          className="w-full"
-        >
-          {t("actions.editTrip")}
-        </MenuButton>
+        {canEdit && (
+          <MenuButton
+            onClick={() => {
+              menuActions.onEdit?.();
+              handleCloseAll();
+            }}
+            icon={<ICONS.edit />}
+            className="w-full"
+          >
+            {t("actions.editTrip")}
+          </MenuButton>
+        )}
 
-        {canMarkCompleted(trip) && (
+        {isOwner && canMarkCompleted(trip) && (
           <MenuButton
             onClick={() => {
               menuActions.onMarkCompleted?.();
@@ -237,7 +239,7 @@ export const TripActions = forwardRef(function TripActions(
           </MenuButton>
         )}
 
-        {canMarkCancelled(trip) && (
+        {isOwner && canMarkCancelled(trip) && (
           <MenuButton
             onClick={() => {
               markCancelled(trip);
@@ -250,7 +252,7 @@ export const TripActions = forwardRef(function TripActions(
           </MenuButton>
         )}
 
-        {canRestore(trip) && (
+        {isOwner && canRestore(trip) && (
           <MenuButton
             onClick={() => {
               menuActions.onRestore?.();
@@ -276,7 +278,7 @@ export const TripActions = forwardRef(function TripActions(
           {t("actions.duplicate")}
         </MenuButton>
 
-        {trip.status === "completed" && (
+        {isOwner && trip.status === "completed" && (
           <>
             <MenuButton
               onClick={() => {
@@ -335,22 +337,26 @@ export const TripActions = forwardRef(function TripActions(
           </>
         )}
 
-        <Separator className="my-2" />
+        {isOwner && (
+          <>
+            <Separator className="my-2" />
 
-        <MenuButton
-          variant="danger"
-          onClick={() => {
-            menuActions.onDelete?.();
-            handleCloseAll();
-          }}
-          icon={<ICONS.remove />}
-          className="w-full"
-        >
-          {t("actions.deleteTrip")}
-        </MenuButton>
+            <MenuButton
+              variant="danger"
+              onClick={() => {
+                menuActions.onDelete?.();
+                handleCloseAll();
+              }}
+              icon={<ICONS.remove />}
+              className="w-full"
+            >
+              {t("actions.deleteTrip")}
+            </MenuButton>
+          </>
+        )}
       </Menu>
 
-      {confirmModal.isOpen && !!removeTrip && (
+      {confirmModal.isOpen && isOwner && !!removeTrip && (
         <ConfirmModal
           isOpen={confirmModal.isOpen}
           title="Delete item?"

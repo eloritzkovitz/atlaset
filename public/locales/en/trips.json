@@ -28,9 +28,10 @@
 
   "sections": {
     "overview": "Overview",
-    "details": "Details",
     "destinations": "Destinations",
     "itinerary": "Itinerary",
+    "details": "Details",
+    "people": "People",
     "photos": "Photos"
   },
 
@@ -119,21 +120,6 @@
       "noNotes": "No notes available."
     },
 
-    "details": {
-      "participants": {
-        "select": "Select participants",
-        "none": "No participants selected."
-      },
-      "categories": {
-        "select": "Select categories",
-        "none": "No categories selected."
-      },
-      "tags": {
-        "select": "Select tags",
-        "none": "No tags selected."
-      }
-    },
-
     "destinations": {
       "countries": {
         "select": "Select Countries",
@@ -147,6 +133,25 @@
         "searchPlaceholder": "Search locations",
         "noResults": "No locations found."
       }
+    },
+
+    "details": {
+      "categories": {
+        "select": "Select categories",
+        "none": "No categories selected."
+      },
+      "tags": {
+        "select": "Select tags",
+        "none": "No tags selected."
+      }
+    },
+
+    "people": {
+      "searchPlaceholder": "Search users",
+      "noResults": "No users found.",
+      "addParticipant": "Add as participant",
+      "removeParticipant": "Remove participant",
+      "noParticipants": "No participants added yet."
     },
 
     "photos": {

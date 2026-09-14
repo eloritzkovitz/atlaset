@@ -9,7 +9,7 @@ import {
   getDocData,
 } from "@lib/firebase";
 import { sharedTripsService } from "./sharedTripsService";
-import type { SharedTrip, Trip } from "../types";
+import type { SharedTrip, Trip, TripShares } from "../types";
 import { profileService } from "../../../user/profile/services/profileService";
 import { ACTIONS, type Action } from "@constants/actions";
 import { notificationService } from "@features/notifications/services/notificationService";
@@ -35,6 +35,46 @@ const sendParticipantNotification = async (
     },
   });
 };
+
+/** Synchronizes trip shares with the shared trips service. */
+async function syncTripShares(
+  trip: Trip,
+  previousTrip: Trip | null,
+  shares: TripShares | undefined,
+  ownerUid: string,
+) {
+  const participants = new Set(trip.participants ?? []);
+  const previousParticipants = new Set(previousTrip?.participants ?? []);
+  const currentRecipients = new Set([
+    ...(trip.sharedWith ?? []),
+    ...participants,
+  ]);
+  const previousRecipients = new Set([
+    ...(previousTrip?.sharedWith ?? []),
+    ...previousParticipants,
+  ]);
+
+  for (const uid of currentRecipients) {
+    if (uid === ownerUid) continue;
+
+    const share = shares?.get(uid);
+    await sharedTripsService.addReference(
+      uid,
+      ownerUid,
+      trip.id,
+      participants.has(uid) ? "participant" : (share?.type ?? "shared"),
+      share?.permission ?? "viewer",
+    );
+  }
+
+  for (const uid of previousRecipients) {
+    if (uid !== ownerUid && !currentRecipients.has(uid)) {
+      await sharedTripsService.removeReference(uid, trip.id);
+    }
+  }
+
+  return previousParticipants;
+}
 
 /**
  * Service for managing user trips.
@@ -95,7 +135,7 @@ export const tripsService = {
    * Add a new trip.
    * @param trip - The trip object to add.
    */
-  async add(trip: Trip): Promise<Trip> {
+  async add(trip: Trip, shares?: TripShares): Promise<Trip> {
     const user = getCurrentUser();
     if (!user) throw new Error("Authentication required to add a trip.");
 
@@ -115,15 +155,10 @@ export const tripsService = {
     const tripsCol = getUserCollection("trips");
     await setDoc(doc(tripsCol, trip.id), tripForFirestore);
 
-    // Add shared trip references for participants (excluding owner)
+    await syncTripShares({ ...trip, participants }, null, shares, user.uid);
+
     for (const participantUid of participants) {
       if (participantUid !== user.uid) {
-        await sharedTripsService.addReference(
-          participantUid,
-          user.uid,
-          trip.id,
-        );
-
         await sendParticipantNotification(
           participantUid,
           ACTIONS.TRIP_PARTICIPANT_ADDED,
@@ -200,7 +235,7 @@ export const tripsService = {
    * Edits an existing trip.
    * @param trip - The trip object with updated data.
    */
-  async edit(trip: Trip) {
+  async edit(trip: Trip, shares?: TripShares) {
     const user = getCurrentUser();
     if (!user) throw new Error("Authentication required to edit a trip.");
 
@@ -224,25 +259,25 @@ export const tripsService = {
     // Fetch previous trip to compare participants
     const tripDocRef = doc(getPaths.sub(user.uid, "trips"), trip.id);
     const prevTrip = await getDocData<Trip>(tripDocRef);
-    const prevParticipants = prevTrip?.participants || [];
     await setDoc(
       doc(tripsCol, trip.id),
       tripForFirestore as Record<string, unknown>,
     );
 
-    // Update shared trip references for participants
-    const newParticipants = participants;
-    const added = newParticipants.filter(
-      (uid) => uid !== user.uid && !prevParticipants.includes(uid),
+    const previousParticipants = await syncTripShares(
+      { ...trip, participants },
+      prevTrip,
+      shares,
+      user.uid,
     );
-    const removed = prevParticipants.filter(
-      (uid) => uid !== user.uid && !newParticipants.includes(uid),
+    const added = participants.filter(
+      (uid) => uid !== user.uid && !previousParticipants.has(uid),
+    );
+    const removed = [...previousParticipants].filter(
+      (uid) => uid !== user.uid && !participants.includes(uid),
     );
 
-    // Add new shared trip references
     for (const participantUid of added) {
-      await sharedTripsService.addReference(participantUid, user.uid, trip.id);
-
       await sendParticipantNotification(
         participantUid,
         ACTIONS.TRIP_PARTICIPANT_ADDED,
@@ -251,10 +286,7 @@ export const tripsService = {
       );
     }
 
-    // Remove shared trip references for removed participants
     for (const participantUid of removed) {
-      await sharedTripsService.removeReference(participantUid, trip.id);
-
       await sendParticipantNotification(
         participantUid,
         ACTIONS.TRIP_PARTICIPANT_REMOVED,
@@ -285,18 +317,24 @@ export const tripsService = {
 
     const tripDocRef = doc(getPaths.sub(user.uid, "trips"), trip.id);
 
-    // Remove shared trip references for all participants
-    const participants = trip.participants || [];
-    for (const participantUid of participants) {
-      if (participantUid !== user.uid) {
-        await sharedTripsService.removeReference(participantUid, trip.id);
+    // Remove shared references for all recipients (sharedWith and participants)
+    const recipients = new Set([
+      ...(trip.sharedWith ?? []),
+      ...(trip.participants ?? []),
+    ]);
 
-        await sendParticipantNotification(
-          participantUid,
-          ACTIONS.TRIP_PARTICIPANT_REMOVED,
-          user,
-          trip,
-        );
+    for (const recipientUid of recipients) {
+      if (recipientUid !== user.uid) {
+        await sharedTripsService.removeReference(recipientUid, trip.id);
+
+        if (trip.participants?.includes(recipientUid)) {
+          await sendParticipantNotification(
+            recipientUid,
+            ACTIONS.TRIP_PARTICIPANT_REMOVED,
+            user,
+            trip,
+          );
+        }
       }
     }
 

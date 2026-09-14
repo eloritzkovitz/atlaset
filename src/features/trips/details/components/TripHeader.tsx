@@ -9,6 +9,7 @@ import {
 import { ICONS } from "@constants/icons";
 import { useCalendarNavigation } from "@features/calendar/hooks/useCalendarNavigation";
 import { formatDate } from "@utils";
+import { ParticipantsList } from "../../core/components/ParticipantsList";
 import { TripIndicators } from "../../core/components/TripIndicators";
 import { TripStatusChip } from "../../core/components/TripStatusChip";
 import type { Trip } from "../../core/types";
@@ -16,6 +17,7 @@ import type { Trip } from "../../core/types";
 interface TripHeaderProps {
   trip: Trip;
   onEdit: () => void;
+  canEdit: boolean;
   sharedWithMe?: boolean;
   navigation?: {
     previous?: NavigationItem;
@@ -26,6 +28,7 @@ interface TripHeaderProps {
 export function TripHeader({
   trip,
   onEdit,
+  canEdit,
   sharedWithMe,
   navigation,
 }: TripHeaderProps) {
@@ -58,15 +61,16 @@ export function TripHeader({
           <div className="flex w-32 flex-col items-stretch gap-2 shrink-0">
             <TripStatusChip status={trip.status} />
 
-            <ActionButton
-              variant="secondary"
-              className="!w-full !rounded-full text-text hover:bg-surface-hover"
-              onClick={onEdit}
-              icon={<ICONS.edit className="h-4 w-4" />}
-              disabled={sharedWithMe}
-            >
-              {t("actions.editTrip", "Edit trip")}
-            </ActionButton>
+            {canEdit && (
+              <ActionButton
+                variant="secondary"
+                className="!w-full !rounded-full text-text hover:bg-surface-hover"
+                onClick={onEdit}
+                icon={<ICONS.edit className="h-4 w-4" />}
+              >
+                {t("actions.editTrip", "Edit trip")}
+              </ActionButton>
+            )}
           </div>
         </div>
 
@@ -96,6 +100,8 @@ export function TripHeader({
           </div>
 
           <StarRatingInput value={trip.rating} readOnly />
+
+          <ParticipantsList uids={trip.participants ?? []} />
 
           <TripIndicators
             favorite={trip.favorite}

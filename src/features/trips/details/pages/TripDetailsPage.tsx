@@ -12,16 +12,16 @@ import { EMPTY_NUMBER_ARRAY } from "@constants/arrays";
 import { usePageTitle } from "@hooks";
 import { TripDestinationsCard } from "../components/TripDestinationsCard";
 import { TripHeader } from "../components/TripHeader";
+import { TripGoogleMap } from "../components/TripsGoogleMap";
 import { TripPhotoGallery } from "../../photos/components/TripPhotoGallery";
 import { CategoriesList } from "../../core/components/CategoriesList";
-import { ParticipantsList } from "../../core/components/ParticipantsList";
 import { TagsList } from "../../core/components/TagsList";
 import { useTrips } from "../../core/context/TripsContext";
 import { useTripLocations } from "../../core/hooks/useTripLocations";
 import { useTripNavigation } from "../../core/hooks/useTripNavigation";
+import { useTripPermissions } from "../../core/hooks/useTripPermissions";
 import { TripModal } from "../../editor/components/TripModal";
 import { useTripEditor } from "../../editor/hooks/useTripEditor";
-import { TripGoogleMap } from "../components/TripsGoogleMap";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();
@@ -47,6 +47,8 @@ export default function TripDetailsPage() {
     handleSave,
     onClose,
   } = useTripEditor();
+
+  const { canEdit } = useTripPermissions(trip);
 
   if (loading) {
     return (
@@ -76,10 +78,10 @@ export default function TripDetailsPage() {
         />
 
         <div className="mx-auto space-y-6">
-          {/* Trip header */}
           <TripHeader
             trip={trip}
             onEdit={() => handleEdit(trip)}
+            canEdit={canEdit}
             sharedWithMe={sharedTripIds.has(trip.id)}
             navigation={{
               previous: previousTrip
@@ -97,7 +99,6 @@ export default function TripDetailsPage() {
             }}
           />
 
-          {/* Destinations */}
           <TripDestinationsCard
             locations={locations}
             loading={locationsLoading}
@@ -106,7 +107,6 @@ export default function TripDetailsPage() {
           {/* Google My Map */}
           {trip.googleMapsUrl && <TripGoogleMap url={trip.googleMapsUrl} />}
 
-          {/* Photos */}
           <TripPhotoGallery
             tripId={trip.id}
             photos={trip.photos ?? []}
@@ -116,12 +116,6 @@ export default function TripDetailsPage() {
 
           {/* Details */}
           <Card title={t("sections.details", "Details")}>
-            <SectionHeader>
-              {t("fields.participants", "Participants")} (
-              {trip.participants?.length ?? 0})
-            </SectionHeader>
-            <ParticipantsList uids={trip.participants ?? []} />
-
             <SectionHeader title={t("fields.categories", "Categories")} />
             <CategoriesList
               categories={trip.categories ?? []}

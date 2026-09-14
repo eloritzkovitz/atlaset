@@ -3,14 +3,14 @@ import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { TripsContext } from "./TripsContext";
 import { sharedTripsService } from "../services/sharedTripsService";
 import { tripsService } from "../services/tripsService";
-import type { Trip } from "../types";
+import type { SharedTrip, Trip, TripShares } from "../types";
 import { getAutoTripStatus } from "../utils/trips";
 
 export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [trips, setTrips] = useState<Trip[]>([]);
-  const [sharedTripIds, setSharedTripIds] = useState<Set<string>>(new Set());
+  const [sharedTrips, setSharedTrips] = useState<SharedTrip[]>([]);
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +27,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     // Only load trips if user is authenticated
     if (!user) {
       setTrips([]);
-      setSharedTripIds(new Set());
+      setSharedTrips([]);
       setLoading(false);
       return;
     }
@@ -36,11 +36,11 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     Promise.all([
       tripsService.load(),
-      sharedTripsService.getSharedTripIds(user.uid),
-    ]).then(([allTrips, sharedIds]) => {
+      sharedTripsService.getParticipantTrips(user.uid),
+    ]).then(([allTrips, participantTrips]) => {
       if (mounted) {
         loadTrips(allTrips);
-        setSharedTripIds(new Set(sharedIds));
+        setSharedTrips(participantTrips);
         setLoading(false);
       }
     });
@@ -49,6 +49,22 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
       mounted = false;
     };
   }, [user, ready]);
+
+  // Compute shared and participant trip IDs
+  const { sharedTripIds, participantTripIds } = useMemo(() => {
+    const sharedTripIds = new Set<string>();
+    const participantTripIds = new Set<string>();
+
+    for (const trip of sharedTrips) {
+      sharedTripIds.add(trip.tripId);
+
+      if (trip.type === "participant") {
+        participantTripIds.add(trip.tripId);
+      }
+    }
+
+    return { sharedTripIds, participantTripIds };
+  }, [sharedTrips]);
 
   // Load trips from IndexedDB on mount
   function loadTrips(rawTrips: Trip[]) {
@@ -61,9 +77,9 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   /** Adds a new trip. */
-  async function addTrip(trip: Trip) {
+  async function addTrip(trip: Trip, shares?: TripShares) {
     const tripWithStatus = { ...trip, status: getAutoTripStatus(trip) };
-    const savedTrip = await tripsService.add(tripWithStatus);
+    const savedTrip = await tripsService.add(tripWithStatus, shares);
 
     setTrips((prev) => [
       ...prev,
@@ -72,13 +88,17 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   /** Edits an existing trip. */
-  async function editTrip(trip: Trip, forceStatus = false) {
+  async function editTrip(
+    trip: Trip,
+    forceStatus = false,
+    shares?: TripShares,
+  ) {
     const updatedTrip = {
       ...trip,
       status: forceStatus ? trip.status : getAutoTripStatus(trip),
     };
 
-    await tripsService.edit(updatedTrip);
+    await tripsService.edit(updatedTrip, shares);
     setTrips((prev) => prev.map((t) => (t.id === trip.id ? updatedTrip : t)));
   }
 
@@ -127,6 +147,12 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
       id: crypto.randomUUID(),
       name: trip.name + " (Copy)",
       status: getAutoTripStatus(trip),
+      participants: [],
+      sharedWith: [],
+      favorite: false,
+      rating: null,
+      photos: [],
+      photoAlbumUrl: undefined,
     };
     const savedTrip = await tripsService.add(newTrip);
     setTrips((prev) => [
@@ -141,7 +167,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Check if all non-shared trips are selected
   const isAllSelected = (filteredTrips: Trip[]) => {
     const nonSharedFiltered = filteredTrips.filter(
-      (t) => !sharedTripIds.has(t.id),
+      (t) => !participantTripIds.has(t.id),
     );
     return (
       nonSharedFiltered.length > 0 &&
@@ -155,13 +181,13 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     [trips, selectedTripIds],
   );
   const nonSharedSelectedTrips = useMemo(
-    () => selectedTrips.filter((trip) => !sharedTripIds.has(trip.id)),
-    [selectedTrips, sharedTripIds],
+    () => selectedTrips.filter((trip) => !participantTripIds.has(trip.id)),
+    [selectedTrips, participantTripIds],
   );
 
   /** Selects or deselects a trip. */
   function selectTrip(id: string) {
-    if (sharedTripIds.has(id)) return;
+    if (participantTripIds.has(id)) return;
     setSelectedTripIds((prev) =>
       prev.includes(id)
         ? prev.filter((tripId) => tripId !== id)
@@ -172,7 +198,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   /** Selects or deselects all trips. */
   function selectAllTrips(filteredIds: string[]) {
     const nonSharedFilteredIds = filteredIds.filter(
-      (id) => !sharedTripIds.has(id),
+      (id) => !participantTripIds.has(id),
     );
 
     const isAllCurrentlySelected =
@@ -207,7 +233,9 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     <TripsContext.Provider
       value={{
         trips,
+        sharedTrips,
         sharedTripIds,
+        participantTripIds,
         selectedTripIds,
         setSelectedTripIds,
         selectTrip,

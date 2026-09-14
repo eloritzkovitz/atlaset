@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Modal,
@@ -13,30 +13,35 @@ import {
   getCountryByIsoCode,
   useCountryData,
 } from "@features/countries";
-import { useUserFriends } from "@features/user/friends/hooks/useUserFriends";
-import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { useDisclosure } from "@hooks";
 import { CategorySelectModal } from "./selects/CategorySelectModal";
 import { DestinationSelectModal } from "./selects/DestinationSelectModal";
-import { ParticipantSelectModal } from "./selects/ParticipantSelectModal";
 import { TagSelectModal } from "./selects/TagSelectModal";
 import { TripDestinationsTab } from "./tabs/destinations/TripDestinationsTab";
 import { TripDetailsTab } from "./tabs/details/TripDetailsTab";
 import { TripItineraryTab } from "./tabs/itinerary/TripItineraryTab";
 import { TripOverviewTab } from "./tabs/overview/TripOverviewTab";
 import { TripPhotosTab } from "./tabs/photos/TripPhotosTab";
+import { useTripPeople } from "../hooks/useTripPeople";
 import { useTripFilters } from "../../core/hooks/useTripFilters";
-import type { Trip, TripCategory, TripTag } from "../../core/types";
+import type { Trip, TripCategory, TripShares, TripTag } from "../../core/types";
 import { getAutoTripStatus } from "../../core/utils/trips";
 import "./TripModal.css";
+import { TripPeopleTab } from "./tabs/people/TripPeopleTab";
 
-type TripTab = "overview" | "details" | "destinations" | "itinerary" | "photos";
+type TripTab =
+  | "overview"
+  | "destinations"
+  | "itinerary"
+  | "details"
+  | "people"
+  | "photos";
 
 interface TripModalProps {
   isOpen: boolean;
   trip: Trip | null;
   onChange: (trip: Trip) => void;
-  onSave: (trip: Trip) => Promise<void>;
+  onSave: (trip: Trip, shares: TripShares) => Promise<void>;
   onClose: () => void;
   isEditing: boolean;
 }
@@ -52,12 +57,10 @@ export function TripModal({
 }: TripModalProps) {
   const { t } = useTranslation("trips");
   const { countries } = useCountryData();
-  const { friends } = useUserFriends();
   const { categoryOptions, tagOptions } = useTripFilters();
 
   const countryModal = useDisclosure(false);
   const destinationModal = useDisclosure(false);
-  const participantModal = useDisclosure(false);
   const categoryModal = useDisclosure(false);
   const tagModal = useDisclosure(false);
 
@@ -67,47 +70,38 @@ export function TripModal({
     !!(isEditing && trip && getAutoTripStatus(trip) === "planned"),
   );
 
-  const friendUids = useMemo(() => friends.map((f) => f.uid), [friends]);
+  const {
+    people,
+    searchResults,
+    search,
+    addPerson,
+    addParticipant,
+    updatePermission,
+    handleParticipantChange,
+    removePerson,
+    tripShares,
+    searchLoading,
+  } = useTripPeople({
+    trip,
+    isOpen,
+    isEditing,
+  });
 
-  const { profiles: friendProfiles } = useFriendProfiles(friendUids);
+  const formattedCategoryOptions = categoryOptions.map((option) => ({
+    value: option.value as TripCategory,
+    label: option.label,
+  }));
 
-  const participantOptions = useMemo(
-    () =>
-      friendProfiles.map((profile) => ({
-        value: profile.uid,
-        label: profile.displayName || profile.username || profile.uid,
-        profile,
-      })),
-    [friendProfiles],
-  );
+  const formattedTagOptions = tagOptions.map((option) => ({
+    value: option.value as TripTag,
+    label: option.label,
+  }));
 
-  const selectedParticipantProfiles = useMemo(() => {
-    if (!trip?.participants) return [];
+  if (!trip) {
+    return null;
+  }
 
-    return friendProfiles.filter((profile) =>
-      trip.participants?.includes(profile.uid),
-    );
-  }, [friendProfiles, trip]);
-
-  const formattedCategoryOptions = useMemo(
-    () =>
-      categoryOptions.map((opt) => ({
-        value: opt.value as TripCategory,
-        label: opt.label,
-      })),
-    [categoryOptions],
-  );
-
-  const formattedTagOptions = useMemo(
-    () =>
-      tagOptions.map((opt) => ({
-        value: opt.value as TripTag,
-        label: opt.label,
-      })),
-    [tagOptions],
-  );
-
-  if (!trip) return null;
+  const currentTrip = trip;
 
   const selectedCountries = trip.countryCodes
     .map((isoCode) => getCountryByIsoCode(isoCode, { countries }))
@@ -119,16 +113,20 @@ export function TripModal({
       label: t("sections.overview"),
     },
     {
-      value: "details",
-      label: t("sections.details"),
-    },
-    {
       value: "destinations",
       label: t("sections.destinations"),
     },
     {
       value: "itinerary",
       label: t("sections.itinerary"),
+    },
+    {
+      value: "details",
+      label: t("sections.details"),
+    },
+    {
+      value: "people",
+      label: t("sections.people"),
     },
     {
       value: "photos",
@@ -141,19 +139,27 @@ export function TripModal({
     trip.countryCodes.length > 0 &&
     (isTentative || (!!trip.startDate && !!trip.endDate));
 
+  const isModalOpen =
+    countryModal.isOpen ||
+    destinationModal.isOpen ||
+    categoryModal.isOpen ||
+    tagModal.isOpen;
+
+  async function handleSubmit() {
+    if (!isValid) {
+      return;
+    }
+
+    await onSave(currentTrip, tripShares);
+  }
+
   return (
     <>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
         className="w-[900px] min-w-[900px] max-w-[900px] h-[92vh] flex flex-col"
-        disableClose={
-          countryModal.isOpen ||
-          destinationModal.isOpen ||
-          participantModal.isOpen ||
-          categoryModal.isOpen ||
-          tagModal.isOpen
-        }
+        disableClose={isModalOpen}
         draggable
       >
         <ModalHeader
@@ -165,20 +171,15 @@ export function TripModal({
           }
         />
 
-        {/* Tabs */}
         <TabControl tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
         <form
           className="flex flex-col flex-1 min-h-0"
-          onSubmit={(e) => {
-            e.preventDefault();
-
-            if (!isValid) return;
-
-            onSave(trip);
+          onSubmit={(event) => {
+            event.preventDefault();
+            void handleSubmit();
           }}
         >
-          {/* Tab content */}
           <div className="flex-1 min-h-0 overflow-y-auto w-full">
             <div className="w-full p-4">
               {activeTab === "overview" && (
@@ -187,17 +188,6 @@ export function TripModal({
                   isTentative={isTentative}
                   onChange={onChange}
                   onTentativeChange={setIsTentative}
-                />
-              )}
-
-              {activeTab === "details" && (
-                <TripDetailsTab
-                  trip={trip}
-                  selectedParticipantProfiles={selectedParticipantProfiles}
-                  onChange={onChange}
-                  onEditParticipants={participantModal.open}
-                  onEditCategories={categoryModal.open}
-                  onEditTags={tagModal.open}
                 />
               )}
 
@@ -215,13 +205,37 @@ export function TripModal({
                 <TripItineraryTab trip={trip} onChange={onChange} />
               )}
 
+              {activeTab === "details" && (
+                <TripDetailsTab
+                  trip={trip}
+                  onChange={onChange}
+                  onEditCategories={categoryModal.open}
+                  onEditTags={tagModal.open}
+                />
+              )}
+
+              {activeTab === "people" && (
+                <TripPeopleTab
+                  people={people}
+                  searchResults={searchResults}
+                  onSearch={search}
+                  onAdd={(profile) => addPerson(profile, onChange)}
+                  onAddParticipant={(profile) => addParticipant(profile, onChange)}
+                  onRemove={(uid) => removePerson(uid, onChange)}
+                  onPermissionChange={updatePermission}
+                  onParticipantChange={(uid, participant) =>
+                    handleParticipantChange(uid, participant, onChange)
+                  }
+                  searchLoading={searchLoading}
+                />
+              )}
+
               {activeTab === "photos" && (
                 <TripPhotosTab trip={trip} onChange={onChange} />
               )}
             </div>
           </div>
 
-          {/* Actions */}
           <div className="w-full flex justify-end px-6 pb-4 shrink-0">
             <ModalActions
               onCancel={onClose}
@@ -248,10 +262,10 @@ export function TripModal({
         selected={trip.countryCodes}
         options={countries}
         onClose={countryModal.close}
-        onChange={(newCodes) => {
+        onChange={(countryCodes) => {
           onChange({
             ...trip,
-            countryCodes: newCodes,
+            countryCodes,
           });
         }}
       />
@@ -260,26 +274,13 @@ export function TripModal({
         isOpen={destinationModal.isOpen}
         selected={trip.locationIds ?? []}
         countryCodes={trip.countryCodes}
-        onChange={(locationIds) =>
+        onChange={(locationIds) => {
           onChange({
             ...trip,
             locationIds,
-          })
-        }
-        onClose={() => destinationModal.close()}
-      />
-
-      <ParticipantSelectModal
-        isOpen={participantModal.isOpen}
-        selected={trip.participants || []}
-        options={participantOptions}
-        onClose={participantModal.close}
-        onChange={(newParticipants) => {
-          onChange({
-            ...trip,
-            participants: newParticipants,
           });
         }}
+        onClose={destinationModal.close}
       />
 
       <CategorySelectModal
@@ -287,10 +288,10 @@ export function TripModal({
         selected={trip.categories || []}
         options={formattedCategoryOptions}
         onClose={categoryModal.close}
-        onChange={(newCategories) => {
+        onChange={(categories) => {
           onChange({
             ...trip,
-            categories: newCategories as TripCategory[],
+            categories: categories as TripCategory[],
           });
         }}
       />
@@ -300,10 +301,10 @@ export function TripModal({
         selected={trip.tags || []}
         options={formattedTagOptions}
         onClose={tagModal.close}
-        onChange={(newTags) => {
+        onChange={(tags) => {
           onChange({
             ...trip,
-            tags: newTags as TripTag[],
+            tags: tags as TripTag[],
           });
         }}
       />

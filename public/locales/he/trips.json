@@ -28,9 +28,10 @@
 
   "sections": {
     "overview": "סקירה",
-    "details": "פרטים",
     "destinations": "יעדים",
     "itinerary": "מסלול",
+    "details": "פרטים",
+    "people": "אנשים",
     "photos": "תמונות"
   },
 
@@ -119,21 +120,6 @@
       "noNotes": "אין הערות זמינות."
     },
 
-    "details": {
-      "participants": {
-        "select": "בחר משתתפים",
-        "none": "לא נבחרו משתתפים."
-      },
-      "categories": {
-        "select": "בחר קטגוריות",
-        "none": "לא נבחרו קטגוריות."
-      },
-      "tags": {
-        "select": "בחר תגיות",
-        "none": "לא נבחרו תגיות."
-      }
-    },
-
     "destinations": {
       "countries": {
         "select": "בחר מדינות",
@@ -147,6 +133,25 @@
         "searchPlaceholder": "חפש מיקומים",
         "noResults": "לא נמצאו מיקומים."
       }
+    },
+
+    "details": {
+      "categories": {
+        "select": "בחר קטגוריות",
+        "none": "לא נבחרו קטגוריות."
+      },
+      "tags": {
+        "select": "בחר תגיות",
+        "none": "לא נבחרו תגיות."
+      }
+    },
+
+    "people": {
+      "searchPlaceholder": "חפש משתמשים",
+      "noResults": "לא נמצאו משתמשים.",
+      "addParticipant": "הוסף כמשתתף",
+      "removeParticipant": "הסר משתתף",
+      "noParticipants": "עדיין לא נוספו משתתפים."
     },
 
     "photos": {
