@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@components";
 import type { Location } from "@lib/locations";
-import { TripLocationsList } from "../../core/components/TripLocationsList";
-import { TripLocationsMap } from "./TripLocationsMap";
+import { TripLocationsList } from "../../locations/components/TripLocationsList";
+import { TripLocationsMap } from "../../locations/components/TripLocationsMap";
 
 interface TripDestinationsCardProps {
   locations: Location[];

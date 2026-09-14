@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { getLocationsByIds } from "@lib/locations";
-import type { Location } from "@lib/locations";
+import { getLocationsByIds, type Location } from "@lib/locations";
 
 interface UseTripLocationsResult {
   locations: Location[];

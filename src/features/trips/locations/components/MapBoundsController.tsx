@@ -10,6 +10,7 @@ interface MapBoundsControllerProps {
 export function MapBoundsController({ locations }: MapBoundsControllerProps) {
   const map = useMap();
 
+  // Adjust the map bounds to fit the provided locations whenever they change
   useEffect(() => {
     if (locations.length === 0) {
       return;
