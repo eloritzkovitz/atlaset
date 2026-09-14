@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { EmptyListMessage } from "@components";
 import { FriendRequestActions } from "./FriendRequestActions";
 import { friendService } from "../services/friendService";
-import { UserListItem } from "../../core/components/UserListItem";
+import { UserList } from "../../core/components/UserList";
 
 interface FriendRequestListProps {
   requests: Array<{ uid: string; from: string }>;
@@ -26,29 +26,18 @@ export function FriendRequestList({
   }
 
   return (
-    <ul className="space-y-2">
-      {requests.map((req) => (
-        <UserListItem
-          key={req.uid}
-          uid={req.from}
-          actions={
-            userUid ? (
-              <FriendRequestActions
-                onAccept={(requestUserName) =>
-                  friendService.acceptFriendRequest(
-                    userUid,
-                    req.from,
-                    requestUserName,
-                  )
-                }
-                onReject={() =>
-                  friendService.rejectFriendRequest(userUid, req.from)
-                }
-              />
-            ) : undefined
-          }
-        />
-      ))}
-    </ul>
+    <UserList
+      uids={requests.map((request) => request.from)}
+      getActions={(uid) =>
+        userUid ? (
+          <FriendRequestActions
+            onAccept={(requestUserName) =>
+              friendService.acceptFriendRequest(userUid, uid, requestUserName)
+            }
+            onReject={() => friendService.rejectFriendRequest(userUid, uid)}
+          />
+        ) : undefined
+      }
+    />
   );
 }

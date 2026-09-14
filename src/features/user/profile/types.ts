@@ -43,6 +43,12 @@ export interface UserProfile {
   wantToVisitCountryCodes?: string[];
 }
 
+/** Fields required to render a user in a list. */
+export type UserDisplayProfile = Pick<
+  UserProfile,
+  "uid" | "username" | "displayName" | "email" | "photoURL"
+>;
+
 /** Represents a user in the Firestore database. */
 export interface FirestoreUser extends UserProfile {
   status?: "active" | "deactivated";

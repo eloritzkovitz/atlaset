@@ -3,7 +3,7 @@ import { EmptyListMessage } from "@components";
 import { FriendListItemMenuActions } from "./FriendListItemMenuActions";
 import { useFriendSearch } from "../hooks/useFriendSearch";
 import type { FriendProfile } from "../types";
-import { UserListItem } from "../../core/components/UserListItem";
+import { UserList } from "../../core/components/UserList";
 
 interface FriendListProps {
   profiles: FriendProfile[];
@@ -32,19 +32,14 @@ export function FriendList({
   }
 
   return (
-    <ul className="space-y-2">
-      {filtered.map((profile) => (
-        <UserListItem
-          key={profile.uid}
+    <UserList
+      profiles={filtered}
+      getMenuContent={(profile) => (
+        <FriendListItemMenuActions
           uid={profile.uid}
-          menuContent={
-            <FriendListItemMenuActions
-              uid={profile.uid}
-              username={profile.username}
-            />
-          }
+          username={profile.username}
         />
-      ))}
-    </ul>
+      )}
+    />
   );
 }

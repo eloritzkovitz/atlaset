@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import { PanelListItem } from "@components";
 import { UserInfo } from "./UserInfo";
 import { useUserProfile } from "../../profile/hooks/useUserProfile";
+import type { UserDisplayProfile } from "../../profile/types";
 
 interface UserListItemProps {
-  uid: string;
+  uid?: string;
+  profile?: UserDisplayProfile;
   profileLink?: boolean;
   actions?: React.ReactNode;
   menuContent?: React.ReactNode;
@@ -13,20 +15,23 @@ interface UserListItemProps {
 
 export function UserListItem({
   uid,
+  profile,
   profileLink = true,
   actions,
   menuContent,
   loading: externalLoading,
 }: UserListItemProps) {
-  const { profile: userProfile, loading: profileLoading } = useUserProfile({
-    uid,
+  const shouldFetchProfile = !profile && !!uid;
+  const { profile: fetchedProfile, loading: profileLoading } = useUserProfile({
+    uid: shouldFetchProfile ? uid : undefined,
   });
+  const userProfile = profile ?? fetchedProfile;
 
-  const loading = externalLoading ?? profileLoading;
+  const loading = externalLoading ?? (!profile && profileLoading);
 
   // Determine display name or fallback to username or uid
   const resolvedDisplayName =
-    userProfile?.displayName || userProfile?.username || uid;
+    userProfile?.displayName || userProfile?.username || uid || "user";
 
   // Custom icon/content for PanelListItem
   const icon = loading ? (
