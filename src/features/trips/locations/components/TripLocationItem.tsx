@@ -22,7 +22,7 @@ export function TripLocationItem({
 
   return (
     <div
-      className={`flex items-center justify-between rounded px-3 py-2 transition-colors bg-surface rounded-full ${
+      className={`flex items-center justify-between rounded px-3 py-2 transition-colors bg-input rounded-full ${
         selected ? "!bg-primary/70" : "hover:bg-primary-hover/35"
       }`}
     >
@@ -47,10 +47,10 @@ export function TripLocationItem({
         {onRemove && (
           <ActionButton
             icon={<ICONS.close />}
-            variant="custom"
-            className="p-1"
+            title={t("editor.actions.remove")}
             ariaLabel={t("editor.actions.remove")}
             onClick={() => onRemove(location.id)}
+            rounded
           />
         )}
       </div>

@@ -38,13 +38,13 @@ export function ColorSelectInput({
       />
       <ActionButton
         type="button"
-        variant="secondary"
+        icon={<ICONS.editField />}
+        title={t("actions.edit")}
+        aria-label={t("actions.edit")}
         onClick={() => setModalOpen(true)}
+        rounded
         disabled={disabled}
-        icon={<ICONS.edit className="inline" />}
-      >
-        {t("actions.edit")}
-      </ActionButton>
+      />
       <ColorPickerModal
         isOpen={modalOpen}
         color={value}

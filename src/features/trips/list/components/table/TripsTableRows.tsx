@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Checkbox, StarRatingInput, TableCell } from "@components";
-import type { Country } from "@features/countries/types";
+import { getCountrySortName, type Country } from "@features/countries";
 import { formatDate } from "@utils";
 import { TripActions } from "./TripActions";
 import { CategoriesList } from "../../../core/components/CategoriesList";
@@ -45,7 +45,7 @@ export function TripsTableRows({
 
   // Sort countries alphabetically by name
   const sortedCountries = mappedCountries.sort((a, b) =>
-    a.name.localeCompare(b.name),
+    getCountrySortName(a).localeCompare(getCountrySortName(b)),
   );
 
   // Ref for TripActions to support context menu opening

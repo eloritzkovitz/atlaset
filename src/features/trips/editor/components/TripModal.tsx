@@ -186,6 +186,8 @@ export function TripModal({
               {activeTab === "overview" && (
                 <TripOverviewTab
                   trip={trip}
+                  selectedCountries={selectedCountries}
+                  onEditCountries={countryModal.open}
                   isTentative={isTentative}
                   onChange={onChange}
                   onTentativeChange={setIsTentative}
@@ -195,8 +197,6 @@ export function TripModal({
               {activeTab === "destinations" && (
                 <TripDestinationsTab
                   trip={trip}
-                  selectedCountries={selectedCountries}
-                  onEditCountries={countryModal.open}
                   onEditLocations={destinationModal.open}
                   onChange={onChange}
                 />

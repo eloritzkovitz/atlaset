@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { LoadingSpinner, SectionHeader } from "@components";
+import { EmptyListMessage, LoadingSpinner, SectionHeader } from "@components";
 import { CountryWithFlag, SPECIAL_COUNTRIES } from "@features/countries";
 import { useLanguage } from "@features/settings/account";
 import type { Location } from "@lib/locations";
@@ -69,9 +69,7 @@ export function TripLocationsList({
 
   if (locations.length === 0) {
     return (
-      <p className="text-sm text-muted">
-        {t("editor.destinations.locations.none")}
-      </p>
+      <EmptyListMessage message={t("editor.destinations.locations.none")} />
     );
   }
 

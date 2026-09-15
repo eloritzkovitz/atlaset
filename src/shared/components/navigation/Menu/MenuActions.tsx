@@ -61,7 +61,7 @@ export function MenuActions({
       {onNameChange && (
         <MenuButton
           onClick={handleEdit}
-          icon={<ICONS.rename />}
+          icon={<ICONS.editField />}
           className="w-full"
         >
           {t("actions.rename", "Rename")}

@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage } from "@components";
 import { CountryListRow } from "../../browse/components/CountryListRow";
+import { getCountrySortName } from "../../browse/utils/countrySort";
 import { SPECIAL_COUNTRIES } from "../../core/constants/specialCountries";
 import { useCountryData } from "../../core/hooks/useCountryData";
 import { getCountryResourceBundle } from "../../core/utils/countryLocalization";
@@ -48,7 +49,7 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
       return undefined;
     })
     .filter((country): country is Country => Boolean(country))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => getCountrySortName(a).localeCompare(getCountrySortName(b)));
 
   return (
     <CollapsibleHeader

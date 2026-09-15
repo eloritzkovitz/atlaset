@@ -108,16 +108,17 @@ export function CountrySelectField({
           {!disabled && (
             <ActionButton
               type="button"
-              variant="secondary"
+              icon={<ICONS.editField />}
+              title={t("common:actions.edit")}
+              aria-label={t("common:actions.edit")}
               onClick={onOpen}
+              rounded
               disabled={disabled}
-            >
-              <ICONS.edit className="inline" /> {t("common:actions.edit")}
-            </ActionButton>
+            />
           )}
         </div>
       </FormField>
-      
+
       {isOpen &&
         createPortal(
           <CountrySelectModal

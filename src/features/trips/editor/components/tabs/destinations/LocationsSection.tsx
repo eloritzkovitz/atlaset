@@ -28,16 +28,12 @@ export function LocationsSection({
         </span>
 
         <ActionButton
-          icon={<ICONS.edit />}
-          variant="custom"
-          className="px-2 py-1 text-sm"
+          icon={<ICONS.editField />}
+          title={t("editor.destinations.locations.select")}
           ariaLabel={t("editor.destinations.locations.select")}
           onClick={onEdit}
-        >
-          {locations.length > 0
-            ? t("editor.actions.edit")
-            : t("editor.actions.add")}
-        </ActionButton>
+          rounded
+        />
       </div>
 
       <TripLocationsList

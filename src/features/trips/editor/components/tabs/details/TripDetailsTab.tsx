@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { FormField, InputBox } from "@components";
 import type { Trip } from "@features/trips/core/types";
 import { CategoriesSection } from "./CategoriesSection";
 import { TagsSection } from "./TagsSection";
@@ -16,8 +18,10 @@ export function TripDetailsTab({
   onEditCategories,
   onEditTags,
 }: TripDetailsTabProps) {
+  const { t } = useTranslation("trips");
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <CategoriesSection
         selectedCategories={trip.categories || []}
         onEdit={onEditCategories}
@@ -41,6 +45,24 @@ export function TripDetailsTab({
           })
         }
       />
+
+      <FormField label={t("fields.notes")}>
+        <InputBox
+          id="trip-notes"
+          name="trip-notes"
+          as="textarea"
+          maxLength={2000}
+          className="w-full min-h-48 resize-none"
+          value={trip.notes ?? ""}
+          onChange={(e: { target: { value: string } }) =>
+            onChange({
+              ...trip,
+              notes: e.target.value,
+            })
+          }
+          placeholder={t("editor.overview.notesPlaceholder")}
+        />
+      </FormField>
     </div>
   );
 }
