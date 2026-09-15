@@ -1,12 +1,14 @@
 import React, { useId, type ReactNode } from "react";
+import { FieldLabel } from "./FieldLabel";
 
 interface FormFieldProps {
   label: ReactNode;
   children: ReactNode;
   id?: string;
   name?: string;
-  className?: string;
+  required?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 interface FormInputChildProps {
@@ -21,8 +23,9 @@ export function FormField({
   children,
   id,
   name,
-  className = "",
+  required = false,
   disabled = false,
+  className = "",
 }: FormFieldProps) {
   const autoId = useId();
   const fieldId = id || autoId;
@@ -60,9 +63,9 @@ export function FormField({
         disabled ? "opacity-60" : ""
       } ${className}`}
     >
-      <label htmlFor={fieldId} className="font-semibold text-text select-none">
+      <FieldLabel htmlFor={fieldId} required={required}>
         {label}
-      </label>
+      </FieldLabel>
       {enhancedChildren}
     </div>
   );

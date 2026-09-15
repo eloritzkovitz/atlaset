@@ -15,6 +15,7 @@ interface CountrySelectFieldProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
+  required?: boolean;
   disabled?: boolean;
   isTripBasedCountry?: (code: string) => boolean;
   isCountryDisabled?: (code: string) => boolean;
@@ -28,6 +29,7 @@ export function CountrySelectField({
   isOpen,
   onOpen,
   onClose,
+  required = false,
   disabled,
   isTripBasedCountry,
   isCountryDisabled,
@@ -36,17 +38,16 @@ export function CountrySelectField({
   const { t } = useTranslation("atlas");
   const labelText = label ?? t("countries.select.label");
 
-  // Map codes to countries and sort alphabetically
   const selectedCountries = useMemo(() => {
     if (!countryCodes.length || !countries.length) return [];
 
     const codeSet = new Set(countryCodes);
+
     return countries
       .filter((country) => codeSet.has(country.isoCode))
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [countryCodes, countries]);
 
-  // Handle changes from the modal, ensuring trip-based countries remain selected
   const handleModalChange = useCallback(
     (incomingCodes: string[]) => {
       if (!isTripBasedCountry) {
@@ -54,12 +55,10 @@ export function CountrySelectField({
         return;
       }
 
-      // Identify all currently selected codes that are system-locked by trip parameters
       const lockedCodes = countryCodes.filter((code) =>
         isTripBasedCountry(code),
       );
 
-      // Combine the user selection with locked codes, ensuring no duplicates exist
       const mergedCodes = Array.from(
         new Set([...incomingCodes, ...lockedCodes]),
       );
@@ -71,7 +70,7 @@ export function CountrySelectField({
 
   return (
     <>
-      <FormField label={labelText}>
+      <FormField label={labelText} required={required} disabled={disabled}>
         <div className="flex items-center gap-2 flex-wrap">
           {countryCodes.length === 0 ? (
             <span className="text-muted">
@@ -105,6 +104,7 @@ export function CountrySelectField({
               );
             })
           )}
+
           {!disabled && (
             <ActionButton
               type="button"
@@ -113,7 +113,6 @@ export function CountrySelectField({
               aria-label={t("common:actions.edit")}
               onClick={onOpen}
               rounded
-              disabled={disabled}
             />
           )}
         </div>

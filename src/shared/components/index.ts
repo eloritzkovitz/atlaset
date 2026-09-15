@@ -31,6 +31,8 @@ export { Checkbox } from "./inputs/Checkbox/Checkbox";
 export { ColorSelectInput } from "./inputs/ColorSelectInput/ColorSelectInput";
 export { DateSelect } from "./inputs/DateSelect/DateSelect";
 export { DropdownSelectInput } from "./inputs/DropdownSelectInput/DropdownSelectInput";
+export { FieldHeader } from "./inputs/FormField/FieldHeader";
+export { FieldLabel } from "./inputs/FormField/FieldLabel";
 export { FileDropzone } from "./inputs/FileDropzone/FileDropzone";
 export { FloatingActionButton } from "./inputs/Button/FloatingActionButton";
 export { FormField } from "./inputs/FormField/FormField";

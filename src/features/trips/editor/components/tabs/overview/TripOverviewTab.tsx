@@ -33,7 +33,7 @@ export function TripOverviewTab({
   return (
     <div className="flex flex-col gap-4">
       {/* Name */}
-      <FormField label={t("fields.name")}>
+      <FormField label={t("fields.name")} required>
         <InputBox
           id="trip-name"
           name="trip-name"
@@ -51,7 +51,11 @@ export function TripOverviewTab({
 
       {/* Dates */}
       <div className="grid grid-cols-2 gap-4">
-        <FormField label={t("fields.startDate")} disabled={isTentative}>
+        <FormField
+          label={t("fields.startDate")}
+          required={!isTentative}
+          disabled={isTentative}
+        >
           <DateSelect
             value={trip.startDate ?? ""}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +77,11 @@ export function TripOverviewTab({
           />
         </FormField>
 
-        <FormField label={t("fields.endDate")} disabled={isTentative}>
+        <FormField
+          label={t("fields.endDate")}
+          required={!isTentative}
+          disabled={isTentative}
+        >
           <DateSelect
             value={trip.endDate ?? ""}
             min={trip.startDate || undefined}

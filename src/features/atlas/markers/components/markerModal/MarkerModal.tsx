@@ -97,7 +97,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
         }}
       >
         <div className="p-2 space-y-4">
-          <FormField label={t("markers.form.name", "Name")}>
+          <FormField label={t("markers.form.name", "Name")} required>
             <input
               ref={nameRef}
               id="marker-name"
@@ -124,6 +124,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
             isOpen={countrySelect.isOpen}
             onOpen={countrySelect.open}
             onClose={countrySelect.close}
+            required
           />
 
           <FormField label={t("markers.form.color", "Color")}>

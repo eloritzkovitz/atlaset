@@ -24,6 +24,7 @@ export function PasswordField({
   hideLabel = false,
   className = "",
   status,
+  required = false,
   ...inputProps
 }: PasswordFieldProps) {
   const [show, setShow] = useState(false);
@@ -35,6 +36,7 @@ export function PasswordField({
         name="password-input"
         type={show ? "text" : "password"}
         className={`w-full pe-10 ${className}`}
+        required={required}
         {...inputProps}
       />
       <button
@@ -49,5 +51,12 @@ export function PasswordField({
       {status && <div className="mt-1 text-xs text-danger">{status}</div>}
     </div>
   );
-  return hideLabel ? content : <FormField label={label}>{content}</FormField>;
+
+  return hideLabel ? (
+    content
+  ) : (
+    <FormField label={label} required={required}>
+      {content}
+    </FormField>
+  );
 }

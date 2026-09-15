@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton, EmptyListMessage } from "@components";
-import { ICONS } from "@constants/icons";
+import { EmptyListMessage, FieldHeader } from "@components";
 import type { TripTag } from "@features/trips/core/types";
 import { TagsList } from "../../../../core/components/TagsList";
 
@@ -19,15 +18,11 @@ export function TagsSection({
 
   return (
     <div className="flex-1 min-h-0 pt-2">
-      <div className="flex items-center justify-between mb-2">
-        <span className="font-semibold">{t("fields.tags", "Tags")}</span>
-        <ActionButton
-          type="button"
-          icon={<ICONS.editField />}
-          onClick={onEdit}
-          rounded
-        />
-      </div>
+      <FieldHeader
+        label={t("fields.tags")}
+        onEdit={onEdit}
+        editLabel={t("editor.details.tags.select")}
+      />
 
       {selectedTags.length === 0 ? (
         <EmptyListMessage

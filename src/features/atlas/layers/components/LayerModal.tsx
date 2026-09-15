@@ -116,7 +116,7 @@ export function LayerModal({
             }}
           >
             <div className="flex flex-col p-4">
-              <FormField label={t("layers.form.name", "Name:")}>
+              <FormField label={t("layers.form.name", "Name:")} required>
                 <input
                   id="layer-name"
                   name="name"
@@ -142,6 +142,7 @@ export function LayerModal({
                 isOpen={countryModal.isOpen}
                 onOpen={countryModal.open}
                 onClose={countryModal.close}
+                required
                 disabled={isListManaged}
               />
               {!isEditing && (

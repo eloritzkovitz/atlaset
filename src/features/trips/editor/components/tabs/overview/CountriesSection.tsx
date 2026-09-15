@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton } from "@components";
-import { ICONS } from "@constants/icons";
+import { FieldHeader } from "@components";
 import { getCountrySortName } from "@features/countries";
 import { TripCountriesList } from "@features/trips/core/components/TripCountriesList";
 
@@ -23,18 +22,11 @@ export function CountriesSection({
 
   return (
     <div className="mb-4">
-      <div className="flex items-center justify-between mb-1">
-        <span className="font-semibold text-text">{t("fields.countries")}</span>
-
-        <ActionButton
-          type="button"
-          onClick={onEdit}
-          icon={<ICONS.editField />}
-          title={t("editor.overview.countries.select")}
-          aria-label={t("editor.overview.countries.select")}
-          rounded
-        />
-      </div>
+      <FieldHeader
+        label={t("fields.countries")}
+        onEdit={onEdit}
+        editLabel={t("editor.overview.countries.select")}
+      />
 
       <div className="grid grid-cols-[120px_1fr] gap-2">
         <div />
