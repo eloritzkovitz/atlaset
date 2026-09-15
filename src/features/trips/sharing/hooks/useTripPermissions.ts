@@ -1,7 +1,7 @@
 import { useAuth } from "@features/user/auth/hooks/useAuth";
-import { useTrips } from "../context/TripsContext";
 import { isTripEditor, canEditTrip } from "../utils/tripPermissions";
-import type { Trip } from "../types";
+import { useTrips } from "../../core/context/TripsContext";
+import type { Trip } from "../../core/types";
 
 /**
  * Provides the current user's permissions for a trip.

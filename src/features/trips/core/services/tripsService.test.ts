@@ -8,20 +8,20 @@ import {
 } from "@test-utils/firebaseMockRegistry";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { tripsService } from "./tripsService";
-import { sharedTripsService } from "./sharedTripsService";
-import type { SharedTrip } from "../types";
+import { sharedTripsService } from "../../sharing/services/sharedTripsService";
+import type { SharedTrip } from "../../sharing/types";
 
 const { notificationSendMock } = vi.hoisted(() => ({
   notificationSendMock: vi.fn(),
 }));
 
-vi.mock("./sharedTripsService");
+vi.mock("../../sharing/services/sharedTripsService");
 
-vi.mock("../../user/profile/services/profileService", () => ({
+vi.mock("@features/user/profile/services/profileService", () => ({
   profileService: { updateVisitedCountryCodes: vi.fn() },
 }));
 
-vi.mock("@features/notifications/services/notificationService", () => ({
+vi.mock("@features/notifications", () => ({
   notificationService: {
     send: notificationSendMock,
   },

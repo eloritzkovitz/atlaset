@@ -8,14 +8,14 @@ import {
   Separator,
 } from "@components";
 import { ICONS } from "@constants/icons";
+import { SearchItem } from "@features/search";
 import { UserAvatar, UserInfo } from "@features/user/core";
 import type { UserProfile } from "@features/user/profile/types";
 import {
   UserPermissionSelect,
   type Permission,
 } from "@features/user/permissions";
-import type { TripPerson } from "../../../types";
-import { SearchItem } from "@features/search/components/results/SearchItem";
+import type { TripPerson } from "../../../../sharing/types";
 
 interface PeopleSectionProps {
   people: TripPerson[];

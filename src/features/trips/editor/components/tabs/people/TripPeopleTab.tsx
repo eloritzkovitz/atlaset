@@ -1,7 +1,7 @@
 import type { Permission } from "@features/user/permissions/types";
 import type { UserProfile } from "@features/user/profile/types";
 import { PeopleSection } from "./PeopleSection";
-import type { TripPerson } from "../../../types";
+import type { TripPerson } from "../../../../sharing/types";
 
 interface TripPeopleTabProps {
   people: TripPerson[];

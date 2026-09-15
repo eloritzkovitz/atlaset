@@ -3,4 +3,6 @@ export { NotificationsContent } from "./components/NotificationsContent";
 
 export { useNotifications } from "./hooks/useNotifications";
 
+export { notificationService } from "./services/notificationService";
+
 export * from "./types";

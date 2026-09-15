@@ -21,13 +21,14 @@ import { TripDestinationsTab } from "./tabs/destinations/TripDestinationsTab";
 import { TripDetailsTab } from "./tabs/details/TripDetailsTab";
 import { TripItineraryTab } from "./tabs/itinerary/TripItineraryTab";
 import { TripOverviewTab } from "./tabs/overview/TripOverviewTab";
-import { TripPhotosTab } from "./tabs/photos/TripPhotosTab";
-import { useTripPeople } from "../hooks/useTripPeople";
-import { useTripFilters } from "../../core/hooks/useTripFilters";
-import type { Trip, TripCategory, TripShares, TripTag } from "../../core/types";
-import { getAutoTripStatus } from "../../core/utils/trips";
-import "./TripModal.css";
 import { TripPeopleTab } from "./tabs/people/TripPeopleTab";
+import { TripPhotosTab } from "./tabs/photos/TripPhotosTab";
+import { useTripFilters } from "../../core/hooks/useTripFilters";
+import type { Trip, TripCategory, TripTag } from "../../core/types";
+import { getAutoTripStatus } from "../../core/utils/trips";
+import { useTripPeople } from "../../sharing/hooks/useTripPeople";
+import type { TripShares } from "../../sharing/types";
+import "./TripModal.css";
 
 type TripTab =
   | "overview"
@@ -220,7 +221,9 @@ export function TripModal({
                   searchResults={searchResults}
                   onSearch={search}
                   onAdd={(profile) => addPerson(profile, onChange)}
-                  onAddParticipant={(profile) => addParticipant(profile, onChange)}
+                  onAddParticipant={(profile) =>
+                    addParticipant(profile, onChange)
+                  }
                   onRemove={(uid) => removePerson(uid, onChange)}
                   onPermissionChange={updatePermission}
                   onParticipantChange={(uid, participant) =>

@@ -2,7 +2,8 @@
  * Utility functions for handling trip permissions.
  */
 
-import type { SharedTrip, Trip } from "../types";
+import type { SharedTrip } from "../types";
+import type { Trip } from "../../core/types";
 
 /**
  * Determines if the user is a viewer of the trip.

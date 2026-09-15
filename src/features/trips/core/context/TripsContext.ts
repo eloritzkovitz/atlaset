@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
-import type { SharedTrip, Trip, TripShares } from "../types";
+import type { Trip } from "../types";
+import type { SharedTrip, TripShares } from "../../sharing/types";
 
 export interface TripsContextType {
   trips: Trip[];

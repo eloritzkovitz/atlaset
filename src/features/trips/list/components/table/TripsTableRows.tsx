@@ -6,13 +6,13 @@ import type { Country } from "@features/countries/types";
 import { formatDate } from "@utils";
 import { TripActions } from "./TripActions";
 import { CategoriesList } from "../../../core/components/CategoriesList";
-import { ParticipantsList } from "../../../core/components/ParticipantsList";
 import { TagsList } from "../../../core/components/TagsList";
 import { TripCountriesList } from "../../../core/components/TripCountriesList";
 import { TripIndicators } from "../../../core/components/TripIndicators";
 import { TripStatusChip } from "../../../core/components/TripStatusChip";
 import { useTrips } from "../../../core/context/TripsContext";
 import type { Trip } from "../../../core/types";
+import { ParticipantsList } from "../../../sharing/components/ParticipantsList";
 
 interface TripsTableRowsProps {
   trip: Trip;

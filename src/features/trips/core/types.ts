@@ -1,4 +1,3 @@
-import type { Permission } from "@features/user/permissions/types";
 import { ALL_TRIP_CATEGORIES } from "./constants/categories";
 import { ALL_TRIP_STATUSES } from "./constants/statuses";
 import { ALL_TRIP_TAGS } from "./constants/tags";
@@ -45,20 +44,6 @@ export type Trip = {
   /** URL of a Google Maps link for the trip. */
   googleMapsUrl?: string;
 };
-
-/** The type of a shared trip. */
-export type SharedTripType = "participant" | "shared";
-
-/** Represents a shared trip reference. */
-export type SharedTrip = {
-  ownerUid: string;
-  tripId: string;
-  type?: SharedTripType;
-  permission?: Permission;
-};
-
-/** Represents trip share drafts keyed by recipient UID. */
-export type TripShares = ReadonlyMap<string, SharedTrip>;
 
 /** Represents a trip category. */
 export type TripCategory = (typeof ALL_TRIP_CATEGORIES)[number];

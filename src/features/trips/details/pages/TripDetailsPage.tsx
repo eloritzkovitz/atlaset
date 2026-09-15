@@ -18,10 +18,10 @@ import { CategoriesList } from "../../core/components/CategoriesList";
 import { TagsList } from "../../core/components/TagsList";
 import { useTrips } from "../../core/context/TripsContext";
 import { useTripNavigation } from "../../core/hooks/useTripNavigation";
-import { useTripPermissions } from "../../core/hooks/useTripPermissions";
 import { TripModal } from "../../editor/components/TripModal";
 import { useTripEditor } from "../../editor/hooks/useTripEditor";
 import { useTripLocations } from "../../locations/hooks/useTripLocations";
+import { useTripPermissions } from "../../sharing/hooks/useTripPermissions";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();

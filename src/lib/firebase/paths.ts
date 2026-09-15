@@ -20,7 +20,7 @@ export interface UserSubcollections {
   savedMaps: import("@features/atlas/savedMaps/types").SavedMap;
   sessions: import("@features/user/account/types").UserSession;
   settings: import("@features/settings/types").Settings;
-  sharedTrips: import("@features/trips/types").SharedTrip;
+  sharedTrips: import("@features/trips/sharing/types").SharedTrip;
   trips: import("@features/trips/types").Trip;
 }
 

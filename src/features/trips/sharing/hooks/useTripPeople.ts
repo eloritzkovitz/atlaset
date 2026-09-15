@@ -4,10 +4,10 @@ import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfile
 import { useUserFriends } from "@features/user/friends/hooks/useUserFriends";
 import { useUserSearch } from "@features/search/hooks/useUserSearch";
 import type { UserSearchResult } from "@features/search/types";
-import type { UserProfile } from "@features/user/profile";
 import type { Permission } from "@features/user/permissions/types";
-import type { TripPerson } from "../types";
-import type { SharedTrip, Trip } from "../../core/types";
+import type { UserProfile } from "@features/user/profile";
+import type { SharedTrip, TripPerson } from "../types";
+import type { Trip } from "../../core/types";
 
 interface UseTripPeopleOptions {
   trip: Trip | null;

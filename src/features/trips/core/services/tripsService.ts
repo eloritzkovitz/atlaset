@@ -1,5 +1,8 @@
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
+import { ACTIONS, type Action } from "@constants/actions";
 import { logUserActivity } from "@features/activity";
+import { notificationService } from "@features/notifications";
+import { profileService } from "@features/user/profile/services/profileService";
 import {
   db,
   getUserCollection,
@@ -8,11 +11,9 @@ import {
   getDocsData,
   getDocData,
 } from "@lib/firebase";
-import { sharedTripsService } from "./sharedTripsService";
-import type { SharedTrip, Trip, TripShares } from "../types";
-import { profileService } from "../../../user/profile/services/profileService";
-import { ACTIONS, type Action } from "@constants/actions";
-import { notificationService } from "@features/notifications/services/notificationService";
+import type { Trip } from "../types";
+import { sharedTripsService } from "../../sharing/services/sharedTripsService";
+import type { SharedTrip, TripShares } from "../../sharing/types";
 
 // Sends a notification to a participant about a trip action.
 const sendParticipantNotification = async (

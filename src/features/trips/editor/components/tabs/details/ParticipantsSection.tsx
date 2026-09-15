@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { EmptyListMessage } from "@components";
 import { ICONS } from "@constants/icons";
-import { ParticipantsList } from "@features/trips/core/components/ParticipantsList";
+import { ParticipantsList } from "@features/trips/sharing/components/ParticipantsList";
 import type { UserProfile } from "@features/user/profile/types";
 
 interface ParticipantsSectionProps {

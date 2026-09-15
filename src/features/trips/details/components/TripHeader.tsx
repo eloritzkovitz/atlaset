@@ -9,10 +9,10 @@ import {
 import { ICONS } from "@constants/icons";
 import { useCalendarNavigation } from "@features/calendar/hooks/useCalendarNavigation";
 import { formatDate } from "@utils";
-import { ParticipantsList } from "../../core/components/ParticipantsList";
 import { TripIndicators } from "../../core/components/TripIndicators";
 import { TripStatusChip } from "../../core/components/TripStatusChip";
 import type { Trip } from "../../core/types";
+import { ParticipantsList } from "../../sharing/components/ParticipantsList";
 
 interface TripHeaderProps {
   trip: Trip;

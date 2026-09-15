@@ -28,7 +28,7 @@ import {
   canRestore,
   hasValidStartDate,
 } from "../../../core/utils/trips";
-import { useTripPermissions } from "@features/trips/core/hooks/useTripPermissions";
+import { useTripPermissions } from "../../../sharing/hooks/useTripPermissions";
 
 interface TripActionsProps {
   trip: Trip;

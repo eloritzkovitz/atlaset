@@ -2,8 +2,9 @@ import { useCallback } from "react";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDisclosure } from "@hooks";
 import { useTrips } from "../../core/context/TripsContext";
-import type { Trip, TripShares } from "../../core/types";
-import { canEditTrip } from "../../core/utils/tripPermissions";
+import type { Trip } from "../../core/types";
+import type { TripShares } from "../../sharing/types";
+import { canEditTrip } from "../../sharing/utils/tripPermissions";
 
 const emptyTrip: Trip = {
   id: "",
