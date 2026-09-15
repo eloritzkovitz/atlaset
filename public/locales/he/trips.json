@@ -116,16 +116,13 @@
 
     "overview": {
       "tentativeDates": "תאריכים משוערים",
-      "notesPlaceholder": "הוסף הערות לגבי הטיול הזה...",
-      "noNotes": "אין הערות זמינות."
-    },
-
-    "destinations": {
       "countries": {
         "select": "בחר מדינות",
         "none": "לא נבחרו מדינות."
-      },
+      }
+    },
 
+    "destinations": {
       "locations": {
         "title": "מיקומים",
         "select": "בחר מיקומים",
@@ -143,6 +140,10 @@
       "tags": {
         "select": "בחר תגיות",
         "none": "לא נבחרו תגיות."
+      },
+      "notes": {
+        "placeholder": "הוסף הערות לגבי הטיול הזה...",
+        "none": "אין הערות זמינות."
       }
     },
 

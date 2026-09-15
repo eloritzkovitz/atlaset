@@ -7,20 +7,24 @@
       "mutualFriend_one": "אחד משותף",
       "mutualFriend_other": "{{count}} משותפים"
     },
+
     "searchPlaceholder": "חיפוש חברים",
     "loading": "טוען...",
+    
     "status": {
       "you": "אתה",
       "friend": "חבר",
       "adding": "מוסיף...",
       "pending": "בתהליך"
     },
+    
     "empty": {
       "noFriendsYet": "עדיין אין חברים.",
       "noFriendsFound": "לא נמצאו חברים.",
       "noFriendRequests": "אין בקשות חברות.",
       "noMutualFriends": "אין חברים משותפים."
     },
+    
     "actions": {
       "viewProfile": "צפייה בפרופיל",
       "addFriend": "הוספת חבר",
@@ -34,15 +38,25 @@
       "unfriendConfirmTitle": "הסר חבר",
       "unfriendConfirmMessage": "האם אתה בטוח שברצונך להסיר חבר זה?"
     },
+    
     "panel": {
       "friends": "חברים",
       "requests": "בקשות חברות"
     },
+    
     "tabs": {
       "all": "כל החברים",
       "mutual": "חברים משותפים"
     }
   },
+  
+  "permissions": {
+    "title": "הרשאות",
+    "owner": "בעלים",
+    "editor": "עורך",
+    "viewer": "צופה"
+  },
+
   "profile": {
     "header": {
       "editProfile": "עריכת פרופיל",
@@ -50,11 +64,13 @@
       "showFriendsList": "הצגת רשימת חברים",
       "backToProfile": "חזרה לפרופיל"
     },
+    
     "tabs": {
       "about": "אודות",
       "friends": "חברים",
       "visits": "ביקורים"
     },
+    
     "editModal": {
       "title": "ערוך פרופיל",
       "personalInfo": "פרטים אישיים",
@@ -73,6 +89,7 @@
       "success": "הפרופיל עודכן בהצלחה.",
       "failed": "נכשל בעדכון הפרופיל."
     },
+    
     "about": {
       "title": "אודות",
       "personalDetails": {
@@ -84,29 +101,36 @@
         "biography": "ביוגרפיה",
         "noBiographyProvided": "אין ביוגרפיה"
       },
+
       "contactInfo": {
         "title": "פרטי קשר",
         "email": "דוא\"ל",
         "noEmailProvided": "אין דוא\"ל"
       },
+
       "notSpecified": "לא צויין"
     },
+
     "friends": {
       "title": "חברים",
       "loading": "טוען חברים..."
     },
+
     "travel": {
       "title": "תקציר מסע",
       "visited": "מדינות שביקרתי",
       "wantToVisit": "רוצה לבקר"
     },
+
     "visits": {
       "tabs": {
         "visited": "ביקרתי",
         "wantToVisit": "רוצה לבקר",
         "compare": "השוואה"
       },
+
       "noCountries": "עדיין אין מדינות.",
+
       "compare": {
         "title": "השוואה עם {{name}}",
         "loading": "משווה...",
@@ -120,6 +144,7 @@
         }
       }
     },
+    
     "bestScores": "התוצאות הטובות ביותר",
     "private": "הפרופיל הזה פרטי.",
     "notFound": "המשתמש לא נמצא."

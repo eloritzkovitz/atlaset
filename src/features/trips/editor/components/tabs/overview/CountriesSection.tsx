@@ -30,8 +30,8 @@ export function CountriesSection({
           type="button"
           onClick={onEdit}
           icon={<ICONS.editField />}
-          title={t("editor.destinations.countries.select")}
-          aria-label={t("editor.destinations.countries.select")}
+          title={t("editor.overview.countries.select")}
+          aria-label={t("editor.overview.countries.select")}
           rounded
         />
       </div>

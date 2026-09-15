@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { DropdownSelectInput } from "@components";
 import { PERMISSION_OPTIONS } from "../constants/permissions";
 import type { Permission } from "../types";
@@ -13,10 +14,17 @@ export function UserPermissionSelect({
   onChange,
   disabled = false,
 }: UserPermissionSelectProps) {
+  const { t } = useTranslation("user");
+
+  const options = PERMISSION_OPTIONS.map((option) => ({
+    ...option,
+    label: t(`permissions.${option.value}`),
+  }));
+
   return (
     <DropdownSelectInput<Permission>
       value={permission}
-      options={PERMISSION_OPTIONS}
+      options={options}
       onChange={(value) => {
         if (!Array.isArray(value)) {
           onChange(value);

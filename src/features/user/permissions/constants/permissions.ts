@@ -1,7 +1,7 @@
-import type { DropdownOption } from "@types";
+import type { Option } from "@types";
 import type { Permission } from "../types";
 
-export const PERMISSION_OPTIONS: DropdownOption<Permission>[] = [
+export const PERMISSION_OPTIONS: Option<Permission>[] = [
   {
     value: "viewer",
     label: "Viewer",

@@ -23,7 +23,7 @@ export function TripCountriesList({
     <div>
       <div className="flex flex-col gap-3">
         {countries.length === 0 && (
-          <EmptyListMessage message={t("editor.destinations.countries.none")} />
+          <EmptyListMessage message={t("editor.overview.countries.none")} />
         )}
 
         {countries.map((country) =>

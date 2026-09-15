@@ -132,7 +132,7 @@ export default function TripDetailsPage() {
               <p className="whitespace-pre-line text-muted">{trip.notes}</p>
             ) : (
               <EmptyListMessage
-                message={t("editor.overview.noNotes", "No notes available.")}
+                message={t("editor.details.notes.none", "No notes available.")}
               />
             )}
           </Card>

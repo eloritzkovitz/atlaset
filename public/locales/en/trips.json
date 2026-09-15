@@ -116,16 +116,13 @@
 
     "overview": {
       "tentativeDates": "Tentative Dates",
-      "notesPlaceholder": "Add notes about this trip...",
-      "noNotes": "No notes available."
-    },
-
-    "destinations": {
       "countries": {
         "select": "Select Countries",
         "none": "No countries selected."
-      },
+      }
+    },
 
+    "destinations": {
       "locations": {
         "title": "Locations",
         "select": "Select Locations",
@@ -143,6 +140,10 @@
       "tags": {
         "select": "Select tags",
         "none": "No tags selected."
+      },
+      "notes": {
+        "placeholder": "Add notes about this trip...",
+        "none": "No notes available."
       }
     },
 

@@ -60,7 +60,7 @@ export function TripDetailsTab({
               notes: e.target.value,
             })
           }
-          placeholder={t("editor.overview.notesPlaceholder")}
+          placeholder={t("editor.details.notes.placeholder")}
         />
       </FormField>
     </div>
