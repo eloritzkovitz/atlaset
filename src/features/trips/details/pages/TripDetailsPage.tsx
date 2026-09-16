@@ -73,7 +73,7 @@ export default function TripDetailsPage() {
     <>
       <Container className="mt-12">
         <PageHeader
-          title={t("pageTitle", "My Trips")}
+          title={t("pageTitle", "Trips")}
           onBack={() => navigate("/trips")}
         />
 

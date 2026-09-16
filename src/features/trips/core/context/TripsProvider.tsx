@@ -37,11 +37,11 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     Promise.all([
       tripsService.load(),
-      sharedTripsService.getParticipantTrips(user.uid),
-    ]).then(([allTrips, participantTrips]) => {
+      sharedTripsService.getSharedTrips(user.uid),
+    ]).then(([allTrips, allSharedTrips]) => {
       if (mounted) {
         loadTrips(allTrips);
-        setSharedTrips(participantTrips);
+        setSharedTrips(allSharedTrips);
         setLoading(false);
       }
     });

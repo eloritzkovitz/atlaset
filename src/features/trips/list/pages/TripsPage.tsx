@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { LoadingSpinner } from "@components";
+import { EmptyListMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@features/countries";
 import { usePageTitle, useScreenSize, useTablePagination } from "@hooks";
 import { TripsTable } from "../components/table/TripsTable";
 import { TripsToolbar } from "../components/toolbar/TripsToolbar";
 import { useTrips } from "../../core/context/TripsContext";
 import { useTripFilters } from "../../core/hooks/useTripFilters";
-import type { TripFilterState, TripSortBy } from "../../core/types";
+import type {
+  TripFilterState,
+  TripSortBy,
+  TripViewMode,
+} from "../../core/types";
 import { sortTrips } from "../../core/utils/tripSort";
 import { TripModal } from "../../editor/components/TripModal";
 import { useTripEditor } from "../../editor/hooks/useTripEditor";
@@ -18,15 +22,24 @@ export default function TripsPage() {
 
   const { countries } = useCountryData();
   const { isMobile } = useScreenSize();
-  const { trips, loading } = useTrips();
+  const { trips, sharedTripIds, participantTripIds, loading } = useTrips();
   const { t } = useTranslation("trips");
 
   const [globalSearch, setGlobalSearch] = useState("");
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
+  const [viewMode, setViewMode] = useState<TripViewMode>("trips");
 
   usePageTitle(t("pageTitle", "Trips"));
 
   const pageFromUrl = Math.max(1, Number(searchParams.get("page")) || 1);
+
+  const visibleTrips = trips.filter((trip) => {
+    if (viewMode === "shared") {
+      return sharedTripIds.has(trip.id) && !participantTripIds.has(trip.id);
+    }
+
+    return !sharedTripIds.has(trip.id) || participantTripIds.has(trip.id);
+  });
 
   const {
     filteredTrips,
@@ -40,7 +53,7 @@ export default function TripsPage() {
     categoryOptions,
     statusOptions,
     tagOptions,
-  } = useTripFilters(trips, undefined, globalSearch);
+  } = useTripFilters(visibleTrips, undefined, globalSearch);
 
   const sortedTrips = sortTrips(filteredTrips, countries ?? [], sortBy);
 
@@ -61,7 +74,16 @@ export default function TripsPage() {
   const { isOpen, trip, setTrip, handleAdd, handleEdit, handleSave, onClose } =
     useTripEditor();
 
-  // Update filter handler
+  const handleViewModeChange = (mode: TripViewMode) => {
+    setViewMode(mode);
+    setCurrentPage(1);
+
+    setSearchParams((params) => {
+      params.delete("page");
+      return params;
+    });
+  };
+
   const handleUpdateFilter = (key: string, value: unknown) => {
     if (key in filters) {
       updateFilter(
@@ -97,6 +119,8 @@ export default function TripsPage() {
           setGlobalSearch={setGlobalSearch}
           resetFilters={resetFilters}
           onAddTrip={handleAdd}
+          viewMode={viewMode}
+          onViewModeChange={handleViewModeChange}
         />
       )}
 
@@ -117,9 +141,7 @@ export default function TripsPage() {
             message={t("loading", "Loading trips...")}
           />
         ) : trips.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center min-h-[300px] text-muted text-lg">
-            {t("noTrips", "No trips yet.")}
-          </div>
+          <EmptyListMessage message={t("noTrips", "No trips yet.")} />
         ) : (
           <>
             <TripsTable

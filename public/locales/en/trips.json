@@ -36,7 +36,14 @@
   },
 
   "table": {
+    "empty": "No trips available.",
+
     "toolbar": {
+      "viewMode": {
+        "trips": "My Trips",
+        "shared": "Shared with Me"
+      },
+
       "search": {
         "placeholder": "Search trips"
       },

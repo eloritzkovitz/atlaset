@@ -36,7 +36,14 @@
   },
 
   "table": {
+    "empty": "אין טיולים זמינים.",
+
     "toolbar": {
+      "viewMode": {
+        "trips": "הטיולים שלי",
+        "shared": "משותף איתי"
+      },
+
       "search": {
         "placeholder": "חיפוש טיולים"
       },

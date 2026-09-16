@@ -54,6 +54,9 @@ export type TripStatus = (typeof ALL_TRIP_STATUSES)[number];
 /** Represents a tag associated with a trip. */
 export type TripTag = (typeof ALL_TRIP_TAGS)[number];
 
+/** Represents the view mode for the trips list. */
+export type TripViewMode = "trips" | "shared";
+
 /** Sort keys for trips. */
 export type TripSortByKey =
   | "name"
