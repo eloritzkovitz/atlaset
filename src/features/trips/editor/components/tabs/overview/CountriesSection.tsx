@@ -26,6 +26,7 @@ export function CountriesSection({
         label={t("fields.countries")}
         onEdit={onEdit}
         editLabel={t("editor.overview.countries.select")}
+        required
       />
 
       <div className="grid grid-cols-[120px_1fr] gap-2">

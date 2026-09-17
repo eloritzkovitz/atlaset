@@ -1,12 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Modal,
-  ModalActions,
-  ModalHeader,
-  TabControl,
-  type TabControlItem,
-} from "@components";
+import { Modal, ModalActions, ModalHeader, TabControl } from "@components";
 import { ICONS } from "@constants/icons";
 import {
   CountrySelectModal,
@@ -23,38 +17,38 @@ import { TripItineraryTab } from "./tabs/itinerary/TripItineraryTab";
 import { TripOverviewTab } from "./tabs/overview/TripOverviewTab";
 import { TripPeopleTab } from "./tabs/people/TripPeopleTab";
 import { TripPhotosTab } from "./tabs/photos/TripPhotosTab";
+import { getTripModalTabs, type TripTab } from "./tripModalTabs";
 import { useTripFilters } from "../../core/hooks/useTripFilters";
 import type { Trip, TripCategory, TripTag } from "../../core/types";
 import { getAutoTripStatus } from "../../core/utils/trips";
 import { useTripPeople } from "../../sharing/hooks/useTripPeople";
-import type { TripShares } from "../../sharing/types";
+import type { TripOverrides, TripShares } from "../../sharing/types";
+import { getTripOverrides } from "../../sharing/utils/tripOverrides";
 import "./TripModal.css";
 
-type TripTab =
-  | "overview"
-  | "destinations"
-  | "itinerary"
-  | "details"
-  | "people"
-  | "photos";
+export type TripModalMode = "add" | "edit" | "custom";
 
 interface TripModalProps {
   isOpen: boolean;
   trip: Trip | null;
+  mode: TripModalMode;
+  overrides?: TripOverrides;
   onChange: (trip: Trip) => void;
   onSave: (trip: Trip, shares: TripShares) => Promise<void>;
+  onSaveOverrides?: (overrides: TripOverrides) => Promise<void>;
   onClose: () => void;
-  isEditing: boolean;
 }
 
-/** Renders the add/edit trip modal. */
+/** Renders the add/edit/customize trip modal. */
 export function TripModal({
   isOpen,
   trip,
+  mode,
+  overrides,
   onChange,
   onSave,
+  onSaveOverrides,
   onClose,
-  isEditing,
 }: TripModalProps) {
   const { t } = useTranslation("trips");
   const { countries } = useCountryData();
@@ -66,10 +60,33 @@ export function TripModal({
   const tagModal = useDisclosure(false);
 
   const [activeTab, setActiveTab] = useState<TripTab>("overview");
+  const [customTrip, setCustomTrip] = useState<Trip | null>(null);
+  const [isTentative, setIsTentative] = useState(false);
 
-  const [isTentative, setIsTentative] = useState(
-    !!(isEditing && trip && getAutoTripStatus(trip) === "planned"),
-  );
+  const isEditing = mode === "edit";
+  const isCustomizing = mode === "custom";
+
+  // Reset the active tab to "overview" whenever the modal is opened
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTab("overview");
+    }
+  }, [isOpen]);
+
+  // Update the custom trip and tentative status whenever the modal is opened or the trip changes
+  useEffect(() => {
+    if (!isOpen || !trip) {
+      return;
+    }
+
+    const effectiveTrip = mode === "custom" ? { ...trip, ...overrides } : trip;
+
+    setCustomTrip(mode === "custom" ? effectiveTrip : null);
+
+    setIsTentative(
+      mode !== "add" && getAutoTripStatus(effectiveTrip) === "planned",
+    );
+  }, [isOpen, trip, mode, overrides]);
 
   const {
     people,
@@ -88,57 +105,40 @@ export function TripModal({
     isEditing,
   });
 
-  const formattedCategoryOptions = categoryOptions.map((option) => ({
-    value: option.value as TripCategory,
-    label: option.label,
-  }));
+  const selectOptions = {
+    categories: categoryOptions.map((option) => ({
+      value: option.value as TripCategory,
+      label: option.label,
+    })),
+    tags: tagOptions.map((option) => ({
+      value: option.value as TripTag,
+      label: option.label,
+    })),
+  };
 
-  const formattedTagOptions = tagOptions.map((option) => ({
-    value: option.value as TripTag,
-    label: option.label,
-  }));
+  const editableTrip = isCustomizing ? customTrip : trip;
 
-  if (!trip) {
+  if (!trip || !editableTrip) {
     return null;
   }
 
   const currentTrip = trip;
+  const currentEditableTrip = editableTrip;
 
-  const selectedCountries = trip.countryCodes
+  const selectedCountries = currentEditableTrip.countryCodes
     .map((isoCode) => getCountryByIsoCode(isoCode, { countries }))
     .filter(Boolean);
 
-  const tabs: TabControlItem<TripTab>[] = [
-    {
-      value: "overview",
-      label: t("sections.overview"),
-    },
-    {
-      value: "destinations",
-      label: t("sections.destinations"),
-    },
-    {
-      value: "itinerary",
-      label: t("sections.itinerary"),
-    },
-    {
-      value: "details",
-      label: t("sections.details"),
-    },
-    {
-      value: "people",
-      label: t("sections.people"),
-    },
-    {
-      value: "photos",
-      label: t("sections.photos"),
-    },
-  ];
+  const tabs = getTripModalTabs(mode, t);
 
-  const isValid =
-    !!trip.name.trim() &&
-    trip.countryCodes.length > 0 &&
-    (isTentative || (!!trip.startDate && !!trip.endDate));
+  const isValid = isCustomizing
+    ? currentEditableTrip.countryCodes.length > 0 &&
+      (isTentative ||
+        (!!currentEditableTrip.startDate && !!currentEditableTrip.endDate))
+    : !!currentEditableTrip.name.trim() &&
+      currentEditableTrip.countryCodes.length > 0 &&
+      (isTentative ||
+        (!!currentEditableTrip.startDate && !!currentEditableTrip.endDate));
 
   const isModalOpen =
     countryModal.isOpen ||
@@ -146,12 +146,32 @@ export function TripModal({
     categoryModal.isOpen ||
     tagModal.isOpen;
 
+  function handleChange(nextTrip: Trip) {
+    if (isCustomizing) {
+      setCustomTrip(nextTrip);
+      return;
+    }
+
+    onChange(nextTrip);
+  }
+
   async function handleSubmit() {
     if (!isValid) {
       return;
     }
 
-    await onSave(currentTrip, tripShares);
+    if (isCustomizing) {
+      if (!onSaveOverrides) {
+        return;
+      }
+
+      const nextOverrides = getTripOverrides(currentTrip, currentEditableTrip);
+
+      await onSaveOverrides(nextOverrides);
+      return;
+    }
+
+    await onSave(currentEditableTrip, tripShares);
   }
 
   return (
@@ -167,7 +187,11 @@ export function TripModal({
           title={
             <>
               <ICONS.trips />
-              {isEditing ? t("editor.titleEdit") : t("editor.titleAdd")}
+              {mode === "add"
+                ? t("editor.titleAdd")
+                : mode === "edit"
+                  ? t("editor.titleEdit")
+                  : t("editor.titleCustomize")}
             </>
           }
         />
@@ -185,31 +209,34 @@ export function TripModal({
             <div className="w-full p-4">
               {activeTab === "overview" && (
                 <TripOverviewTab
-                  trip={trip}
+                  trip={currentEditableTrip}
                   selectedCountries={selectedCountries}
                   onEditCountries={countryModal.open}
                   isTentative={isTentative}
-                  onChange={onChange}
+                  onChange={handleChange}
                   onTentativeChange={setIsTentative}
                 />
               )}
 
               {activeTab === "destinations" && (
                 <TripDestinationsTab
-                  trip={trip}
+                  trip={currentEditableTrip}
                   onEditLocations={destinationModal.open}
-                  onChange={onChange}
+                  onChange={handleChange}
                 />
               )}
 
               {activeTab === "itinerary" && (
-                <TripItineraryTab trip={trip} onChange={onChange} />
+                <TripItineraryTab
+                  trip={currentEditableTrip}
+                  onChange={handleChange}
+                />
               )}
 
               {activeTab === "details" && (
                 <TripDetailsTab
-                  trip={trip}
-                  onChange={onChange}
+                  trip={currentEditableTrip}
+                  onChange={handleChange}
                   onEditCategories={categoryModal.open}
                   onEditTags={tagModal.open}
                 />
@@ -234,7 +261,10 @@ export function TripModal({
               )}
 
               {activeTab === "photos" && (
-                <TripPhotosTab trip={trip} onChange={onChange} />
+                <TripPhotosTab
+                  trip={currentEditableTrip}
+                  onChange={handleChange}
+                />
               )}
             </div>
           </div>
@@ -243,16 +273,16 @@ export function TripModal({
             <ModalActions
               onCancel={onClose}
               submitIcon={
-                isEditing ? (
+                isEditing || isCustomizing ? (
                   <ICONS.save className="inline" />
                 ) : (
                   <ICONS.add className="inline" />
                 )
               }
               submitLabel={
-                isEditing
-                  ? t("editor.actions.saveChanges")
-                  : t("editor.actions.addTrip")
+                mode === "add"
+                  ? t("editor.actions.addTrip")
+                  : t("editor.actions.saveChanges")
               }
               disabled={!isValid}
             />
@@ -262,12 +292,12 @@ export function TripModal({
 
       <CountrySelectModal
         isOpen={countryModal.isOpen}
-        selected={trip.countryCodes}
+        selected={currentEditableTrip.countryCodes}
         options={countries}
         onClose={countryModal.close}
         onChange={(countryCodes) => {
-          onChange({
-            ...trip,
+          handleChange({
+            ...currentEditableTrip,
             countryCodes,
           });
         }}
@@ -275,11 +305,11 @@ export function TripModal({
 
       <DestinationSelectModal
         isOpen={destinationModal.isOpen}
-        selected={trip.locationIds ?? []}
-        countryCodes={trip.countryCodes}
+        selected={currentEditableTrip.locationIds ?? []}
+        countryCodes={currentEditableTrip.countryCodes}
         onChange={(locationIds) => {
-          onChange({
-            ...trip,
+          handleChange({
+            ...currentEditableTrip,
             locationIds,
           });
         }}
@@ -288,12 +318,12 @@ export function TripModal({
 
       <CategorySelectModal
         isOpen={categoryModal.isOpen}
-        selected={trip.categories || []}
-        options={formattedCategoryOptions}
+        selected={currentEditableTrip.categories || []}
+        options={selectOptions.categories}
         onClose={categoryModal.close}
         onChange={(categories) => {
-          onChange({
-            ...trip,
+          handleChange({
+            ...currentEditableTrip,
             categories: categories as TripCategory[],
           });
         }}
@@ -301,12 +331,12 @@ export function TripModal({
 
       <TagSelectModal
         isOpen={tagModal.isOpen}
-        selected={trip.tags || []}
-        options={formattedTagOptions}
+        selected={currentEditableTrip.tags || []}
+        options={selectOptions.tags}
         onClose={tagModal.close}
         onChange={(tags) => {
-          onChange({
-            ...trip,
+          handleChange({
+            ...currentEditableTrip,
             tags: tags as TripTag[],
           });
         }}

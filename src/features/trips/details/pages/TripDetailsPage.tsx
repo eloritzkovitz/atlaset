@@ -25,7 +25,7 @@ import { useTripPermissions } from "../../sharing/hooks/useTripPermissions";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();
-  const { trips, loading, sharedTripIds } = useTrips();
+  const { trips, loading, sharedTripIds, duplicateTrip } = useTrips();
   const { t } = useTranslation("trips");
 
   const { tripId } = useParams<{ tripId: string }>();
@@ -42,13 +42,17 @@ export default function TripDetailsPage() {
   const {
     isOpen: isEditorOpen,
     trip: editingTrip,
+    mode: editorMode,
+    overrides,
     setTrip,
     handleEdit,
+    handleCustomize,
     handleSave,
+    handleSaveOverrides,
     onClose,
   } = useTripEditor();
 
-  const { canEdit } = useTripPermissions(trip);
+  const { canEdit, isParticipant } = useTripPermissions(trip);
 
   if (loading) {
     return (
@@ -81,7 +85,10 @@ export default function TripDetailsPage() {
           <TripHeader
             trip={trip}
             onEdit={() => handleEdit(trip)}
+            onCustomize={() => handleCustomize(trip)}
+            onDuplicate={() => duplicateTrip(trip)}
             canEdit={canEdit}
+            canCustomize={isParticipant}
             sharedWithMe={sharedTripIds.has(trip.id)}
             navigation={{
               previous: previousTrip
@@ -144,10 +151,12 @@ export default function TripDetailsPage() {
         <TripModal
           isOpen={isEditorOpen}
           trip={editingTrip}
+          mode={editorMode}
+          overrides={overrides}
           onChange={setTrip}
           onSave={handleSave}
+          onSaveOverrides={handleSaveOverrides}
           onClose={onClose}
-          isEditing
         />
       )}
     </>

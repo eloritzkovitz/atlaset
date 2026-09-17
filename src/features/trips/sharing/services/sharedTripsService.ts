@@ -1,7 +1,7 @@
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import type { Permission } from "@features/user/permissions/types";
 import { getDocsData, getPaths } from "@lib/firebase";
-import type { SharedTrip, SharedTripType } from "../types";
+import type { SharedTrip, SharedTripType, TripOverrides } from "../types";
 
 /** Service for managing shared trips. */
 export const sharedTripsService = {
@@ -22,16 +22,26 @@ export const sharedTripsService = {
     return trips.filter((trip) => trip.type === "participant");
   },
 
-  /** Adds a reference for a recipient. */
-  async addReference(
+  /** Sets a reference for a recipient. */
+  async setReference(
     recipientUid: string,
     ownerUid: string,
     tripId: string,
     type: SharedTripType = "shared",
     permission: Permission = "viewer",
+    overrides?: TripOverrides,
   ): Promise<void> {
     const sharedRefDoc = doc(getPaths.sub(recipientUid, "sharedTrips"), tripId);
-    await setDoc(sharedRefDoc, { ownerUid, tripId, type, permission });
+
+    const sharedTrip: SharedTrip = {
+      ownerUid,
+      tripId,
+      type,
+      permission,
+      ...(overrides && { overrides }),
+    };
+
+    await setDoc(sharedRefDoc, sharedTrip);
   },
 
   /** Removes a reference for a recipient. */

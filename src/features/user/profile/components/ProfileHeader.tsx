@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { FaPen, FaListUl } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { ActionButton, Card } from "@components";
-import { useLanguage } from "@features/settings/account/hooks/useLanguage";
 import type { UserProfile } from "../types";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { UserAvatar } from "../../core/components/UserAvatar";
@@ -31,7 +30,6 @@ export function ProfileHeader({
 }: ProfileHeaderProps) {
   const { user: currentUser } = useAuth();
   const { t } = useTranslation("user");
-  const { isRtl } = useLanguage();
 
   // Friendship status logic
   const {
@@ -70,10 +68,9 @@ export function ProfileHeader({
           <div className="flex flex-row items-center w-full gap-3">
             <div className="flex-1 min-w-0">
               <h1
-                className={`text-2xl sm:text-3xl font-bold w-full truncate ${
-                  isRtl ? "text-right" : "text-left"
-                }`}
-                dir={isRtl ? "rtl" : undefined}
+                className={
+                  "text-2xl sm:text-3xl font-bold w-full truncate text-start"
+                }
               >
                 {profile.displayName}
               </h1>
@@ -99,10 +96,7 @@ export function ProfileHeader({
               />
             )}
           </div>
-          <div
-            className={`${isRtl ? "text-right" : "text-left"} text-gray-500 text-base mt-1`}
-            dir={isRtl ? "rtl" : undefined}
-          >
+          <div className={"text-start text-gray-500 text-base mt-1"}>
             @{profile.username}
           </div>
 

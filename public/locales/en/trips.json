@@ -1,5 +1,5 @@
 {
-  "pageTitle": "My Trips",
+  "pageTitle": "Trips",
   "loading": "Loading trips...",
   "noTrips": "No trips yet.",
 
@@ -110,6 +110,8 @@
     "viewPhotoAlbum": "View Photo Album",
     "viewInCalendar": "View in Calendar",
     "editTrip": "Edit Trip",
+    "customizeTrip": "Customize Trip",
+    "copyTrip": "Copy Trip",
     "duplicate": "Duplicate",
     "favorite": "Favorite",
     "unfavorite": "Unfavorite",
@@ -120,6 +122,7 @@
   "editor": {
     "titleAdd": "Add Trip",
     "titleEdit": "Edit Trip",
+    "titleCustomize": "Customize Trip",
 
     "overview": {
       "tentativeDates": "Tentative Dates",

@@ -87,8 +87,8 @@ describe("sharedTripsService", () => {
     expect(trips[0].type).toBe("participant");
   });
 
-  it("addReference uses default type and permission", async () => {
-    await sharedTripsService.addReference("p1", "o1", "t1");
+  it("setReference uses default type and permission", async () => {
+    await sharedTripsService.setReference("p1", "o1", "t1");
 
     expect(fs.collection).toHaveBeenCalledWith(
       expect.anything(),
@@ -105,8 +105,8 @@ describe("sharedTripsService", () => {
     );
   });
 
-  it("addReference stores the supplied type and permission", async () => {
-    await sharedTripsService.addReference(
+  it("setReference stores the supplied type and permission", async () => {
+    await sharedTripsService.setReference(
       "p1",
       "o1",
       "t1",

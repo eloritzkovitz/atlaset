@@ -33,10 +33,11 @@ import { useTripPermissions } from "../../../sharing/hooks/useTripPermissions";
 interface TripActionsProps {
   trip: Trip;
   onEdit: (t: Trip) => void;
+  onCustomize: (trip: Trip) => void;
 }
 
 export const TripActions = forwardRef(function TripActions(
-  { trip, onEdit }: TripActionsProps,
+  { trip, onEdit, onCustomize }: TripActionsProps,
   ref,
 ) {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ export const TripActions = forwardRef(function TripActions(
   const rateMenuRef = useRef<HTMLDivElement>(null);
 
   // Determine user permissions
-  const { isOwner, canEdit } = useTripPermissions(trip);
+  const { isOwner, isParticipant, canEdit } = useTripPermissions(trip);
 
   const {
     hoverHandlers: rateMenuHoverHandlers,
@@ -129,6 +130,7 @@ export const TripActions = forwardRef(function TripActions(
   const menuActions = useMenuActions(
     {
       onEdit: () => onEdit(trip),
+      onCustomize: () => onCustomize(trip),
       onMarkCompleted: () => markCompleted(trip),
       onMarkCancelled: () => markCancelled(trip),
       onRestore: () => restoreTrip(trip),
@@ -226,6 +228,19 @@ export const TripActions = forwardRef(function TripActions(
           </MenuButton>
         )}
 
+        {isParticipant && (
+          <MenuButton
+            onClick={() => {
+              menuActions.onCustomize?.();
+              handleCloseAll();
+            }}
+            icon={<ICONS.customize />}
+            className="w-full"
+          >
+            {t("actions.customizeTrip")}
+          </MenuButton>
+        )}
+
         {isOwner && canMarkCompleted(trip) && (
           <MenuButton
             onClick={() => {
@@ -278,7 +293,7 @@ export const TripActions = forwardRef(function TripActions(
           {t("actions.duplicate")}
         </MenuButton>
 
-        {isOwner && trip.status === "completed" && (
+        {(isOwner || isParticipant) && trip.status === "completed" && (
           <>
             <MenuButton
               onClick={() => {

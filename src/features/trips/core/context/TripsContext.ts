@@ -1,6 +1,10 @@
 import { createContext, useContext } from "react";
 import type { Trip } from "../types";
-import type { SharedTrip, TripShares } from "../../sharing/types";
+import type {
+  SharedTrip,
+  TripOverrides,
+  TripShares,
+} from "../../sharing/types";
 
 export interface TripsContextType {
   trips: Trip[];
@@ -27,6 +31,10 @@ export interface TripsContextType {
   duplicateTrip: (trip: Trip) => void;
   updateTripFavorite: (trip: Trip, favorite: boolean) => void;
   updateTripRating: (trip: Trip, rating: number | undefined) => void;
+  saveTripOverrides: (
+    tripId: string,
+    overrides: TripOverrides,
+  ) => Promise<void>;
   removeTrip: (trip: Trip) => Promise<void>;
 }
 

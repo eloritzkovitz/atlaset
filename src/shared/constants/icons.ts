@@ -108,6 +108,7 @@ import {
   FaUserGroup,
   FaUserPlus,
   FaVolumeHigh,
+  FaWrench,
   FaXmark,
 } from "react-icons/fa6";
 import { IoAccessibility, IoLanguage, IoTelescope } from "react-icons/io5";
@@ -243,6 +244,7 @@ export const ICONS = {
   download: FaDownload,
   edit: FaPenToSquare,
   editField: FaPencil,
+  customize: FaWrench,
   save: FaFloppyDisk,
   center: FaCrosshairs,
   favorite: FaHeart,

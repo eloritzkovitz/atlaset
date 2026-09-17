@@ -55,16 +55,19 @@ async function syncTripShares(
     ...previousParticipants,
   ]);
 
+  // Add or update references for current recipients
   for (const uid of currentRecipients) {
     if (uid === ownerUid) continue;
 
     const share = shares?.get(uid);
-    await sharedTripsService.addReference(
+
+    await sharedTripsService.setReference(
       uid,
       ownerUid,
       trip.id,
       participants.has(uid) ? "participant" : (share?.type ?? "shared"),
       share?.permission ?? "viewer",
+      share?.overrides,
     );
   }
 

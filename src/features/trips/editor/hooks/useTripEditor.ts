@@ -1,9 +1,10 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDisclosure } from "@hooks";
 import { useTrips } from "../../core/context/TripsContext";
 import type { Trip } from "../../core/types";
-import type { TripShares } from "../../sharing/types";
+import type { TripModalMode } from "../components/TripModal";
+import type { TripOverrides, TripShares } from "../../sharing/types";
 import { canEditTrip } from "../../sharing/utils/tripPermissions";
 
 const emptyTrip: Trip = {
@@ -21,12 +22,18 @@ const emptyTrip: Trip = {
  */
 export function useTripEditor() {
   const { user: currentUser } = useAuth();
-  const { addTrip, editTrip, trips, sharedTrips } = useTrips();
+  const { sharedTrips, addTrip, editTrip, saveTripOverrides } = useTrips();
 
   const modal = useDisclosure<Trip>();
+  const [mode, setMode] = useState<TripModalMode>("add");
+  const [customOverrides, setCustomOverrides] = useState<
+    TripOverrides | undefined
+  >();
 
   // Add a trip
   const handleAdd = useCallback(() => {
+    setMode("add");
+    setCustomOverrides(undefined);
     modal.open({ ...emptyTrip });
   }, [modal]);
 
@@ -48,19 +55,31 @@ export function useTripEditor() {
 
       if (!canEdit) return;
 
+      setMode("edit");
+      setCustomOverrides(undefined);
       modal.open({ ...selectedTrip });
     },
     [modal, sharedTrips, currentUser],
   );
 
+  // Customize a trip (for shared trips)
+  const handleCustomize = useCallback(
+    (selectedTrip: Trip) => {
+      const sharedTrip = sharedTrips.find(
+        (sharedTrip) => sharedTrip.tripId === selectedTrip.id,
+      );
+
+      setMode("custom");
+      setCustomOverrides(sharedTrip?.overrides);
+      modal.open({ ...selectedTrip });
+    },
+    [modal, sharedTrips],
+  );
+
   // Save a trip (either add or edit)
   const handleSave = useCallback(
     async (trip: Trip, shares: TripShares) => {
-      // Check if ID exists in trips context or if it's a new trip
-      const isExisting =
-        Boolean(trip.id) && trips.some((item) => item.id === trip.id);
-
-      if (isExisting) {
+      if (mode === "edit") {
         await editTrip(trip, false, shares);
       } else {
         await addTrip({ ...trip, id: crypto.randomUUID() }, shares);
@@ -68,16 +87,33 @@ export function useTripEditor() {
 
       modal.close();
     },
-    [modal, trips, addTrip, editTrip],
+    [mode, modal, addTrip, editTrip],
+  );
+
+  // Save custom trip overrides
+  const handleSaveOverrides = useCallback(
+    async (overrides: TripOverrides) => {
+      if (!modal.data) return;
+
+      await saveTripOverrides(modal.data.id, overrides);
+
+      setCustomOverrides(overrides);
+      modal.close();
+    },
+    [modal, saveTripOverrides],
   );
 
   return {
     isOpen: modal.isOpen,
     trip: modal.data,
+    mode,
+    overrides: customOverrides,
     setTrip: modal.setData,
     handleAdd,
     handleEdit,
+    handleCustomize,
     handleSave,
+    handleSaveOverrides,
     onClose: modal.close,
   };
 }

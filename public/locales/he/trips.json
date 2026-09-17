@@ -1,5 +1,5 @@
 {
-  "pageTitle": "הטיולים שלי",
+  "pageTitle": "טיולים",
   "loading": "טוען טיולים...",
   "noTrips": "אין עדיין טיולים.",
 
@@ -110,6 +110,7 @@
     "viewPhotoAlbum": "הצג אלבום תמונות",
     "viewInCalendar": "הצג בלוח שנה",
     "editTrip": "ערוך טיול",
+    "customizeTrip": "התאם אישית טיול",
     "duplicate": "שכפול",
     "favorite": "הוסף למועדפים",
     "unfavorite": "הסר ממועדפים",
@@ -120,6 +121,7 @@
   "editor": {
     "titleAdd": "הוסף טיול",
     "titleEdit": "ערוך טיול",
+    "titleCustomize": "התאם אישית טיול",
 
     "overview": {
       "tentativeDates": "תאריכים משוערים",

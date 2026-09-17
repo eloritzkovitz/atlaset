@@ -5,7 +5,11 @@ import { tripsService } from "../services/tripsService";
 import type { Trip } from "../types";
 import { getAutoTripStatus } from "../utils/trips";
 import { sharedTripsService } from "../../sharing/services/sharedTripsService";
-import type { SharedTrip, TripShares } from "../../sharing/types";
+import type {
+  SharedTrip,
+  TripOverrides,
+  TripShares,
+} from "../../sharing/types";
 
 export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -67,6 +71,25 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     return { sharedTripIds, participantTripIds };
   }, [sharedTrips]);
 
+  // Gets a shared trip by tripId
+  function getSharedTrip(tripId: string) {
+    return sharedTrips.find((trip) => trip.tripId === tripId);
+  }
+
+  // Updates a trip in the local state
+  function updateLocalTrip(tripId: string, updates: Partial<Trip>) {
+    setTrips((prev) =>
+      prev.map((trip) =>
+        trip.id === tripId
+          ? {
+              ...trip,
+              ...updates,
+            }
+          : trip,
+      ),
+    );
+  }
+
   // Load trips from IndexedDB on mount
   function loadTrips(rawTrips: Trip[]) {
     setTrips(
@@ -121,17 +144,70 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   /** Updates a trip's favorite status. */
   async function updateTripFavorite(trip: Trip, favorite: boolean) {
+    const sharedTrip = getSharedTrip(trip.id);
+
+    if (sharedTrip?.type === "participant") {
+      await saveTripOverrides(trip.id, {
+        ...(sharedTrip.overrides ?? {}),
+        favorite,
+      });
+      return;
+    }
+
     await tripsService.updateFavorite(trip, favorite);
-    setTrips((prev) =>
-      prev.map((t) => (t.id === trip.id ? { ...trip, favorite } : t)),
-    );
+    updateLocalTrip(trip.id, { favorite });
   }
 
   /** Updates a trip's rating. */
   async function updateTripRating(trip: Trip, rating: number | undefined) {
+    const sharedTrip = getSharedTrip(trip.id);
+
+    if (sharedTrip?.type === "participant") {
+      await saveTripOverrides(trip.id, {
+        ...(sharedTrip.overrides ?? {}),
+        rating,
+      });
+      return;
+    }
+
     await tripsService.updateRating(trip, rating);
+    updateLocalTrip(trip.id, { rating });
+  }
+
+  /** Saves the current user's personal trip overrides. */
+  async function saveTripOverrides(tripId: string, overrides: TripOverrides) {
+    const sharedTrip = getSharedTrip(tripId);
+
+    if (!user || !sharedTrip) return;
+
+    await sharedTripsService.setReference(
+      user.uid,
+      sharedTrip.ownerUid,
+      sharedTrip.tripId,
+      sharedTrip.type ?? "shared",
+      sharedTrip.permission ?? "viewer",
+      overrides,
+    );
+
+    setSharedTrips((prev) =>
+      prev.map((trip) =>
+        trip.tripId === tripId ? { ...trip, overrides } : trip,
+      ),
+    );
+
     setTrips((prev) =>
-      prev.map((t) => (t.id === trip.id ? { ...trip, rating } : t)),
+      prev.map((trip) =>
+        trip.id === tripId
+          ? {
+              ...trip,
+              ...overrides,
+              status: getAutoTripStatus({
+                ...trip,
+                ...overrides,
+              }),
+            }
+          : trip,
+      ),
     );
   }
 
@@ -143,11 +219,14 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   /** Duplicates a trip. */
   async function duplicateTrip(trip: Trip) {
-    const newTrip = {
+    const newTrip: Trip = {
       ...trip,
       id: crypto.randomUUID(),
-      name: trip.name + " (Copy)",
-      status: getAutoTripStatus(trip),
+      name: `${trip.name} (Copy)`,
+      startDate: undefined,
+      endDate: undefined,
+      fullDays: 1,
+      status: "planned",
       participants: [],
       sharedWith: [],
       favorite: false,
@@ -155,7 +234,9 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
       photos: [],
       photoAlbumUrl: undefined,
     };
+
     const savedTrip = await tripsService.add(newTrip);
+
     setTrips((prev) => [
       ...prev,
       {
@@ -253,6 +334,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
         duplicateTrip,
         updateTripFavorite,
         updateTripRating,
+        saveTripOverrides,
         removeTrip,
       }}
     >

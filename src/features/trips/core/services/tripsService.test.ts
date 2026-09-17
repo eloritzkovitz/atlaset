@@ -125,7 +125,7 @@ describe("tripsService", () => {
 
       const result = await tripsService.add(trip);
 
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "friend1",
         freshUser.uid,
         "t1",
@@ -159,7 +159,7 @@ describe("tripsService", () => {
         sharedWith: ["friend1"],
       } as any);
 
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "friend1",
         freshUser.uid,
         "t1",
@@ -192,7 +192,7 @@ describe("tripsService", () => {
         shares,
       );
 
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "friend1",
         freshUser.uid,
         "t1",
@@ -238,7 +238,7 @@ describe("tripsService", () => {
         "oldFriend",
         "t1",
       );
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "newFriend",
         freshUser.uid,
         "t1",
@@ -295,14 +295,14 @@ describe("tripsService", () => {
         sharedWith: ["stayingFriend", "newFriend"],
       } as any);
 
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "stayingFriend",
         freshUser.uid,
         "t1",
         "shared",
         "viewer",
       );
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "newFriend",
         freshUser.uid,
         "t1",

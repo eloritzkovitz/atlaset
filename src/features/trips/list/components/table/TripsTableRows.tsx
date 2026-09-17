@@ -19,6 +19,7 @@ interface TripsTableRowsProps {
   tripIdx: number;
   countryByIsoCode: { [isoCode: string]: Country };
   onEdit: (trip: Trip) => void;
+  onCustomize: (trip: Trip) => void;
 }
 
 export function TripsTableRows({
@@ -26,6 +27,7 @@ export function TripsTableRows({
   tripIdx,
   countryByIsoCode,
   onEdit,
+  onCustomize,
 }: TripsTableRowsProps) {
   const { updateTripRating, selectedTripIds, selectTrip, sharedTripIds } =
     useTrips();
@@ -158,7 +160,12 @@ export function TripsTableRows({
 
         {/* Actions */}
         <TableCell rowSpan={rowSpan}>
-          <TripActions ref={actionsRef} trip={trip} onEdit={onEdit} />
+          <TripActions
+            ref={actionsRef}
+            trip={trip}
+            onEdit={onEdit}
+            onCustomize={onCustomize}
+          />
         </TableCell>
       </>
     </tr>

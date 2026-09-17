@@ -71,8 +71,19 @@ export default function TripsPage() {
     initialPageSize: 20,
   });
 
-  const { isOpen, trip, setTrip, handleAdd, handleEdit, handleSave, onClose } =
-    useTripEditor();
+  const {
+    isOpen,
+    trip,
+    mode,
+    overrides,
+    setTrip,
+    handleAdd,
+    handleEdit,
+    handleCustomize,
+    handleSave,
+    handleSaveOverrides,
+    onClose,
+  } = useTripEditor();
 
   const handleViewModeChange = (mode: TripViewMode) => {
     setViewMode(mode);
@@ -130,10 +141,12 @@ export default function TripsPage() {
           key={trip?.id ?? "new-trip"}
           isOpen={isOpen}
           trip={trip}
+          mode={mode}
+          overrides={overrides}
           onChange={setTrip}
           onSave={handleSave}
+          onSaveOverrides={handleSaveOverrides}
           onClose={onClose}
-          isEditing={!!trip && !!trip.id}
         />
         {loading ? (
           <LoadingSpinner
@@ -147,6 +160,7 @@ export default function TripsPage() {
             <TripsTable
               trips={paginatedTrips}
               onEdit={handleEdit}
+              onCustomize={handleCustomize}
               filters={filters}
               updateFilter={handleUpdateFilter}
               countryOptions={countryOptions}

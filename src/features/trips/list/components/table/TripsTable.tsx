@@ -22,6 +22,7 @@ import "./TripsTable.css";
 interface TripsTableProps {
   trips: Trip[];
   onEdit: (trip: Trip) => void;
+  onCustomize: (trip: Trip) => void;
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
@@ -43,6 +44,7 @@ interface TripsTableProps {
 export function TripsTable({
   trips,
   onEdit,
+  onCustomize,
   filters,
   updateFilter,
   countryOptions,
@@ -139,6 +141,7 @@ export function TripsTable({
                 tripIdx={tripIdx}
                 countryByIsoCode={countryByIsoCode}
                 onEdit={onEdit}
+                onCustomize={onCustomize}
               />
             </tbody>
           ))

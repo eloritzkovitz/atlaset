@@ -21,6 +21,8 @@ export function useTripPermissions(trip: Trip | undefined) {
 
   const isEditor = !isOwner && isTripEditor(sharedTrip);
 
+  const isParticipant = sharedTrip?.type === "participant";
+
   const canEdit =
     trip !== undefined &&
     user !== null &&
@@ -30,6 +32,7 @@ export function useTripPermissions(trip: Trip | undefined) {
   return {
     isOwner,
     isEditor,
+    isParticipant,
     canEdit,
   };
 }
