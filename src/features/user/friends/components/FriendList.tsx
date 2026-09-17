@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { EmptyListMessage } from "@components";
-import { UserListItem } from "./UserListItem";
+import { FriendListItemMenuActions } from "./FriendListItemMenuActions";
 import { useFriendSearch } from "../hooks/useFriendSearch";
 import type { FriendProfile } from "../types";
+import { UserList } from "../../core/components/UserList";
 
 interface FriendListProps {
   profiles: FriendProfile[];
@@ -31,10 +32,14 @@ export function FriendList({
   }
 
   return (
-    <ul className="space-y-2">
-      {filtered.map((profile) => (
-        <UserListItem key={profile.uid} uid={profile.uid} />
-      ))}
-    </ul>
+    <UserList
+      profiles={filtered}
+      getMenuContent={(profile) => (
+        <FriendListItemMenuActions
+          uid={profile.uid}
+          username={profile.username}
+        />
+      )}
+    />
   );
 }

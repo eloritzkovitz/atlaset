@@ -6,4 +6,4 @@ Timezones can be searched and filtered by UTC offsets.
 
 ## **Learn more**
 
-[Countries](/docs/atlas/countries.md)
+- [Countries](/docs/atlas/countries.md)

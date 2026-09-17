@@ -1,5 +1,5 @@
 import { FaCrown } from "react-icons/fa6";
-import { UserAvatar } from "../../UserAvatar";
+import { UserAvatar } from "@features/user/core/components/UserAvatar";
 import type { UserProfile } from "../../../types";
 
 interface ProfileComparisonStatProps {

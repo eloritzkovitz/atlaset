@@ -6,20 +6,24 @@
       "mutualFriend_one": "{{count}} mutual",
       "mutualFriend_other": "{{count}} mutual"
     },
+
     "searchPlaceholder": "Search friends",
     "loading": "Loading...",
+    
     "status": {
       "you": "You",
       "friend": "Friend",
       "adding": "Adding...",
       "pending": "Pending"
     },
+
     "empty": {
       "noFriendsYet": "No friends yet.",
       "noFriendsFound": "No friends found.",
       "noFriendRequests": "No friend requests.",
       "noMutualFriends": "No mutual friends."
     },
+
     "actions": {
       "viewProfile": "View Profile",
       "addFriend": "Add Friend",
@@ -33,15 +37,25 @@
       "unfriendConfirmTitle": "Remove friend",
       "unfriendConfirmMessage": "Are you sure you want to remove this person from your friends?"
     },
+
     "panel": {
       "friends": "Friends",
       "requests": "Friend requests"
     },
+    
     "tabs": {
       "all": "All friends",
       "mutual": "Mutual friends"
     }
   },
+
+  "permissions": {
+    "title": "Permissions",
+    "owner": "Owner",
+    "editor": "Editor",
+    "viewer": "Viewer"
+  },
+
   "profile": {
     "header": {
       "editProfile": "Edit Profile",
@@ -49,11 +63,13 @@
       "showFriendsList": "Show friends list",
       "backToProfile": "Back to Profile"
     },
+
     "tabs": {
       "about": "About",
       "friends": "Friends",
       "visits": "Visits"
     },
+
     "editModal": {
       "title": "Edit Profile",
       "personalInfo": "Personal Information",
@@ -72,6 +88,7 @@
       "success": "Profile updated successfully.",
       "failed": "Failed to update profile."
     },
+
     "about": {
       "title": "About",
       "personalDetails": {
@@ -83,6 +100,7 @@
         "biography": "Biography",
         "noBiographyProvided": "No biography provided"
       },
+
       "contactInfo": {
         "title": "Contact Info",
         "email": "Email",
@@ -90,22 +108,27 @@
       },
       "notSpecified": "Not specified"
     },
+
     "friends": {
       "title": "Friends",
       "loading": "Loading friends..."
     },
+
     "travel": {
       "title": "Travel Summary",
       "visited": "Countries visited",
       "wantToVisit": "Want to visit"
     },
+
     "visits": {
       "tabs": {
         "visited": "Visited",
         "wantToVisit": "Want to Visit",
         "compare": "Compare"
       },
+
       "noCountries": "No countries yet.",
+
       "compare": {
         "title": "Comparing with {{name}}",
         "loading": "Comparing...",
@@ -119,6 +142,7 @@
         }
       }
     },
+
     "bestScores": "Best Quiz Scores",
     "private": "This profile is private.",
     "notFound": "User not found."

@@ -101,6 +101,7 @@ export function CountryListModal({
           <div className="p-4">
             <FormField
               label={t("countries.lists.form.nameLabel")}
+              required
               disabled={isTrackingList}
             >
               <input
@@ -109,6 +110,7 @@ export function CountryListModal({
                 name="name"
                 value={list.name}
                 onChange={(e) => onChange({ ...list, name: e.target.value })}
+                required
               />
             </FormField>
             <CountrySelectField
@@ -131,6 +133,7 @@ export function CountryListModal({
               onClose={countrySelect.close}
               isTripBasedCountry={isTrackingList ? isTripBased : undefined}
               isCountryDisabled={handleIsCountryDisabled}
+              required
             />
             {isEditing && isLinked && (
               <div className="flex px-3 py-2 mb-2 items-center text-danger ">

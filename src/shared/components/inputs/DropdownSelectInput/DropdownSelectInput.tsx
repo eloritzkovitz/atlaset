@@ -142,7 +142,7 @@ export function DropdownSelectInput<T = string>({
         matchTriggerWidth
         className={`${
           isFilter ? "!bg-surface" : "!bg-input"
-        } !p-0 !rounded-none max-h-64 overflow-y-auto overflow-x-hidden border-none shadow-lg`}
+        } !z-[10000] !p-0 !rounded-none max-h-64 overflow-y-auto overflow-x-hidden border-none shadow-lg`}
       >
         <div id={`${id}-listbox`} role="listbox" aria-multiselectable={isMulti}>
           <DropdownOptions

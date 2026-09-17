@@ -4,7 +4,7 @@ import { MenuButton } from "@components";
 import { ACTIONS } from "@constants/actions";
 import { ICONS } from "@constants/icons";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
-import { UserAvatar } from "@features/user/profile";
+import { UserAvatar } from "@features/user/core";
 import { profileService } from "@features/user/profile/services/profileService";
 import { formatTimeAgo } from "@utils";
 import { notificationService } from "../services/notificationService";

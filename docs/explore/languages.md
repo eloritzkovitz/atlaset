@@ -6,4 +6,4 @@ Languages can be searched and filtered by name and code.
 
 ## **Learn more**
 
-[Countries](/docs/atlas/countries.md)
+- [Countries](/docs/atlas/countries.md)

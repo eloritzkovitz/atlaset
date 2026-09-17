@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-17
+
+- **[feature]** **Trips | Sharing:** Expanded trip sharing to include sharing trips regardless of participation
+- **[feature]** **Trips | Sharing:** Added permissions to allow users to view or edit trips
+- **[feature]** **Trips | Sharing:** Added trip overrides to allow participants to customize various fields
+
 ## 2026-09-12
 
 - **[feature]** **Trips | Photos:** Added options to reorder photos in the gallery

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Tooltip } from "@components";
 import { CountryFlag } from "./CountryFlag";
 import type { FlagSize } from "../types";
+import { getCountrySortName } from "../../browse/utils/countrySort";
 import { useCountryData } from "../../core/hooks/useCountryData";
 import type { Country } from "../../types";
 import "./CountryFlagGrid.css";
@@ -33,7 +34,9 @@ export function CountryFlagGrid({
     return countryCodes
       .map((code) => countryByIsoCode[code])
       .filter((country): country is Country => Boolean(country))
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) =>
+        getCountrySortName(a).localeCompare(getCountrySortName(b)),
+      );
   }, [countryCodes, countryByIsoCode]);
 
   const defaultGridClass =

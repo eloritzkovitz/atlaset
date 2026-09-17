@@ -1,5 +1,5 @@
 {
-  "pageTitle": "My Trips",
+  "pageTitle": "Trips",
   "loading": "Loading trips...",
   "noTrips": "No trips yet.",
 
@@ -28,14 +28,22 @@
 
   "sections": {
     "overview": "Overview",
-    "details": "Details",
     "destinations": "Destinations",
     "itinerary": "Itinerary",
+    "details": "Details",
+    "people": "People",
     "photos": "Photos"
   },
 
   "table": {
+    "empty": "No trips available.",
+
     "toolbar": {
+      "viewMode": {
+        "trips": "My Trips",
+        "shared": "Shared with Me"
+      },
+
       "search": {
         "placeholder": "Search trips"
       },
@@ -102,6 +110,8 @@
     "viewPhotoAlbum": "View Photo Album",
     "viewInCalendar": "View in Calendar",
     "editTrip": "Edit Trip",
+    "customizeTrip": "Customize Trip",
+    "copyTrip": "Copy Trip",
     "duplicate": "Duplicate",
     "favorite": "Favorite",
     "unfavorite": "Unfavorite",
@@ -112,34 +122,17 @@
   "editor": {
     "titleAdd": "Add Trip",
     "titleEdit": "Edit Trip",
+    "titleCustomize": "Customize Trip",
 
     "overview": {
       "tentativeDates": "Tentative Dates",
-      "notesPlaceholder": "Add notes about this trip...",
-      "noNotes": "No notes available."
-    },
-
-    "details": {
-      "participants": {
-        "select": "Select participants",
-        "none": "No participants selected."
-      },
-      "categories": {
-        "select": "Select categories",
-        "none": "No categories selected."
-      },
-      "tags": {
-        "select": "Select tags",
-        "none": "No tags selected."
+      "countries": {
+        "select": "Select Countries",
+        "none": "No countries selected."
       }
     },
 
     "destinations": {
-      "countries": {
-        "select": "Select Countries",
-        "none": "No countries selected."
-      },
-
       "locations": {
         "title": "Locations",
         "select": "Select Locations",
@@ -147,6 +140,29 @@
         "searchPlaceholder": "Search locations",
         "noResults": "No locations found."
       }
+    },
+
+    "details": {
+      "categories": {
+        "select": "Select categories",
+        "none": "No categories selected."
+      },
+      "tags": {
+        "select": "Select tags",
+        "none": "No tags selected."
+      },
+      "notes": {
+        "placeholder": "Add notes about this trip...",
+        "none": "No notes available."
+      }
+    },
+
+    "people": {
+      "searchPlaceholder": "Search users",
+      "noResults": "No users found.",
+      "addParticipant": "Add as participant",
+      "removeParticipant": "Remove participant",
+      "noParticipants": "No participants added yet."
     },
 
     "photos": {

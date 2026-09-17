@@ -87,6 +87,6 @@ qualifier:query modifier:query
 
 ## **Learn more**
 
-[Country Lists](/docs/atlas/country-lists.md)  
-[Layers](/docs/atlas/layers-markers.md)  
-[Your Vists](/docs/trips/visits.md)
+- [Country Lists](/docs/atlas/country-lists.md)  
+- [Layers](/docs/atlas/layers-markers.md)  
+- [Your Vists](/docs/trips/visits.md)

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { RankBadge } from "@components";
-import { UserInfo } from "@features/user/profile/components/UserInfo";
-import { formatDate, formatTimeSeconds } from "@utils";
+import { UserInfo } from "@features/user/core";
 import type { UserProfile } from "@features/user/profile/types";
+import { formatDate, formatTimeSeconds } from "@utils";
 import type { LeaderboardRow } from "../../types";
 
 interface LeaderboardRowComponentProps {

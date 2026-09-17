@@ -13,6 +13,7 @@ In Atlaset, `trips` let you record, organize and analyze your travels. Each `tri
 | `countries`    | `string[]` | Array of `ISO 3166-1 country codes` visited                                               |
 | `startDate`    | `string`   | Start date of the `trip` (`ISO 8601` format, optional for tentative trips)                |
 | `endDate`      | `string`   | End date of the `trip` (`ISO 8601` format, optional for tentative trips)                  |
+| `fullDays`     | `string`   | _(optional)_ Number of full days (meaning a full calendar day at the destination)         |
 | `participants` | `string[]` | _(optional)_ UIDs of `participants` in the `trip`                                         |
 | `category`     | `string`   | _(optional)_ Category for the `trip`. Must be one of the supported categories. See below. |
 | `status`       | `string`   | _(optional)_ The trip's current status. Must be one of the supported statuses. See below. |
@@ -37,13 +38,6 @@ The user can also manually control a trip's status:
 - Trips can be manually marked as `completed` if their start date has already passed or is today.
 - Trips can be manually marked as `cancelled` and archived if they were `planned` or `upcoming`.
 - In the case that a cancelled trip is restored, you can restore it - the trip's status will be calculated automatically.
-
-### **Participants**
-
-Each `trip` can include a list of `participants`. This allows you to include family and friends in your `trips`, while effectively sharing the same `trips`.
-
-- After a successful creation of a `trip`, the trip's creator (and owner) will be automatically added as a `participant`.
-- You can add, remove or edit other `participants` from your `friends` when creating or editing `trips`.
 
 > **Note:**
 >
@@ -106,10 +100,11 @@ Open a trip from the `Trips` panel to view its details page. The page brings tog
 - Your `trips` power the `Visited Countries` layer and `timeline` features.
 - Changes to your `trips` are reflected in `layers` and `timeline` coloring automatically.
 
-## **Learn More:**
+## **Learn more**
 
-[Trip destinations](/docs/trips/destinations.md)  
-[Trip gallery](/docs/trips/gallery.md)  
-[Calendar](/docs/trips/calendar.md)  
-[Statistics](/docs/dashboard/statistics.md)  
-[Timeline](/docs/atlas/timeline.md)
+- [Trip destinations](/docs/trips/destinations.md)  
+- [Trip gallery](/docs/trips/gallery.md)  
+- [Sharing trips](/docs/trips/sharing-trips.md)  
+- [Calendar](/docs/trips/calendar.md)  
+- [Statistics](/docs/dashboard/statistics.md)  
+- [Timeline](/docs/atlas/timeline.md)

@@ -107,7 +107,9 @@ import {
   FaUserGear,
   FaUserGroup,
   FaUserPlus,
+  FaUsers,
   FaVolumeHigh,
+  FaWrench,
   FaXmark,
 } from "react-icons/fa6";
 import { IoAccessibility, IoLanguage, IoTelescope } from "react-icons/io5";
@@ -179,6 +181,7 @@ export const ICONS = {
   tripCancelled: FaBan,
   tripFilters: FaPercent,
   photoAlbum: FaImages,
+  sharedTrips: FaUsers,
   // Dashboard
   dashboard: DashboardIcon,
   overview: FaHouse,
@@ -242,8 +245,9 @@ export const ICONS = {
   view: FaRegEye,
   download: FaDownload,
   edit: FaPenToSquare,
+  editField: FaPencil,
+  customize: FaWrench,
   save: FaFloppyDisk,
-  rename: FaPencil,
   center: FaCrosshairs,
   favorite: FaHeart,
   unfavorite: FaRegHeart,

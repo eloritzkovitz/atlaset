@@ -1,13 +1,13 @@
-import { UserListItem } from "./UserListItem";
-import { friendService } from "../../friends/services/friendService";
-import { EmptyListMessage } from "@components";
 import { useTranslation } from "react-i18next";
+import { EmptyListMessage } from "@components";
+import { FriendRequestActions } from "./FriendRequestActions";
+import { friendService } from "../services/friendService";
+import { UserList } from "../../core/components/UserList";
 
 interface FriendRequestListProps {
   requests: Array<{ uid: string; from: string }>;
   loading: boolean;
   userUid?: string;
-  currentUserName?: string;
 }
 
 export function FriendRequestList({
@@ -26,28 +26,18 @@ export function FriendRequestList({
   }
 
   return (
-    <ul>
-      {requests.map((req) => (
-        <UserListItem
-          key={req.uid}
-          uid={req.from}
-          onAccept={
-            userUid
-              ? (requestUserName?: string) =>
-                  friendService.acceptFriendRequest(
-                    userUid,
-                    req.from,
-                    requestUserName,
-                  )
-              : undefined
-          }
-          onReject={
-            userUid
-              ? () => friendService.rejectFriendRequest(userUid, req.from)
-              : undefined
-          }
-        />
-      ))}
-    </ul>
+    <UserList
+      uids={requests.map((request) => request.from)}
+      getActions={(uid) =>
+        userUid ? (
+          <FriendRequestActions
+            onAccept={(requestUserName) =>
+              friendService.acceptFriendRequest(userUid, uid, requestUserName)
+            }
+            onReject={() => friendService.rejectFriendRequest(userUid, uid)}
+          />
+        ) : undefined
+      }
+    />
   );
 }

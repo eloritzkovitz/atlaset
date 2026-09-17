@@ -1,9 +1,9 @@
 import type { SerializableUser } from "@features/user/auth/types";
 import { UserAvatar } from "./UserAvatar";
-import type { UserProfile } from "../types";
+import type { UserDisplayProfile, UserProfile } from "../../profile/types";
 
 interface UserInfoProps {
-  user: SerializableUser | UserProfile | null;
+  user: SerializableUser | UserDisplayProfile | UserProfile | null;
   avatarSize?: number;
   showDisplayName?: boolean;
   showEmail?: boolean;

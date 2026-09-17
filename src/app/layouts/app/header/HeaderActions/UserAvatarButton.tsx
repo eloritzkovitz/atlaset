@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import type { SerializableUser } from "@features/user/auth/types";
-import { UserAvatar } from "@features/user/profile/components/UserAvatar";
+import { UserAvatar } from "@features/user/core";
 
 interface UserAvatarButtonProps {
   user: SerializableUser | null;

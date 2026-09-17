@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ModalSelect } from "@components";
 import { ICONS } from "@constants/icons";
 import type { Location } from "@lib/locations";
-import { useLocationSearch } from "../../../core/hooks/useLocationSearch";
+import { useLocationSearch } from "../../../locations/hooks/useLocationSearch";
 
 interface DestinationSelectModalProps {
   isOpen: boolean;

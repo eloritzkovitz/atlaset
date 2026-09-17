@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Table, type TableColumn, RankBadge } from "@components";
-import { UserInfo } from "@features/user/profile/components/UserInfo";
+import { UserInfo } from "@features/user/core";
 import type { UserProfile } from "@features/user/profile/types";
 import { formatDate, formatTimeSeconds } from "@utils";
 import type {

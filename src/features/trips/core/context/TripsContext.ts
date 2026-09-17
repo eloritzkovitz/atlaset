@@ -1,10 +1,17 @@
 import { createContext, useContext } from "react";
 import type { Trip } from "../types";
+import type {
+  SharedTrip,
+  TripOverrides,
+  TripShares,
+} from "../../sharing/types";
 
 export interface TripsContextType {
   trips: Trip[];
+  sharedTrips: SharedTrip[];
   loading: boolean;
   sharedTripIds: Set<string>;
+  participantTripIds: Set<string>;
   selectedTripIds: string[];
   setSelectedTripIds: (ids: string[]) => void;
   selectTrip: (id: string) => void;
@@ -12,14 +19,22 @@ export interface TripsContextType {
   isAllSelected: (filteredTrips: Trip[]) => boolean;
   handleBulkDuplicate: (tripIds: string[]) => void;
   handleBulkDelete: (tripIds: string[]) => void;
-  addTrip: (trip: Trip) => void;
-  editTrip: (trip: Trip) => void;
+  addTrip: (trip: Trip, shares?: TripShares) => Promise<void>;
+  editTrip: (
+    trip: Trip,
+    forceStatus?: boolean,
+    shares?: TripShares,
+  ) => Promise<void>;
   markCompleted: (trip: Trip) => void;
   markCancelled: (trip: Trip) => void;
   restoreTrip: (trip: Trip) => void;
   duplicateTrip: (trip: Trip) => void;
   updateTripFavorite: (trip: Trip, favorite: boolean) => void;
   updateTripRating: (trip: Trip, rating: number | undefined) => void;
+  saveTripOverrides: (
+    tripId: string,
+    overrides: TripOverrides,
+  ) => Promise<void>;
   removeTrip: (trip: Trip) => Promise<void>;
 }
 

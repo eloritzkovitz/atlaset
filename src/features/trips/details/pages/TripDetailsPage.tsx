@@ -12,20 +12,20 @@ import { EMPTY_NUMBER_ARRAY } from "@constants/arrays";
 import { usePageTitle } from "@hooks";
 import { TripDestinationsCard } from "../components/TripDestinationsCard";
 import { TripHeader } from "../components/TripHeader";
+import { TripGoogleMap } from "../components/TripsGoogleMap";
 import { TripPhotoGallery } from "../../photos/components/TripPhotoGallery";
 import { CategoriesList } from "../../core/components/CategoriesList";
-import { ParticipantsList } from "../../core/components/ParticipantsList";
 import { TagsList } from "../../core/components/TagsList";
 import { useTrips } from "../../core/context/TripsContext";
-import { useTripLocations } from "../../core/hooks/useTripLocations";
 import { useTripNavigation } from "../../core/hooks/useTripNavigation";
 import { TripModal } from "../../editor/components/TripModal";
 import { useTripEditor } from "../../editor/hooks/useTripEditor";
-import { TripGoogleMap } from "../components/TripsGoogleMap";
+import { useTripLocations } from "../../locations/hooks/useTripLocations";
+import { useTripPermissions } from "../../sharing/hooks/useTripPermissions";
 
 export default function TripDetailsPage() {
   const navigate = useNavigate();
-  const { trips, loading, sharedTripIds } = useTrips();
+  const { trips, loading, sharedTripIds, duplicateTrip } = useTrips();
   const { t } = useTranslation("trips");
 
   const { tripId } = useParams<{ tripId: string }>();
@@ -42,11 +42,17 @@ export default function TripDetailsPage() {
   const {
     isOpen: isEditorOpen,
     trip: editingTrip,
+    mode: editorMode,
+    overrides,
     setTrip,
     handleEdit,
+    handleCustomize,
     handleSave,
+    handleSaveOverrides,
     onClose,
   } = useTripEditor();
+
+  const { canEdit, isParticipant } = useTripPermissions(trip);
 
   if (loading) {
     return (
@@ -71,15 +77,18 @@ export default function TripDetailsPage() {
     <>
       <Container className="mt-12">
         <PageHeader
-          title={t("pageTitle", "My Trips")}
+          title={t("pageTitle", "Trips")}
           onBack={() => navigate("/trips")}
         />
 
         <div className="mx-auto space-y-6">
-          {/* Trip header */}
           <TripHeader
             trip={trip}
             onEdit={() => handleEdit(trip)}
+            onCustomize={() => handleCustomize(trip)}
+            onDuplicate={() => duplicateTrip(trip)}
+            canEdit={canEdit}
+            canCustomize={isParticipant}
             sharedWithMe={sharedTripIds.has(trip.id)}
             navigation={{
               previous: previousTrip
@@ -97,7 +106,6 @@ export default function TripDetailsPage() {
             }}
           />
 
-          {/* Destinations */}
           <TripDestinationsCard
             locations={locations}
             loading={locationsLoading}
@@ -106,7 +114,6 @@ export default function TripDetailsPage() {
           {/* Google My Map */}
           {trip.googleMapsUrl && <TripGoogleMap url={trip.googleMapsUrl} />}
 
-          {/* Photos */}
           <TripPhotoGallery
             tripId={trip.id}
             photos={trip.photos ?? []}
@@ -116,12 +123,6 @@ export default function TripDetailsPage() {
 
           {/* Details */}
           <Card title={t("sections.details", "Details")}>
-            <SectionHeader>
-              {t("fields.participants", "Participants")} (
-              {trip.participants?.length ?? 0})
-            </SectionHeader>
-            <ParticipantsList uids={trip.participants ?? []} />
-
             <SectionHeader title={t("fields.categories", "Categories")} />
             <CategoriesList
               categories={trip.categories ?? []}
@@ -138,7 +139,7 @@ export default function TripDetailsPage() {
               <p className="whitespace-pre-line text-muted">{trip.notes}</p>
             ) : (
               <EmptyListMessage
-                message={t("editor.overview.noNotes", "No notes available.")}
+                message={t("editor.details.notes.none", "No notes available.")}
               />
             )}
           </Card>
@@ -150,10 +151,12 @@ export default function TripDetailsPage() {
         <TripModal
           isOpen={isEditorOpen}
           trip={editingTrip}
+          mode={editorMode}
+          overrides={overrides}
           onChange={setTrip}
           onSave={handleSave}
+          onSaveOverrides={handleSaveOverrides}
           onClose={onClose}
-          isEditing
         />
       )}
     </>

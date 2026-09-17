@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton } from "@components";
-import { ICONS } from "@constants/icons";
-import { TripLocationsList } from "@features/trips/core/components/TripLocationsList";
+import { FieldHeader } from "@components";
 import type { Location } from "@lib/locations";
+import { TripLocationsList } from "../../../../locations/components/TripLocationsList";
 
 interface LocationsSectionProps {
   locations: Location[];
@@ -22,23 +21,11 @@ export function LocationsSection({
 
   return (
     <div className="flex-1 min-h-0 overflow-auto">
-      <div className="flex items-center justify-between mb-1">
-        <span className="font-semibold">
-          {t("editor.destinations.locations.title")}
-        </span>
-
-        <ActionButton
-          icon={<ICONS.edit />}
-          variant="custom"
-          className="px-2 py-1 text-sm"
-          ariaLabel={t("editor.destinations.locations.select")}
-          onClick={onEdit}
-        >
-          {locations.length > 0
-            ? t("editor.actions.edit")
-            : t("editor.actions.add")}
-        </ActionButton>
-      </div>
+      <FieldHeader
+        label={t("editor.destinations.locations.title")}
+        onEdit={onEdit}
+        editLabel={t("editor.destinations.locations.select")}
+      />
 
       <TripLocationsList
         locations={locations}

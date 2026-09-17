@@ -1,14 +1,12 @@
+import { useTranslation } from "react-i18next";
+import { FormField, InputBox } from "@components";
 import type { Trip } from "@features/trips/core/types";
-import type { UserProfile } from "@features/user/profile";
 import { CategoriesSection } from "./CategoriesSection";
-import { ParticipantsSection } from "./ParticipantsSection";
 import { TagsSection } from "./TagsSection";
 
 interface TripDetailsTabProps {
   trip: Trip;
-  selectedParticipantProfiles: UserProfile[];
   onChange: (trip: Trip) => void;
-  onEditParticipants: () => void;
   onEditCategories: () => void;
   onEditTags: () => void;
 }
@@ -16,27 +14,14 @@ interface TripDetailsTabProps {
 /** Renders the details tab for a trip. */
 export function TripDetailsTab({
   trip,
-  selectedParticipantProfiles,
   onChange,
-  onEditParticipants,
   onEditCategories,
   onEditTags,
 }: TripDetailsTabProps) {
-  return (
-    <div className="flex flex-col gap-3"> 
-      <ParticipantsSection
-        selectedParticipants={selectedParticipantProfiles}
-        onEdit={onEditParticipants}
-        onRemove={(uid) =>
-          onChange({
-            ...trip,
-            participants: (trip.participants || []).filter(
-              (participant) => participant !== uid,
-            ),
-          })
-        }
-      />
+  const { t } = useTranslation("trips");
 
+  return (
+    <div className="flex flex-col gap-4">
       <CategoriesSection
         selectedCategories={trip.categories || []}
         onEdit={onEditCategories}
@@ -60,6 +45,24 @@ export function TripDetailsTab({
           })
         }
       />
+
+      <FormField label={t("fields.notes")}>
+        <InputBox
+          id="trip-notes"
+          name="trip-notes"
+          as="textarea"
+          maxLength={2000}
+          className="w-full min-h-48 resize-none"
+          value={trip.notes ?? ""}
+          onChange={(e: { target: { value: string } }) =>
+            onChange({
+              ...trip,
+              notes: e.target.value,
+            })
+          }
+          placeholder={t("editor.details.notes.placeholder")}
+        />
+      </FormField>
     </div>
   );
 }

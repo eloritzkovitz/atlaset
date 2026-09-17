@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Pagination } from "@components";
+import { EmptyListMessage, Pagination } from "@components";
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useCountryData } from "@features/countries";
 import { useScreenSize, useResizableColumns } from "@hooks";
@@ -11,12 +11,18 @@ import {
   MIN_WIDTHS,
   type ColumnKey,
 } from "../../constants/columns";
-import type { Trip, TripFilters, TripSortBy, TripSortByKey } from "../../../core/types";
+import type {
+  Trip,
+  TripFilters,
+  TripSortBy,
+  TripSortByKey,
+} from "../../../core/types";
 import "./TripsTable.css";
 
 interface TripsTableProps {
   trips: Trip[];
   onEdit: (trip: Trip) => void;
+  onCustomize: (trip: Trip) => void;
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
@@ -38,6 +44,7 @@ interface TripsTableProps {
 export function TripsTable({
   trips,
   onEdit,
+  onCustomize,
   filters,
   updateFilter,
   countryOptions,
@@ -126,30 +133,42 @@ export function TripsTable({
           participantsOptions={participantsOptions}
           renderResizeHandle={renderResizeHandle}
         />
-        {trips.map((trip, tripIdx) => (
-          <tbody key={trip.id} className="trips-group">
-            <TripsTableRows
-              key={trip.id}
-              trip={trip}
-              tripIdx={tripIdx}
-              countryByIsoCode={countryByIsoCode}
-              onEdit={onEdit}
-            />
+        {trips.length > 0 ? (
+          trips.map((trip, tripIdx) => (
+            <tbody key={trip.id} className="trips-group">
+              <TripsTableRows
+                trip={trip}
+                tripIdx={tripIdx}
+                countryByIsoCode={countryByIsoCode}
+                onEdit={onEdit}
+                onCustomize={onCustomize}
+              />
+            </tbody>
+          ))
+        ) : (
+          <tbody className="trips-empty">
+            <tr>
+              <td colSpan={13}>
+                <EmptyListMessage message={t("table.empty")} />
+              </td>
+            </tr>
           </tbody>
-        ))}
+        )}
       </table>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={onPageChange}
-        pageSize={pageSize}
-        totalCount={totalCount}
-        onPageSizeChange={onPageSizeChange}
-        itemLabel={{
-          singular: t("table.itemLabels.singular"),
-          plural: t("table.itemLabels.plural"),
-        }}
-      />
+      {totalCount > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          pageSize={pageSize}
+          totalCount={totalCount}
+          onPageSizeChange={onPageSizeChange}
+          itemLabel={{
+            singular: t("table.itemLabels.singular"),
+            plural: t("table.itemLabels.plural"),
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -19,7 +19,7 @@ export const PRIMARY_LINKS = [
     to: "/trips",
     icon: <ICONS.trips className="text-2xl" />,
     labelKey: "navigation.sidebar.trips",
-    label: "My Trips",
+    label: "Trips",
     end: false,
   },
   {

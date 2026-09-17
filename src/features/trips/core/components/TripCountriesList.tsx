@@ -1,6 +1,6 @@
-import { FaXmark } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { EmptyListMessage } from "@components";
+import { ActionButton, EmptyListMessage } from "@components";
+import { ICONS } from "@constants/icons";
 import { CountryWithFlag } from "@features/countries";
 
 interface TripCountriesListProps {
@@ -23,23 +23,32 @@ export function TripCountriesList({
     <div>
       <div className="flex flex-col gap-3">
         {countries.length === 0 && (
-          <EmptyListMessage message={t("editor.destinations.countries.none")} />
+          <EmptyListMessage message={t("editor.overview.countries.none")} />
         )}
-        {countries.map((country) => (
-          <span key={country.isoCode} className="flex items-center py-0.5">
-            <CountryWithFlag country={country} />
-            {removable && (
-              <button
-                type="button"
-                className="ms-auto text-muted hover:text-muted-hover"
-                aria-label={t("editor.actions.remove")}
-                onClick={() => onRemove && onRemove(country.isoCode)}
-              >
-                <FaXmark />
-              </button>
-            )}
-          </span>
-        ))}
+
+        {countries.map((country) =>
+          removable ? (
+            <div
+              key={country.isoCode}
+              className="flex items-center justify-between rounded-full bg-input px-3 py-2 transition-colors hover:bg-primary-hover/35"
+            >
+              <CountryWithFlag country={country} />
+
+              <ActionButton
+                icon={<ICONS.close />}
+                title={t("editor.actions.remove")}
+                ariaLabel={t("editor.actions.remove")}
+                onClick={() => onRemove?.(country.isoCode)}
+                className="p-1"
+                rounded
+              />
+            </div>
+          ) : (
+            <span key={country.isoCode} className="flex items-center py-0.5">
+              <CountryWithFlag country={country} />
+            </span>
+          ),
+        )}
       </div>
     </div>
   );

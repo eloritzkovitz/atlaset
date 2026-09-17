@@ -10,6 +10,6 @@ Every day, a new `country` will be featured, allowing you quick exploration. Oth
 
 With the `Did you know?` section, you can discover new interesting facts about various countries in the world, featuring topics such as geography, nature, history, architecture, archaeology, sports, economy, science and technology and more!
 
-## **Learn More**
+## **Learn more**
 
 [Countries](/docs/atlas/countries.md)

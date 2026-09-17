@@ -21,6 +21,9 @@ export type CountrySortByKey =
 /** Sort options for countries. */
 export type CountrySortBy = SortValue<CountrySortByKey>;
 
+/** A country with a name and ISO code. */
+type CountryNameItem = Pick<Country, "isoCode" | "name">;
+
 /** Dropdown option for sort, with optional icon */
 export type CountrySortOption = {
   value: CountrySortByKey;
@@ -46,7 +49,7 @@ const ENGLISH_ARTICLE_COUNTRIES = new Set(["BS", "GM"]);
  * @param country - The country object to get the sort name for.
  * @returns The normalized sort name for the country.
  */
-function getCountrySortName(country: Country): string {
+export function getCountrySortName(country: CountryNameItem): string {
   const name = normalizeString(country.name);
 
   if (

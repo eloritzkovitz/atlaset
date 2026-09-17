@@ -2,23 +2,24 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Checkbox, StarRatingInput, TableCell } from "@components";
-import type { Country } from "@features/countries/types";
+import { getCountrySortName, type Country } from "@features/countries";
 import { formatDate } from "@utils";
 import { TripActions } from "./TripActions";
 import { CategoriesList } from "../../../core/components/CategoriesList";
-import { ParticipantsList } from "../../../core/components/ParticipantsList";
 import { TagsList } from "../../../core/components/TagsList";
 import { TripCountriesList } from "../../../core/components/TripCountriesList";
 import { TripIndicators } from "../../../core/components/TripIndicators";
 import { TripStatusChip } from "../../../core/components/TripStatusChip";
 import { useTrips } from "../../../core/context/TripsContext";
 import type { Trip } from "../../../core/types";
+import { ParticipantsList } from "../../../sharing/components/ParticipantsList";
 
 interface TripsTableRowsProps {
   trip: Trip;
   tripIdx: number;
   countryByIsoCode: { [isoCode: string]: Country };
   onEdit: (trip: Trip) => void;
+  onCustomize: (trip: Trip) => void;
 }
 
 export function TripsTableRows({
@@ -26,6 +27,7 @@ export function TripsTableRows({
   tripIdx,
   countryByIsoCode,
   onEdit,
+  onCustomize,
 }: TripsTableRowsProps) {
   const { updateTripRating, selectedTripIds, selectTrip, sharedTripIds } =
     useTrips();
@@ -45,7 +47,7 @@ export function TripsTableRows({
 
   // Sort countries alphabetically by name
   const sortedCountries = mappedCountries.sort((a, b) =>
-    a.name.localeCompare(b.name),
+    getCountrySortName(a).localeCompare(getCountrySortName(b)),
   );
 
   // Ref for TripActions to support context menu opening
@@ -158,7 +160,12 @@ export function TripsTableRows({
 
         {/* Actions */}
         <TableCell rowSpan={rowSpan}>
-          <TripActions ref={actionsRef} trip={trip} onEdit={onEdit} />
+          <TripActions
+            ref={actionsRef}
+            trip={trip}
+            onEdit={onEdit}
+            onCustomize={onCustomize}
+          />
         </TableCell>
       </>
     </tr>

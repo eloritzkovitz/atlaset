@@ -14,13 +14,12 @@ export function ToolbarActions({ onAddTrip }: ToolbarActionsProps) {
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // Check if there are selected trips
   const hasSelection = selectedTripIds.length > 0;
 
   return (
-    <div className="flex w-full items-center justify-between gap-2">
-      <div className="flex flex-wrap items-center gap-2 w-full justify-between">
-        <div className="flex items-center gap-2">
+    <>
+      <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex shrink-0 items-center">
           <ActionButton
             onClick={() => handleBulkDuplicate(selectedTripIds)}
             ariaLabel={t("table.toolbar.bulkActions.duplicateSelected")}
@@ -30,6 +29,7 @@ export function ToolbarActions({ onAddTrip }: ToolbarActionsProps) {
             disabled={!hasSelection}
             variant="toggle"
           />
+
           <ActionButton
             onClick={() => setShowDeleteConfirm(true)}
             ariaLabel={t("table.toolbar.bulkActions.deleteSelected")}
@@ -40,8 +40,13 @@ export function ToolbarActions({ onAddTrip }: ToolbarActionsProps) {
             variant="toggle"
           />
         </div>
-        <ActionButton variant="primary" onClick={onAddTrip} className="ms-4">
-          {<ICONS.add className="text-xl" />}
+
+        <ActionButton
+          variant="primary"
+          onClick={onAddTrip}
+          className="shrink-0 ms-4"
+        >
+          <ICONS.add className="text-xl" />
           {t("table.toolbar.bulkActions.addTrip")}
         </ActionButton>
       </div>
@@ -62,6 +67,6 @@ export function ToolbarActions({ onAddTrip }: ToolbarActionsProps) {
           submitIcon={<ICONS.remove className="inline" />}
         />
       )}
-    </div>
+    </>
   );
 }

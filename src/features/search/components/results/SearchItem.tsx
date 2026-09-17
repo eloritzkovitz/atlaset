@@ -33,24 +33,24 @@ export function SearchItem<T>({
         type="button"
         url={url}
         icon={
-          <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center">
             {icon}
           </div>
         }
         onClick={() => onClick(item)}
-        ariaLabel={`Go to ${displayName}`}
-        className="w-full flex items-center gap-3 px-2 py-2"
+        className="flex w-full items-center gap-3 px-2 py-2"
       >
         <div
-          className={`flex flex-col ${contentAlignClass}`}
+          className={`min-w-0 flex-1 ${contentAlignClass}`}
           dir={isRtl ? "rtl" : undefined}
         >
-          <span className="font-medium">{displayName}</span>
-          <span className="text-sm text-muted">
-            {label ? label : <>&nbsp;</>}
+          <span className="block truncate font-medium">{displayName}</span>
+          <span className="block truncate text-sm text-muted">
+            {label || <>&nbsp;</>}
           </span>
-          {children}
         </div>
+
+        {children}
       </MenuButton>
     </li>
   );

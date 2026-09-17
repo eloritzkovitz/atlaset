@@ -8,19 +8,20 @@ import {
 } from "@test-utils/firebaseMockRegistry";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { tripsService } from "./tripsService";
-import { sharedTripsService } from "./sharedTripsService";
+import { sharedTripsService } from "../../sharing/services/sharedTripsService";
+import type { SharedTrip } from "../../sharing/types";
 
 const { notificationSendMock } = vi.hoisted(() => ({
   notificationSendMock: vi.fn(),
 }));
 
-vi.mock("./sharedTripsService");
+vi.mock("../../sharing/services/sharedTripsService");
 
-vi.mock("../../user/profile/services/profileService", () => ({
+vi.mock("@features/user/profile/services/profileService", () => ({
   profileService: { updateVisitedCountryCodes: vi.fn() },
 }));
 
-vi.mock("@features/notifications/services/notificationService", () => ({
+vi.mock("@features/notifications", () => ({
   notificationService: {
     send: notificationSendMock,
   },
@@ -124,10 +125,13 @@ describe("tripsService", () => {
 
       const result = await tripsService.add(trip);
 
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "friend1",
         freshUser.uid,
         "t1",
+        "participant",
+        "viewer",
+        undefined,
       );
 
       expect(notificationSendMock).toHaveBeenCalledWith("friend1", {
@@ -139,7 +143,7 @@ describe("tripsService", () => {
         },
         details: {
           actorName: freshUser.displayName ?? "",
-          itemId: "t1",          
+          itemId: "t1",
           itemName: "Trip",
         },
       });
@@ -147,6 +151,57 @@ describe("tripsService", () => {
       expect(result.participants).toContain(freshUser.uid);
       expect(result.startDate).toBe("2026-01-01");
       expect(result.endDate).toBe("2026-01-10");
+    });
+
+    it("adds shared users without notifying them", async () => {
+      await tripsService.add({
+        id: "t1",
+        name: "Trip",
+        sharedWith: ["friend1"],
+      } as any);
+
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
+        "friend1",
+        freshUser.uid,
+        "t1",
+        "shared",
+        "viewer",
+        undefined,
+      );
+
+      expect(notificationSendMock).not.toHaveBeenCalled();
+    });
+
+    it("uses the supplied permission when adding a shared user", async () => {
+      const shares = new Map<string, SharedTrip>([
+        [
+          "friend1",
+          {
+            ownerUid: freshUser.uid,
+            tripId: "t1",
+            type: "shared",
+            permission: "editor",
+          },
+        ],
+      ]);
+
+      await tripsService.add(
+        {
+          id: "t1",
+          name: "Trip",
+          sharedWith: ["friend1"],
+        } as any,
+        shares,
+      );
+
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
+        "friend1",
+        freshUser.uid,
+        "t1",
+        "shared",
+        "editor",
+        undefined,
+      );
     });
 
     it("handles missing participants and dates during add", async () => {
@@ -186,10 +241,14 @@ describe("tripsService", () => {
         "oldFriend",
         "t1",
       );
-      expect(sharedTripsService.addReference).toHaveBeenCalledWith(
+
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
         "newFriend",
         freshUser.uid,
         "t1",
+        "participant",
+        "viewer",
+        undefined,
       );
 
       expect(notificationSendMock).toHaveBeenCalledTimes(2);
@@ -227,6 +286,46 @@ describe("tripsService", () => {
       );
     });
 
+    it("adds and removes shared users during edit", async () => {
+      fs.getDoc.mockResolvedValue({
+        exists: () => true,
+        data: () => ({
+          sharedWith: ["oldFriend", "stayingFriend"],
+        }),
+      } as any);
+
+      await tripsService.edit({
+        id: "t1",
+        name: "Trip",
+        sharedWith: ["stayingFriend", "newFriend"],
+      } as any);
+
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
+        "stayingFriend",
+        freshUser.uid,
+        "t1",
+        "shared",
+        "viewer",
+        undefined,
+      );
+
+      expect(sharedTripsService.setReference).toHaveBeenCalledWith(
+        "newFriend",
+        freshUser.uid,
+        "t1",
+        "shared",
+        "viewer",
+        undefined,
+      );
+
+      expect(sharedTripsService.removeReference).toHaveBeenCalledWith(
+        "oldFriend",
+        "t1",
+      );
+
+      expect(notificationSendMock).not.toHaveBeenCalled();
+    });
+
     it("handles missing trip data during edit", async () => {
       fs.getDoc.mockResolvedValue({
         exists: () => false,
@@ -252,6 +351,7 @@ describe("tripsService", () => {
       const trip = { id: "t1", name: "Trip 1" } as any;
 
       await tripsService.updateRating(trip, 5);
+
       expect(fs.setDoc).toHaveBeenCalledWith(
         expect.anything(),
         { rating: 5 },
@@ -259,6 +359,7 @@ describe("tripsService", () => {
       );
 
       await tripsService.updateRating(trip, undefined);
+
       expect(fs.setDoc).toHaveBeenCalledWith(
         expect.anything(),
         { rating: null },
@@ -270,6 +371,7 @@ describe("tripsService", () => {
       const trip = { id: "t1", name: "Trip 1" } as any;
 
       await tripsService.updateFavorite(trip, true);
+
       expect(activityMockTracker).toHaveBeenCalledWith(
         413,
         expect.objectContaining({ action: "favorited" }),
@@ -277,6 +379,7 @@ describe("tripsService", () => {
       );
 
       await tripsService.updateFavorite(trip, false);
+
       expect(activityMockTracker).toHaveBeenCalledWith(
         413,
         expect.objectContaining({ action: "unfavorited" }),
@@ -284,19 +387,26 @@ describe("tripsService", () => {
       );
     });
 
-    it("removes participant references and notifies participants", async () => {
+    it("removes participant and shared references and notifies participants", async () => {
       const trip = {
         id: "del",
         name: "My Trip",
+        sharedWith: ["sharedFriend", "friend1", freshUser.uid],
         participants: ["friend1", freshUser.uid],
       } as any;
 
       await tripsService.remove(trip);
 
       expect(sharedTripsService.removeReference).toHaveBeenCalledWith(
+        "sharedFriend",
+        "del",
+      );
+
+      expect(sharedTripsService.removeReference).toHaveBeenCalledWith(
         "friend1",
         "del",
       );
+
       expect(sharedTripsService.removeReference).not.toHaveBeenCalledWith(
         freshUser.uid,
         "del",
@@ -309,24 +419,31 @@ describe("tripsService", () => {
           details: {
             actorName: freshUser.displayName ?? "",
             itemId: "del",
-            itemName: "My Trip",            
+            itemName: "My Trip",
           },
         }),
       );
 
+      expect(notificationSendMock).toHaveBeenCalledTimes(1);
       expect(fs.deleteDoc).toHaveBeenCalled();
     });
 
-    it("handles removal without participants", async () => {
+    it("handles removal without participants or shared users", async () => {
       await tripsService.remove({ id: "del1" } as any);
+
       await tripsService.remove({
         id: "del2",
         participants: [freshUser.uid],
       } as any);
 
+      await tripsService.remove({
+        id: "del3",
+        sharedWith: [freshUser.uid],
+      } as any);
+
       expect(sharedTripsService.removeReference).not.toHaveBeenCalled();
       expect(notificationSendMock).not.toHaveBeenCalled();
-      expect(fs.deleteDoc).toHaveBeenCalledTimes(2);
+      expect(fs.deleteDoc).toHaveBeenCalledTimes(3);
     });
   });
 });

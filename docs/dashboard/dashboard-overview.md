@@ -9,4 +9,4 @@ The **`Dashboard`** is your personal hub, providing a comprehensive overview of 
 
 ## **Learn more**
 
-[Statistics](/docs/dashboard/statistics.md)
+- [Statistics](/docs/dashboard/statistics.md)

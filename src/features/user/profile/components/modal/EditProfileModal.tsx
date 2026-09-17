@@ -42,7 +42,7 @@ export function EditProfileModal({
   onSave,
 }: EditProfileModalProps) {
   const { t } = useTranslation("user");
-  
+
   const [biography, setBiography] = useState(profile?.biography ?? "");
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [username, setUsername] = useState(profile?.username || "");
@@ -165,7 +165,7 @@ export function EditProfileModal({
 
         <form onSubmit={handleSave} className="space-y-6 px-4">
           <SectionHeader title={t("profile.editModal.personalInfo")} />
-          <FormField label={t("profile.editModal.username")}>
+          <FormField label={t("profile.editModal.username")} required>
             <input
               id="username"
               name="username"

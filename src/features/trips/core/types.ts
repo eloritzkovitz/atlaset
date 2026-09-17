@@ -27,26 +27,22 @@ export type Trip = {
   fullDays?: number;
   /** UIDs of participants in this trip. */
   participants?: string[];
+  /** UIDs of users with whom the trip is shared. */
+  sharedWith?: string[];
   /** Additional attributes for the trip. */
   categories?: TripCategory[];
   /** The current status of the trip. */
   status?: TripStatus;
-  /** Additional notes about the trip. */
-  notes?: string;
   /** Tags associated with the trip. */
   tags?: TripTag[];
+  /** Additional notes about the trip. */
+  notes?: string;
   /** Photos associated with the trip. */
   photos?: TripPhoto[];
   /** URL of an external photo album for the trip. */
   photoAlbumUrl?: string;
   /** URL of a Google Maps link for the trip. */
   googleMapsUrl?: string;
-};
-
-/** Represents a shared trip reference. */
-export type SharedTrip = {
-  ownerUid: string;
-  tripId: string;
 };
 
 /** Represents a trip category. */
@@ -57,6 +53,9 @@ export type TripStatus = (typeof ALL_TRIP_STATUSES)[number];
 
 /** Represents a tag associated with a trip. */
 export type TripTag = (typeof ALL_TRIP_TAGS)[number];
+
+/** Represents the view mode for the trips list. */
+export type TripViewMode = "trips" | "shared";
 
 /** Sort keys for trips. */
 export type TripSortByKey =

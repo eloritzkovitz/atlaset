@@ -12,10 +12,15 @@ import { formatDate } from "@utils";
 import { TripIndicators } from "../../core/components/TripIndicators";
 import { TripStatusChip } from "../../core/components/TripStatusChip";
 import type { Trip } from "../../core/types";
+import { ParticipantsList } from "../../sharing/components/ParticipantsList";
 
 interface TripHeaderProps {
   trip: Trip;
   onEdit: () => void;
+  onCustomize?: () => void;
+  onDuplicate?: () => void;
+  canEdit: boolean;
+  canCustomize?: boolean;
   sharedWithMe?: boolean;
   navigation?: {
     previous?: NavigationItem;
@@ -26,6 +31,10 @@ interface TripHeaderProps {
 export function TripHeader({
   trip,
   onEdit,
+  onCustomize,
+  onDuplicate,
+  canEdit,
+  canCustomize,
   sharedWithMe,
   navigation,
 }: TripHeaderProps) {
@@ -55,18 +64,42 @@ export function TripHeader({
             </div>
           </div>
 
-          <div className="flex w-32 flex-col items-stretch gap-2 shrink-0">
+          <div className="flex shrink-0 flex-col items-stretch gap-2 w-32">
             <TripStatusChip status={trip.status} />
 
-            <ActionButton
-              variant="secondary"
-              className="!w-full !rounded-full text-text hover:bg-surface-hover"
-              onClick={onEdit}
-              icon={<ICONS.edit className="h-4 w-4" />}
-              disabled={sharedWithMe}
-            >
-              {t("actions.editTrip", "Edit trip")}
-            </ActionButton>
+            {(canEdit || canCustomize || onDuplicate) && (
+              <div className="flex justify-end gap-2">
+                {canEdit && (
+                  <ActionButton
+                    onClick={onEdit}
+                    icon={<ICONS.edit />}
+                    aria-label={t("actions.editTrip", "Edit trip")}
+                    title={t("actions.editTrip", "Edit trip")}
+                    rounded
+                  />
+                )}
+
+                {canCustomize && onCustomize && (
+                  <ActionButton
+                    onClick={onCustomize}
+                    icon={<ICONS.customize />}
+                    aria-label={t("actions.customizeTrip", "Customize trip")}
+                    title={t("actions.customizeTrip", "Customize trip")}
+                    rounded
+                  />
+                )}
+
+                {onDuplicate && (
+                  <ActionButton
+                    onClick={onDuplicate}
+                    icon={<ICONS.duplicate />}
+                    aria-label={t("actions.copyTrip", "Copy trip")}
+                    title={t("actions.copyTrip", "Copy trip")}
+                    rounded
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -96,6 +129,8 @@ export function TripHeader({
           </div>
 
           <StarRatingInput value={trip.rating} readOnly />
+
+          <ParticipantsList uids={trip.participants ?? []} />
 
           <TripIndicators
             favorite={trip.favorite}

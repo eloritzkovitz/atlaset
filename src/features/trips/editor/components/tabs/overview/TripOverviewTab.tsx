@@ -6,10 +6,14 @@ import {
   InputBox,
   NumberInput,
 } from "@components";
+import type { Country } from "@features/countries/types";
 import type { Trip } from "@features/trips/core/types";
+import { CountriesSection } from "./CountriesSection";
 
 interface TripOverviewTabProps {
   trip: Trip;
+  selectedCountries: Array<Country | null>;
+  onEditCountries: () => void;
   isTentative: boolean;
   onChange: (trip: Trip) => void;
   onTentativeChange: (tentative: boolean) => void;
@@ -18,6 +22,8 @@ interface TripOverviewTabProps {
 /** Renders the overview tab for a trip. */
 export function TripOverviewTab({
   trip,
+  selectedCountries,
+  onEditCountries,
   isTentative,
   onChange,
   onTentativeChange,
@@ -27,7 +33,7 @@ export function TripOverviewTab({
   return (
     <div className="flex flex-col gap-4">
       {/* Name */}
-      <FormField label={t("fields.name")}>
+      <FormField label={t("fields.name")} required>
         <InputBox
           id="trip-name"
           name="trip-name"
@@ -45,7 +51,11 @@ export function TripOverviewTab({
 
       {/* Dates */}
       <div className="grid grid-cols-2 gap-4">
-        <FormField label={t("fields.startDate")} disabled={isTentative}>
+        <FormField
+          label={t("fields.startDate")}
+          required={!isTentative}
+          disabled={isTentative}
+        >
           <DateSelect
             value={trip.startDate ?? ""}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +77,11 @@ export function TripOverviewTab({
           />
         </FormField>
 
-        <FormField label={t("fields.endDate")} disabled={isTentative}>
+        <FormField
+          label={t("fields.endDate")}
+          required={!isTentative}
+          disabled={isTentative}
+        >
           <DateSelect
             value={trip.endDate ?? ""}
             min={trip.startDate || undefined}
@@ -118,23 +132,22 @@ export function TripOverviewTab({
         />
       </FormField>
 
-      {/* Notes */}
-      <FormField label={t("fields.notes")}>
-        <InputBox
-          id="trip-notes"
-          name="trip-notes"
-          as="textarea"
-          className="w-full min-h-48 resize-none"
-          value={trip.notes ?? ""}
-          onChange={(e: { target: { value: string } }) =>
-            onChange({
-              ...trip,
-              notes: e.target.value,
-            })
-          }
-          placeholder={t("editor.overview.notesPlaceholder")}
-        />
-      </FormField>
+      {/* Countries */}
+      <CountriesSection
+        selectedCountries={selectedCountries
+          .filter((country): country is Country => country !== null)
+          .map(({ isoCode, name }) => ({
+            isoCode,
+            name,
+          }))}
+        onEdit={onEditCountries}
+        onRemove={(isoCode) =>
+          onChange({
+            ...trip,
+            countryCodes: trip.countryCodes.filter((code) => code !== isoCode),
+          })
+        }
+      />
     </div>
   );
 }

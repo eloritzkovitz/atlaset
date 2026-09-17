@@ -13,6 +13,7 @@ export function MapLocationController({
 }: MapLocationControllerProps) {
   const map = useMap();
 
+  // Adjust the map view to focus on the selected location whenever it changes
   useEffect(() => {
     if (selectedLocationId === undefined) {
       return;
