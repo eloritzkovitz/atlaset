@@ -16,9 +16,9 @@ Data can be browsed, searched and filtered freely, viewed in `grid mode` or `lis
 
 ## **Learn more**
 
-[Progress](/docs/explore/progress.md)  
-[Discover](/docs/explore/discover.md)  
-[Languages](/docs/explore/languages.md)  
-[Currencies](/docs/explore/currencies.md)  
-[Timezones](/docs/explore/timezones.md)  
-[Achievements](/docs/explore/achievements.md)
+- [Progress](/docs/explore/progress.md)  
+- [Discover](/docs/explore/discover.md)  
+- [Languages](/docs/explore/languages.md)  
+- [Currencies](/docs/explore/currencies.md)  
+- [Timezones](/docs/explore/timezones.md)  
+- [Achievements](/docs/explore/achievements.md)

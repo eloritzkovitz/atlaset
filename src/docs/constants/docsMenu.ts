@@ -182,6 +182,12 @@ export const DOCS_GROUPS = {
         url: "/docs/trips/gallery",
       },
       {
+        label: "Sharing Trips",
+        file: "trips/sharing-trips.md",
+        icon: ICONS.sharedTrips,
+        url: "/docs/trips/sharing-trips",
+      },
+      {
         label: "Your Visits",
         file: "trips/visits.md",
         icon: ICONS.visits,

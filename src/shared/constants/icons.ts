@@ -107,6 +107,7 @@ import {
   FaUserGear,
   FaUserGroup,
   FaUserPlus,
+  FaUsers,
   FaVolumeHigh,
   FaWrench,
   FaXmark,
@@ -180,6 +181,7 @@ export const ICONS = {
   tripCancelled: FaBan,
   tripFilters: FaPercent,
   photoAlbum: FaImages,
+  sharedTrips: FaUsers,
   // Dashboard
   dashboard: DashboardIcon,
   overview: FaHouse,

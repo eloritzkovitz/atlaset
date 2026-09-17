@@ -4,6 +4,6 @@ The **`Progress`** section gives you a detailed view of your exploraion progress
 
 Countries can be searched, filtered by region/subregion/sovereignty/visit status, and viewed in `grid view` or `list view`.
 
-## **Learn More**
+## **Learn more**
 
 [Countries](/docs/atlas/countries.md)  

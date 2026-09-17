@@ -41,5 +41,5 @@ This list represents a "bucket list", where you can manage your dream destinatio
 
 ## **Learn more**
 
-[Layers](/docs/atlas/layers-markers.md)  
-[Your Visits](/docs/trips/visits.md)
+- [Layers](/docs/atlas/layers-markers.md)  
+- [Your Visits](/docs/trips/visits.md)

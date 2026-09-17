@@ -33,10 +33,10 @@ export type Trip = {
   categories?: TripCategory[];
   /** The current status of the trip. */
   status?: TripStatus;
-  /** Additional notes about the trip. */
-  notes?: string;
   /** Tags associated with the trip. */
   tags?: TripTag[];
+  /** Additional notes about the trip. */
+  notes?: string;
   /** Photos associated with the trip. */
   photos?: TripPhoto[];
   /** URL of an external photo album for the trip. */

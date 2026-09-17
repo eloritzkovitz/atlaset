@@ -14,4 +14,4 @@ Currency exchange data is provided by using the [Open Exchange Rates API](https:
 
 ## **Learn more**
 
-[Countries](/docs/atlas/countries.md)
+- [Countries](/docs/atlas/countries.md)

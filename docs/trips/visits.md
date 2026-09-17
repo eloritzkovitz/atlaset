@@ -29,6 +29,6 @@ You can also track and manage your dream destinations through the `Want to Visit
 
 ## **Learn more**
 
-[Countries](/docs/atlas/countrues.md)  
-[Country Lists](/docs/atlas/country-lists.md)  
-[Timeline](/docs/atlas/timeline.md) 
+- [Countries](/docs/atlas/countrues.md)  
+- [Country Lists](/docs/atlas/country-lists.md)  
+- [Timeline](/docs/atlas/timeline.md) 

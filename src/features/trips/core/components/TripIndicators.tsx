@@ -30,7 +30,7 @@ export function TripIndicators({
       {sharedWithMe && (
         <Tooltip content={t("indicators.sharedWithMe", "Shared with me")}>
           <span className="ms-2 inline-flex">
-            <ICONS.friends className="h-5 w-5 text-success" />
+            <ICONS.sharedTrips className="h-5 w-5 text-success" />
           </span>
         </Tooltip>
       )}
