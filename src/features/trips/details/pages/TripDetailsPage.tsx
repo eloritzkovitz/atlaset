@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Card,
   Container,
@@ -24,7 +24,12 @@ import { useTripLocations } from "../../locations/hooks/useTripLocations";
 import { useTripPermissions } from "../../sharing/hooks/useTripPermissions";
 
 export default function TripDetailsPage() {
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const returnPath =
+    typeof location.state?.from === "string" ? location.state.from : "/trips";
+
   const { trips, loading, sharedTripIds, duplicateTrip } = useTrips();
   const { t } = useTranslation("trips");
 
@@ -78,7 +83,7 @@ export default function TripDetailsPage() {
       <Container className="mt-12">
         <PageHeader
           title={t("pageTitle", "Trips")}
-          onBack={() => navigate("/trips")}
+          onBack={() => navigate(returnPath)}
         />
 
         <div className="mx-auto space-y-6">

@@ -49,6 +49,12 @@ export function PeopleSection({
     (profile) => !existingUids.has(profile.uid),
   );
 
+  const sortedPeople = [...people].sort((a, b) =>
+    a.profile.displayName.localeCompare(b.profile.displayName, undefined, {
+      sensitivity: "base",
+    }),
+  );
+
   /** Handles changing the search query and triggering a new search. */
   function handleSearchChange(value: string) {
     setQuery(value);
@@ -126,7 +132,7 @@ export function PeopleSection({
         />
       ) : (
         <div className="flex flex-col divide-y divide-border">
-          {people.map(({ profile, sharedTrip }) => {
+          {sortedPeople.map(({ profile, sharedTrip }) => {
             const isParticipant = sharedTrip.type === "participant";
 
             return (

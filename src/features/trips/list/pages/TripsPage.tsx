@@ -17,7 +17,7 @@ import { sortTrips } from "../../core/utils/tripSort";
 import { TripModal } from "../../editor/components/TripModal";
 import { useTripEditor } from "../../editor/hooks/useTripEditor";
 
-export default function TripsPage() {
+export default function TripsPage() { 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { countries } = useCountryData();
@@ -27,11 +27,17 @@ export default function TripsPage() {
 
   const [globalSearch, setGlobalSearch] = useState("");
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
-  const [viewMode, setViewMode] = useState<TripViewMode>("trips");
 
   usePageTitle(t("pageTitle", "Trips"));
 
   const pageFromUrl = Math.max(1, Number(searchParams.get("page")) || 1);
+
+  const viewMode: TripViewMode =
+    searchParams.get("view") === "shared" ? "shared" : "trips";
+
+  const tripsUrl = `/trips${
+    searchParams.toString() ? `?${searchParams.toString()}` : ""
+  }`;
 
   const visibleTrips = trips.filter((trip) => {
     if (viewMode === "shared") {
@@ -86,13 +92,19 @@ export default function TripsPage() {
   } = useTripEditor();
 
   const handleViewModeChange = (mode: TripViewMode) => {
-    setViewMode(mode);
-    setCurrentPage(1);
-
     setSearchParams((params) => {
+      if (mode === "shared") {
+        params.set("view", "shared");
+      } else {
+        params.delete("view");
+      }
+
       params.delete("page");
+
       return params;
     });
+
+    setCurrentPage(1);
   };
 
   const handleUpdateFilter = (key: string, value: unknown) => {
@@ -159,6 +171,7 @@ export default function TripsPage() {
           <>
             <TripsTable
               trips={paginatedTrips}
+              tripsUrl={tripsUrl}
               onEdit={handleEdit}
               onCustomize={handleCustomize}
               filters={filters}

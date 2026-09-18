@@ -17,6 +17,7 @@ import { ParticipantsList } from "../../../sharing/components/ParticipantsList";
 interface TripsTableRowsProps {
   trip: Trip;
   tripIdx: number;
+  tripsUrl: string;
   countryByIsoCode: { [isoCode: string]: Country };
   onEdit: (trip: Trip) => void;
   onCustomize: (trip: Trip) => void;
@@ -25,6 +26,7 @@ interface TripsTableRowsProps {
 export function TripsTableRows({
   trip,
   tripIdx,
+  tripsUrl,
   countryByIsoCode,
   onEdit,
   onCustomize,
@@ -101,6 +103,7 @@ export function TripsTableRows({
 
             <Link
               to={`/trips/${trip.id}`}
+              state={{ from: tripsUrl }}
               className="font-medium hover:!text-info"
             >
               {trip.name}
