@@ -12,10 +12,7 @@
     {
       "source": "/index.html",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
-        }
+        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
       ]
     },
     {
@@ -29,12 +26,7 @@
     },
     {
       "source": "/data/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     },
     {
       "source": "/(flags|icons|images|sounds)/(.*)",
@@ -49,6 +41,9 @@
   "rewrites": [
     { "source": "/atlas", "destination": "/index.html" },
     { "source": "/atlas/(.*)", "destination": "/index.html" },
-    { "source": "/:path*", "destination": "/index.html" }
+    {
+      "source": "/((?!assets/|data/|flags/|icons/|images/|sounds/|sw\\.js$|.*\\.[^/]+$).*)",
+      "destination": "/index.html"
+    }
   ]
 }
