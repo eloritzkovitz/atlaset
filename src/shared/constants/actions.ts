@@ -75,8 +75,8 @@ export const ACTIONS = {
   TRIP_REMOVED: 415,
 
   // Trip notifications
-  TRIP_PARTICIPANT_ADDED: 420,
-  TRIP_PARTICIPANT_REMOVED: 421,
+  TRIP_ACCESS_GRANTED: 420,
+  TRIP_ACCESS_REVOKED: 421,
 } as const;
 
 /** Represents an application-wide action identifier. */

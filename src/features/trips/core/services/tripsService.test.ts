@@ -135,7 +135,7 @@ describe("tripsService", () => {
       );
 
       expect(notificationSendMock).toHaveBeenCalledWith("friend1", {
-        action: ACTIONS.TRIP_PARTICIPANT_ADDED,
+        action: ACTIONS.TRIP_ACCESS_GRANTED,
         actor: {
           uid: freshUser.uid,
           displayName: freshUser.displayName ?? "",
@@ -153,7 +153,7 @@ describe("tripsService", () => {
       expect(result.endDate).toBe("2026-01-10");
     });
 
-    it("adds shared users without notifying them", async () => {
+    it("adds shared users and notifies them", async () => {
       await tripsService.add({
         id: "t1",
         name: "Trip",
@@ -169,7 +169,12 @@ describe("tripsService", () => {
         undefined,
       );
 
-      expect(notificationSendMock).not.toHaveBeenCalled();
+      expect(notificationSendMock).toHaveBeenCalledWith(
+        "friend1",
+        expect.objectContaining({
+          action: ACTIONS.TRIP_ACCESS_GRANTED,
+        }),
+      );
     });
 
     it("uses the supplied permission when adding a shared user", async () => {
@@ -256,7 +261,7 @@ describe("tripsService", () => {
       expect(notificationSendMock).toHaveBeenCalledWith(
         "newFriend",
         expect.objectContaining({
-          action: ACTIONS.TRIP_PARTICIPANT_ADDED,
+          action: ACTIONS.TRIP_ACCESS_GRANTED,
           details: {
             actorName: freshUser.displayName ?? "",
             itemId: "t1",
@@ -268,7 +273,7 @@ describe("tripsService", () => {
       expect(notificationSendMock).toHaveBeenCalledWith(
         "oldFriend",
         expect.objectContaining({
-          action: ACTIONS.TRIP_PARTICIPANT_REMOVED,
+          action: ACTIONS.TRIP_ACCESS_REVOKED,
           details: {
             actorName: freshUser.displayName ?? "",
             itemId: "t1",
@@ -323,7 +328,21 @@ describe("tripsService", () => {
         "t1",
       );
 
-      expect(notificationSendMock).not.toHaveBeenCalled();
+      expect(notificationSendMock).toHaveBeenCalledTimes(2);
+
+      expect(notificationSendMock).toHaveBeenCalledWith(
+        "newFriend",
+        expect.objectContaining({
+          action: ACTIONS.TRIP_ACCESS_GRANTED,
+        }),
+      );
+
+      expect(notificationSendMock).toHaveBeenCalledWith(
+        "oldFriend",
+        expect.objectContaining({
+          action: ACTIONS.TRIP_ACCESS_REVOKED,
+        }),
+      );
     });
 
     it("handles missing trip data during edit", async () => {
@@ -387,7 +406,7 @@ describe("tripsService", () => {
       );
     });
 
-    it("removes participant and shared references and notifies participants", async () => {
+    it("removes participant and shared references and notifies everyone", async () => {
       const trip = {
         id: "del",
         name: "My Trip",
@@ -415,7 +434,7 @@ describe("tripsService", () => {
       expect(notificationSendMock).toHaveBeenCalledWith(
         "friend1",
         expect.objectContaining({
-          action: ACTIONS.TRIP_PARTICIPANT_REMOVED,
+          action: ACTIONS.TRIP_ACCESS_REVOKED,
           details: {
             actorName: freshUser.displayName ?? "",
             itemId: "del",
@@ -424,7 +443,19 @@ describe("tripsService", () => {
         }),
       );
 
-      expect(notificationSendMock).toHaveBeenCalledTimes(1);
+      expect(notificationSendMock).toHaveBeenCalledWith(
+        "sharedFriend",
+        expect.objectContaining({
+          action: ACTIONS.TRIP_ACCESS_REVOKED,
+          details: {
+            actorName: freshUser.displayName ?? "",
+            itemId: "del",
+            itemName: "My Trip",
+          },
+        }),
+      );
+
+      expect(notificationSendMock).toHaveBeenCalledTimes(2);
       expect(fs.deleteDoc).toHaveBeenCalled();
     });
 

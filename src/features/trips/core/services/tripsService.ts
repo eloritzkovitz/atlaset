@@ -15,14 +15,14 @@ import type { Trip } from "../types";
 import { sharedTripsService } from "../../sharing/services/sharedTripsService";
 import type { SharedTrip, TripShares } from "../../sharing/types";
 
-// Sends a notification to a participant about a trip action.
-const sendParticipantNotification = async (
-  participantUid: string,
+// Sends a notification to a person with access to a trip about a trip action.
+const sendTripAccessNotification = async (
+  recipientUid: string,
   action: Action,
   user: NonNullable<ReturnType<typeof getCurrentUser>>,
   trip: Trip,
 ) => {
-  await notificationService.send(participantUid, {
+  await notificationService.send(recipientUid, {
     action,
     actor: {
       uid: user.uid,
@@ -77,7 +77,7 @@ async function syncTripShares(
     }
   }
 
-  return previousParticipants;
+  return previousRecipients;
 }
 
 /**
@@ -161,11 +161,13 @@ export const tripsService = {
 
     await syncTripShares({ ...trip, participants }, null, shares, user.uid);
 
-    for (const participantUid of participants) {
-      if (participantUid !== user.uid) {
-        await sendParticipantNotification(
-          participantUid,
-          ACTIONS.TRIP_PARTICIPANT_ADDED,
+    const recipients = new Set([...(trip.sharedWith ?? []), ...participants]);
+
+    for (const recipientUid of recipients) {
+      if (recipientUid !== user.uid) {
+        await sendTripAccessNotification(
+          recipientUid,
+          ACTIONS.TRIP_ACCESS_GRANTED,
           user,
           trip,
         );
@@ -268,32 +270,41 @@ export const tripsService = {
       tripForFirestore as Record<string, unknown>,
     );
 
-    const previousParticipants = await syncTripShares(
-      { ...trip, participants },
+    const currentTrip = { ...trip, participants };
+
+    const previousRecipients = await syncTripShares(
+      currentTrip,
       prevTrip,
       shares,
       user.uid,
     );
-    const added = participants.filter(
-      (uid) => uid !== user.uid && !previousParticipants.has(uid),
-    );
-    const removed = [...previousParticipants].filter(
-      (uid) => uid !== user.uid && !participants.includes(uid),
+
+    const currentRecipients = new Set([
+      ...(currentTrip.sharedWith ?? []),
+      ...(currentTrip.participants ?? []),
+    ]);
+
+    const added = [...currentRecipients].filter(
+      (uid) => uid !== user.uid && !previousRecipients.has(uid),
     );
 
-    for (const participantUid of added) {
-      await sendParticipantNotification(
-        participantUid,
-        ACTIONS.TRIP_PARTICIPANT_ADDED,
+    const removed = [...previousRecipients].filter(
+      (uid) => uid !== user.uid && !currentRecipients.has(uid),
+    );
+
+    for (const recipientUid of added) {
+      await sendTripAccessNotification(
+        recipientUid,
+        ACTIONS.TRIP_ACCESS_GRANTED,
         user,
         trip,
       );
     }
 
-    for (const participantUid of removed) {
-      await sendParticipantNotification(
-        participantUid,
-        ACTIONS.TRIP_PARTICIPANT_REMOVED,
+    for (const recipientUid of removed) {
+      await sendTripAccessNotification(
+        recipientUid,
+        ACTIONS.TRIP_ACCESS_REVOKED,
         user,
         trip,
       );
@@ -328,18 +339,16 @@ export const tripsService = {
     ]);
 
     for (const recipientUid of recipients) {
-      if (recipientUid !== user.uid) {
-        await sharedTripsService.removeReference(recipientUid, trip.id);
+      if (recipientUid === user.uid) continue;
 
-        if (trip.participants?.includes(recipientUid)) {
-          await sendParticipantNotification(
-            recipientUid,
-            ACTIONS.TRIP_PARTICIPANT_REMOVED,
-            user,
-            trip,
-          );
-        }
-      }
+      await sharedTripsService.removeReference(recipientUid, trip.id);
+
+      await sendTripAccessNotification(
+        recipientUid,
+        ACTIONS.TRIP_ACCESS_REVOKED,
+        user,
+        trip,
+      );
     }
 
     await deleteDoc(tripDocRef);
