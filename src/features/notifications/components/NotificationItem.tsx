@@ -28,8 +28,8 @@ export function NotificationItem({ notification }: NotificationItemProps) {
 
   // Determines if the notification is related to a trip action
   const isTripNotification =
-    notification.action === ACTIONS.TRIP_PARTICIPANT_ADDED ||
-    notification.action === ACTIONS.TRIP_PARTICIPANT_REMOVED;
+    notification.action === ACTIONS.TRIP_ACCESS_GRANTED ||
+    notification.action === ACTIONS.TRIP_ACCESS_REVOKED;
 
   // Fetches the profile URL for the actor if the notification is related to a profile action
   useEffect(() => {
