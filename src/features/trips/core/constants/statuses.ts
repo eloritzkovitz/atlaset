@@ -17,11 +17,7 @@ export const ALL_TRIP_STATUSES = [
   "cancelled",
 ] as const;
 
-export const FUTURE_TRIP_STATUSES: TripStatus[] = [
-  "in-progress",
-  "upcoming",
-  "planned",
-];
+export const FUTURE_TRIP_STATUSES: TripStatus[] = ["in-progress", "upcoming"];
 
 export const TRIP_STATUS_CONFIG: Record<
   TripStatus,

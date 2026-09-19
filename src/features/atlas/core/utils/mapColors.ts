@@ -42,11 +42,11 @@ export function getVisitColorsFromPalette(
     home: HOME_COUNTRY_COLOR,
     visitCounts: reversedVisitCounts,
     yearly: {
-      new: colors[0] || baseColor,
-      revisit: colors[1] || colors[0] || baseColor,
-      previous: colors[2] || colors[1] || baseColor,
-      upcoming: colors[3] || colors[2] || baseColor,
-      upcomingRevisit: colors[4] || colors[3] || baseColor,
+      new: colors[0],
+      revisit: colors[1],
+      previous: colors[2],
+      upcoming: colors[3],
+      upcomingRevisit: colors[4],
     },
   };
 }
@@ -61,10 +61,10 @@ export function mapPaletteToCountryColors(palette: { colors: string[] }) {
   return {
     HOME_COUNTRY_COLOR: HOME_COUNTRY_COLOR,
     HOVERED_COUNTRY_COLOR: colors[0] || DEFAULT_FILL_COLOR,
-    VISITED_COUNTRY_COLOR: colors[1] || colors[0] || DEFAULT_FILL_COLOR,
-    FUTURE_VISIT_COUNTRY_COLOR: colors[2] || colors[1] || DEFAULT_FILL_COLOR,
-    SELECTED_COUNTRY_COLOR: colors[3] || colors[2] || DEFAULT_FILL_COLOR,
-    HIGHLIGHTED_COUNTRY_COLOR: colors[4] || colors[3] || DEFAULT_FILL_COLOR,
+    VISITED_COUNTRY_COLOR: colors[1] || DEFAULT_FILL_COLOR,
+    FUTURE_VISIT_COUNTRY_COLOR: colors[2] || DEFAULT_FILL_COLOR,
+    SELECTED_COUNTRY_COLOR: colors[3] || DEFAULT_FILL_COLOR,
+    HIGHLIGHTED_COUNTRY_COLOR: colors[4] || DEFAULT_FILL_COLOR,
   };
 }
 
