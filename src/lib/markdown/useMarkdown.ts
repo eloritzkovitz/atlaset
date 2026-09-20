@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 interface MarkdownPlugins {
   ReactMarkdown: typeof import("react-markdown").default;
   remarkGfm: typeof import("remark-gfm").default;
+  rehypeRaw: typeof import("rehype-raw").default;
   rehypeTypeScript: typeof import("./rehypeTypeScript").rehypeTypeScript;
 }
 
@@ -19,12 +20,14 @@ export function useMarkdown() {
     Promise.all([
       import("react-markdown"),
       import("remark-gfm"),
+      import("rehype-raw"),
       import("./rehypeTypeScript"),
-    ]).then(([rm, gfm, typescript]) => {
+    ]).then(([rm, gfm, raw, typescript]) => {
       if (isMounted) {
         setPlugins({
           ReactMarkdown: rm.default,
           remarkGfm: gfm.default,
+          rehypeRaw: raw.default,
           rehypeTypeScript: typescript.rehypeTypeScript,
         });
       }

@@ -16,7 +16,7 @@ Country details include the following sections:
 - **`Relations`**: If any, including `dependencies`, `internal regions` and `disputes`.
 - **`Visits`**: See below.
 
-## **Your visits**
+## **Tracking your visits**
 
 - The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the `home country`).
 - By clicking the `Visits` tab, you can open a detailed view of your `visit history` to the specific country.
@@ -35,15 +35,19 @@ Country details include the following sections:
 - Use the `View toggle` to switch between `lists`:
   - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
 
-### **Search qualifiers**
+## **Advanced search**
 
-In addition to finding countries by name, you can search by qualifiers using this syntax in the country search bar:
+The country search bar supports a variety of `qualifiers` and `modifiers` for more precise searches. To use it, use the following syntax:
 
 ```bash
 qualifier:query modifier:query
 ```
 
-#### **Supported qualifiers**
+- Modifiers rely on certain qualifiers, as explained below.
+- You can chain multiple qualifiers and/or modifiers.
+- All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
+
+### **Search qualifiers**
 
 | Qualifier         | Type                |                            Example | Notes                                                                                                                                                                                                                                                                                                                                                                                           |
 | ----------------- | ------------------- | ---------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -70,7 +74,7 @@ qualifier:query modifier:query
 | `visited`         | boolean             |                     `visited:true` | Matches visited countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                             |
 | `wanttovisit`     | boolean             |                 `wanttovisit:true` | Matches 'want to visit' countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                     |
 
-#### **Additional modifiers**
+### **Search modifiers**
 
 | Modifier | Type                |                        Example | Notes                                                                                                                                           |
 | -------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -82,11 +86,10 @@ qualifier:query modifier:query
 | `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by year of first visit                                                                                              |
 | `last`   | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by year of last visit                                                                                               |
 
-> - All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
-> - For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`.
+> **Note:** For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`.
 
 ## **Learn more**
 
-- [Country Lists](/docs/atlas/country-lists.md)  
-- [Layers](/docs/atlas/layers-markers.md)  
-- [Your Vists](/docs/trips/visits.md)
+- [Country Lists](/docs/atlas/country-lists.md)
+- [Layers](/docs/atlas/layers-markers.md)
+- [Tracking your visits](/docs/trips/visits.md)

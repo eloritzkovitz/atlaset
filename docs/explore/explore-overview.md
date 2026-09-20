@@ -1,10 +1,10 @@
 # Explore overview
 
-The **`Explore`** lets you explore the world in an interactive way. You can either track your own exploration progress, or browse data for new information about countries or other aspects of the world.  
+The **`Explore`** section provides tools for discovering information about the world and tracking your personal exploration progress.
 
-Data can be browsed, searched and filtered freely, viewed in `grid mode` or `list mode` for convenience. 
+You can browse and search geographic and reference data, or track your progress through countries, achievements, and other exploration activities.
 
-## **Key features**
+## **Sections**
 
 - **`Progress`:** Track your world exploration.
 - **`Discover`:** Learn more about countries and various aspects of the world.
@@ -14,11 +14,13 @@ Data can be browsed, searched and filtered freely, viewed in `grid mode` or `lis
 - **`Timezones`:** See detailed information about timezones.
 - **`Achievements`:** Track your personal travel with milestones and goals.
 
+Data can be searched and filtered where applicable, and supported lists can be displayed in either `grid` or `list` mode.
+
 ## **Learn more**
 
-- [Progress](/docs/explore/progress.md)  
-- [Discover](/docs/explore/discover.md)  
-- [Languages](/docs/explore/languages.md)  
-- [Currencies](/docs/explore/currencies.md)  
-- [Timezones](/docs/explore/timezones.md)  
+- [Progress](/docs/explore/progress.md)
+- [Discover](/docs/explore/discover.md)
+- [Languages](/docs/explore/languages.md)
+- [Currencies](/docs/explore/currencies.md)
+- [Timezones](/docs/explore/timezones.md)
 - [Achievements](/docs/explore/achievements.md)

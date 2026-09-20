@@ -21,11 +21,11 @@ Download your `layers` and/or `markers` as a `JSON` file for backup or sharing. 
 
 ## **Sharing maps**
 
-Atlaset supports sharing your `maps` (`layers` and `markers`) via a special `URL`:
+Atlaset supports sharing your `maps` (`visited countries`, `layers` and/or `markers`) via a special `URL`:
 
 - Use the **`Share`** feature to generate a special `URL` containing your `map data`.
 - Share the link with `friends`—anyone with the link can view your `map` in read-only mode.
-- You can choose to include `layers`, `markers`, `map name` and `sharer info`.
+- You can choose to include `visited countries`, `layers`, `markers`, `map name` and `sharer info`.
 
 ## **Embedding maps**
 
@@ -40,8 +40,8 @@ Atlaset supports embedding `maps` directly into your website or blog using an HT
 - Shared `maps` are independent of your `account` and do not expose your private data.
 - You control what is included in the shared `map`.
 
-> **Tips:**
->
-> - Export your `data` regularly for backup.
-> - Use `sharing` and `embedding` to showcase your travels or collaborate with others.
-> - You can import exported `JSON` files back into the app at any time!
+### **Tips**
+
+- Export your `data` regularly for backup.
+- Use `sharing` and `embedding` to showcase your travels or collaborate with others.
+- You can import exported `JSON` files back into the app at any time!

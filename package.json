@@ -48,6 +48,7 @@
     "react-select": "5.10.2",
     "recharts": "3.10.1",
     "refractor": "5.0.0",
+    "rehype-raw": "7.0.0",
     "remark-gfm": "4.0.1",
     "topojson-client": "3.1.0"
   },
@@ -68,8 +69,8 @@
     "@vitest/coverage-v8": "5.0.1",
     "autoprefixer": "10.6.1",
     "cypress": "16.1.0",
-    "dotenv": "17.4.2",
-    "eslint": "10.10.0",
+    "dotenv": "18.0.1",
+    "eslint": "10.11.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.7",
     "fake-indexeddb": "6.2.5",

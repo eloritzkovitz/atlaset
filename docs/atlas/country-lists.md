@@ -12,7 +12,7 @@ You can create and manage your own custom `lists`, which allow quick, dynamic fi
 
 Updating a linked list will also update the relevant content in the layer, allowing for easier management.
 
-## **Tracking Lists**
+## **Tracking lists**
 
 In addition to the custom `user-made lists`, there are additional `tracking lists`, tracking your past and future visits.
 
@@ -24,7 +24,7 @@ As they are automated, these lists behave differently than user-made lists:
 - Updating countries in the lists will have an immediate effect.
 - The lists' names are not editable.
 
-### **The `Visited` List**
+### **The `Visited` list**
 
 This list represents countries you've visited, affecting many aspects of the application's features.
 
@@ -32,7 +32,7 @@ This list represents countries you've visited, affecting many aspects of the app
 - Trip-based `countries` are **not removable**, as they are related to your `trips`.
 - While manually added countries count as visited, unlike trip-based countries they **will not affect your timeline or statistics**.
 
-### **The `Want to Visit` List**
+### **The `Want to Visit` list**
 
 This list represents a "bucket list", where you can manage your dream destinations.
 
@@ -42,4 +42,4 @@ This list represents a "bucket list", where you can manage your dream destinatio
 ## **Learn more**
 
 - [Layers](/docs/atlas/layers-markers.md)  
-- [Your Visits](/docs/trips/visits.md)
+- [Tracking your visits](/docs/trips/visits.md)

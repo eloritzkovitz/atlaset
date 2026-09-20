@@ -1,4 +1,4 @@
-# Your Visits
+# Tracking Your Visits
 
 In Atlaset, your `visits` determine which countries you visited. Many of the application's features rely on visits - such as the `map`, `achievements`, `statistics` and more.
 
