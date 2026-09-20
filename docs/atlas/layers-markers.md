@@ -1,12 +1,12 @@
 # Layers & markers
 
-Atlaset lets you customize your map with `layers` (highlighting groups of `countries`) and `markers` (custom points with details). Both can be managed, exported, imported and shared easily either through the app or from `JSON` files.
+Atlaset lets you customize your map with layers (highlighting groups of countries) and markers (custom points with details). Both can be managed, exported, imported and shared easily either through the app or from `JSON` files.
 
 ## **Layers**
 
-`Countries` are stored in `layers` by their `ISO 3166-1 code`, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
+Countries are stored in layers by their `ISO 3166-1 code`, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
-You can open the `layers panel` from the `map toolbar` or by pressing the <kbd>L</kbd> key.
+You can open the `Layers` panel from the `map toolbar` or by pressing the <kbd>L</kbd> key.
 
 **Layer colors** use `RGBA` or `8-digit hex` color formats to support optional alpha transparency. You can find the correct value by using [this tool](https://rgbacolorpicker.com/).
 
@@ -54,9 +54,9 @@ You can open the `layers panel` from the `map toolbar` or by pressing the <kbd>L
 
 ## **Markers**
 
-`Markers` are custom pins placed on the map by clicking on a `country`. Each `country` can have up to one `marker` at a time.
+`Markers` are custom pins placed on the map by clicking on a country. Each country can have up to one marker at a time.
 
-You can open the `markers panel` from the `map toolbar` or by pressing the <kbd>M</kbd> key.
+You can open the `Markers` panel from the `map toolbar` or by pressing the <kbd>M</kbd> key.
 
 #### Marker JSON Fields
 
@@ -74,6 +74,6 @@ Markers can be added and managed the same way as layers, but with their own resp
 
 ## **Importing/exporting map data**
 
-- `Layers` and `markers` can be easily imported from and exported to `JSON` files.
+- `Layers` and `Markers` can be easily imported from and exported to `JSON` files.
 - Use this to back up your data or share it with others.
-- You can also download the entire `map data` through the `Export` panel, `"Download as JSON"`.
+- You can also download the entire map data through the `Export` panel, `"Download as JSON"`.

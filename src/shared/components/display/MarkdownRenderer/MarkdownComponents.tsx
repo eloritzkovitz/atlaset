@@ -57,7 +57,7 @@ export function getBaseMarkdownComponents(
           <>
             {!isFirst && <Separator className="my-6" />}
             <h2
-              className="mt-8 mb-2 text-3xl text-action-text-hover"
+              className="mt-10 mb-8 text-3xl text-action-text-hover"
               {...rest}
             />
           </>

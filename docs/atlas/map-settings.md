@@ -1,33 +1,33 @@
 # Map settings
 
-In the `map settings`, you can configure the apearance of your map. You can control various settings, such as map projection, map borders and colors.
+In the `Map Settings`, you can configure the apearance of your map. You can control various settings, such as map projection, map borders and colors.
 
-You can open the map settings panel from the `map toolbar` or by pressing the <kbd>S</kbd> key.
+You can open the `Map Settings` panel from the `map toolbar` or by pressing the <kbd>S</kbd> key.
 
 ## **Projection**
 
-**`Projection`** controls how the globe surface is represented on a two-dimensional plane. In Atlaset, there are three supported projections: `Natural Earth`, `Equal Earth` and `Mercator`.
+`Projection` controls how the globe surface is represented on a two-dimensional plane. In Atlaset, there are three supported projections: `Natural Earth`, `Equal Earth` and `Mercator`.
 
 While `Mercator` is still the most commonly used projection in maps, it distorts regions further from the equator. Therefore, `Natural Earth` was chosen as the default option, as it provides a more accurate and pleasant display.
 
 ## **Overlays**
 
-With the `overlays` section, you can toggle various overlays on top of the map:
+With the `Overlays` section, you can toggle various overlays on top of the map:
 
 - **`Show small country overlays`** will show circles on top of small countries (with a land area smaller than 10,000 km²)
 
 ### **Tracking layers**
 
-- **`Show home country`** will visually color the user's `home country`. You can set it in the `user settings`.
-- **`Show visited countries`** will color the user's `visited countries`.
-- **`Show upcoming new visits`** will highlight any `upcoming new visits`, complimenting the visited countries layer. It is based on the user's trip data, counting upcoming trips to unvisited countries.
-- **`Show 'want to visit''`** will color the user's `'want to visit' countries`.
+- **`Show home country`** will visually color the user's home country. You can set it in the `User Settings`.
+- **`Show visited countries`** will color the user's visited countries.
+- **`Show upcoming new visits`** will highlight any upcoming new visits, complimenting the visited countries layer. It is based on the user's trip data, counting upcoming trips to unvisited countries.
+- **`Show 'Want to Visit'`** will color the user's `Want to Visit` countries.
 
 By default, all the tracking layer options are disabled. You can enable or disable them by checking or unchecking their respective boxes.
 
 ## **Colors**
 
-With the `colors` section, you can control how countries are visually distinguished on the map:
+With the `Colors` section, you can control how countries are visually distinguished on the map:
 
 ### **Rules & modifiers**
 
@@ -49,27 +49,27 @@ Color palettes are grouped into various categories:
 
 #### **Standard**
 
-The `standard` palette affects the appearance of the main map:
+The `Standard` palette affects the appearance of the main map:
 
-| Country State       | Palette Index | Description                                         |
-| ------------------- | ------------- | --------------------------------------------------- |
-| Home country        | —             | Uses a fixed color, not from the palette            |
-| Hovered country     | 0             | Shown when hovering over a country                  |
-| Visited country     | 1             | Controls the color of the `visited countries` layer |
-| Selected country    | 2             | Shown when selecting a country                      |
-| Upcoming new visit  | 3             | Controls the color of `upcoming new visits`         |
-| Highlighted country | 4             | Shown when highlighting a country                   |
+| Country State       | Palette Index | Description                                       |
+| ------------------- | ------------- | ------------------------------------------------- |
+| Home country        | —             | Uses a fixed color, not from the palette          |
+| Hovered country     | 0             | Shown when hovering over a country                |
+| Visited country     | 1             | Controls the color of the visited countries layer |
+| Selected country    | 2             | Shown when selecting a country                    |
+| Upcoming new visit  | 3             | Controls the color of upcoming new visits         |
+| Highlighted country | 4             | Shown when highlighting a country                 |
 
 #### **Atlas**
 
-The `atlas` palette affects the appearance of the atlas map when in `Atlas Mode`. Coloring is based on the **four color theorem**, where no more than four colors are required to color all countries on the map while no country will have an adjacent country of the same color. The coloring logic also takes proximity into account (for cases such as island neighbors).
+The `Atlas` palette affects the appearance of the atlas map when in `Atlas Mode`. Coloring is based on the **four color theorem**, where no more than four colors are required to color all countries on the map while no country will have an adjacent country of the same color. The coloring logic also takes proximity into account (for cases such as island neighbors).
 
 #### **Timeline Mode**
 
-When `Timeline Mode` is active, `countries` are colored according to the selected `palette` and the `timeline`’s selected mode:
+When `Timeline Mode` is active, countries are colored according to the selected `palette` and the `Timeline`’s selected mode:
 
-- In `Cumulative mode`, `countries` are colored by their `visit count`, ordered from highest to lowest.
-- In `Yearly mode`, the color will depend on the `visit status` for the year:
+- In `Cumulative mode`, countries are colored by their visit count, ordered from highest to lowest.
+- In `Yearly mode`, the color will depend on the visit status for the year:
 
 | Status             | Palette Index | Description                                    |
 | ------------------ | ------------- | ---------------------------------------------- |

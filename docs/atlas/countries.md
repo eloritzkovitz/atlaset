@@ -1,12 +1,12 @@
 # Countries
 
-Atlaset provides an interactive world map to discover `countries`, view detailed country information and track your `visits`. Use `search`, `filters`, `lists` and `layers` to find, organize and manage your countries and travel data.
+Atlaset provides an interactive world map to discover `countries`, view detailed country information and track your visits. Use search, filters, lists and layers to find, organize and manage your countries and travel data.
 
 ## **Browsing countries**
 
-- Use the `map` or `country list` to browse all available `countries`.
-- Click on a `country` on the `map` or the `country list` to open a detailed view with information.
-- Use the `search bar` to quickly find a `country` by name. For advanced searching, see below.
+- Use the map or country list to browse all available countries.
+- Click on a country on the map or the country list to open a detailed view with information.
+- Use the `search bar` to quickly find a country by name. For advanced searching, see below.
 
 ## **Country details**
 
@@ -19,8 +19,8 @@ Country details include the following sections:
 ## **Tracking your visits**
 
 - The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the `home country`).
-- By clicking the `Visits` tab, you can open a detailed view of your `visit history` to the specific country.
-- Data is based on your `trip data`, or by manually adding countries through the list.
+- By clicking the `Visits` tab, you can open a detailed view of your visit history to the specific country.
+- Data is based on your trip data, or by manually adding countries through the list.
 
 > For a full breakdown of how tracking methods affect your analytics, timeline and dashboard stats, see [here](/docs/trips/visits.md).
 

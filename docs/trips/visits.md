@@ -4,22 +4,22 @@ In Atlaset, your `visits` determine which countries you visited. Many of the app
 
 `Visited countries` are determined by two methods:
 
-- **`Implicit (trip-based)`**: Any country found in a completed trip will be counted as a visited country.
-- **`Explicit (direct-entry)`**: Any country manually added through the `Visited` list will be counted as a visited country.
+- **Implicit (trip-based)**: Any country found in a completed trip will be counted as a visited country.
+- **Explicit (direct-entry)**: Any country manually added through the `Visited` list will be counted as a visited country.
 
 ## **Implicit (Trip-Based)**
 
-Automatically generated from your completed `trips`, this method is the recommended one to follow in order to better track your `visits` and enjoy the full experience.
+Automatically generated from your completed trips, this method is the recommended one to follow in order to better track your visits and enjoy the full experience.
 
-Since trip-based `countries` are computed from `trips`, this allows several benefits:
+Since trip-based countries are computed from trips, this allows several benefits:
 
-- **`Advanced filtering`**: You can filter your trip-based `visited countries` by additional trip-related parameters.
-- **`Timeline`**: In order to track your visits in `timeline mode`, they will need to be associated with `trips`.
-- **`Statistics`**: Visit statistics rely on `trips`.
+- **Advanced filtering**: You can filter your trip-based `visited countries` by additional trip-related parameters.
+- **Timeline**: In order to track your visits in `timeline mode`, they will need to be associated with trips.
+- **Statistics**: Visit statistics rely on trips.
 
 ## **Explicit (Direct-entry)**
 
-Whilst a much quicker and simpler method to use, manually added `countries` do not attribute towards statistics, but work elsewhere otherwise.
+Whilst a much quicker and simpler method to use, manually added countries do not attribute towards statistics, but work elsewhere otherwise.
 
 In order to manually add or remove countries, simply double-click the `Visited` toggle in the `Countries panel` and edit the list.
 
@@ -29,6 +29,6 @@ You can also track and manage your dream destinations through the `Want to Visit
 
 ## **Learn more**
 
-- [Countries](/docs/atlas/countrues.md)  
+- [Countries](/docs/atlas/countries.md)  
 - [Country Lists](/docs/atlas/country-lists.md)  
 - [Timeline](/docs/atlas/timeline.md) 

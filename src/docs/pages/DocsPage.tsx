@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarLayout } from "@app/layouts/app/SidebarLayout";
-import { MarkdownFileRenderer } from "@components";
+import { Container, MarkdownFileRenderer } from "@components";
 import { usePageTitle } from "@hooks";
 import { useMarkdownFile } from "@lib/markdown";
 import { DocsNotFound } from "../components/DocsNotFound";
@@ -45,7 +45,7 @@ export default function DocsPage() {
           ) : undefined
         }
       >
-        <div className="w-full max-w-2xl">
+        <Container>
           {doc ? (
             <MarkdownFileRenderer
               content={content}
@@ -59,7 +59,7 @@ export default function DocsPage() {
           ) : (
             <WelcomeDocsSection />
           )}
-        </div>
+        </Container>
       </SidebarLayout>
     </div>
   );

@@ -1,8 +1,8 @@
-# Saved maps
+# Saved Maps
 
 `Saved maps` are custom map snapshots that store your layers and markers separately from your main map data. They are fully independent, so changes to saved maps do not affect your main layers or markers and vice versa.
 
-You can open the `saved maps panel` from the `map toolbar` or by pressing the <kbd>B</kbd> key.
+You can open the `Saved Maps` panel from the `map toolbar` or by pressing the <kbd>B</kbd> key.
 
 ## **Adding saved maps**
 
@@ -18,7 +18,7 @@ You can also save shared maps by clicking the `Save map` in the `Saved Maps` pan
 
 ## **Edit Mode**
 
-By clicking `View`, a saved map will be loaded into your map component in `Edit Mode`, replacing the main content. When in `Edit Mode`, you can update a saved map's `layers` and `markers` through their respective panels in the `map toolbar` without having to recreate anything.
+By clicking `View`, a saved map will be loaded into your map component in `Edit Mode`, replacing the main content. When in `Edit Mode`, you can update a saved map's layers and markers through their respective panels in the `map toolbar` without having to recreate anything.
 
 ## **Learn more**
 

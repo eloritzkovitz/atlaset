@@ -8,7 +8,7 @@ Currencies can be searched and filtered by name and code.
 
 The **`Currency Exchange`** widget allows you to exchange rates between two currencies. You can do so by selecting your desired currencies and pressing the `Convert` button.
 
-By Default, the selected values will be your `home country`'s currency to USD.
+By Default, the selected values will be your home country's currency to USD.
 
 Currency exchange data is provided by using the [Open Exchange Rates API](https://openexchangerates.org).
 

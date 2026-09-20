@@ -188,7 +188,7 @@ export const DOCS_GROUPS = {
         url: "/docs/trips/sharing-trips",
       },
       {
-        label: "Your Visits",
+        label: "Tracking Your Visits",
         file: "trips/visits.md",
         icon: ICONS.visits,
         url: "/docs/trips/visits",

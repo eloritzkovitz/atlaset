@@ -4,7 +4,7 @@ The **`Discover`** section lets you explore the world and browse the application
 
 ## **Country of the Day**
 
-Every day, a new `country` will be featured, allowing you quick exploration. Otherwise, you can try a random country and find out something surprising!
+Every day, a new country will be featured, allowing you quick exploration. Otherwise, you can try a random country and find out something surprising!
 
 ## **Country facts**
 

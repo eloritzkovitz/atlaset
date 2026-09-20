@@ -1,10 +1,10 @@
 # The map
 
-The main component of the `atlas` is the **`map`** - a full, interactive world map showing all the `countries`, along with user-defined `layers` and `markers`.
+The main component of the atlas is the map - a full, interactive world map showing all the countries, along with user-defined layers and markers.
 
 ## **Map modes**
 
-Map controls and behavior are dependent on the current `map mode` - supporting the following modes:
+Map controls and behavior are dependent on the current map mode - supporting the following modes:
 
 - **`Normal`:** The default mode, showing visited countries and the main layers and markers.
 - **`Timeline`:** Used in `timeline mode`. Highlights countries based on trip/visit data.
@@ -15,11 +15,11 @@ Map controls and behavior are dependent on the current `map mode` - supporting t
 
 ### **The map area**
 
-The main map area includes interactable countries. You can hover over a `country` to see its name and clicking on it will open a modal showing country details and `visit history`.
+The main map area includes interactable countries. You can hover over a country to see its name and clicking on it will open a modal showing country details and `Visit History`.
 
 ### **The map toolbar**
 
-The main control housing the map actions, the `toolbar` is on the bottom right corner of the screen. Main actions include:
+The main control housing the map actions, the `map toolbar` is on the bottom-right corner of the screen. Main actions include:
 
 - **`Countries (C)`:** Browse, filter and view countries
 - **`Layers (L)`:** Manage layers
@@ -41,7 +41,7 @@ Below the map toolbar you will find a bar displaying the current zoom level, coo
 
 ## **Customizing appearance**
 
-You can customize the map's appearance with the `map settings`. For more information on how to tweak your map to your likeness, continue to the next section.
+You can customize the map's appearance with the `Map Settings`. For more information on how to tweak your map to your likeness, continue to the next section.
 
 ## **Learn more**
 
