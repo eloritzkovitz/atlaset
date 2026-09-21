@@ -30,7 +30,7 @@ export function AchievementListGroup({
               key={achievement.id}
               icon={
                 completed ? (
-                  <ICONS.selected className="text-success" />
+                  <ICONS.check className="text-success" />
                 ) : (
                   <span
                     style={{ width: "1em", display: "inline-block" }}

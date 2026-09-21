@@ -97,7 +97,7 @@ export function TripPhotoActions({
           isRemoving ? (
             <FaSpinner className="h-4 w-4 animate-spin" aria-hidden="true" />
           ) : confirmingDelete ? (
-            <ICONS.selected className="h-4 w-4" aria-hidden="true" />
+            <ICONS.check className="h-4 w-4" aria-hidden="true" />
           ) : (
             <ICONS.remove className="h-4 w-4" aria-hidden="true" />
           )

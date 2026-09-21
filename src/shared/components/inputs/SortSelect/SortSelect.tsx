@@ -97,7 +97,7 @@ export function SortSelect<K extends string>({
                     <o.icon />
                   ) : null
                 ) : o.value === selected ? (
-                  <ICONS.selected className="text-green-500" />
+                  <ICONS.check className="text-green-500" />
                 ) : (
                   <span className="w-4 inline-block" />
                 )}

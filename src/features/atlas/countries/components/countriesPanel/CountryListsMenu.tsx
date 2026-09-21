@@ -48,7 +48,7 @@ export function CountryListsMenu({
               }}
             >
               <MenuButton
-                icon={isAlreadyAdded ? <ICONS.selected /> : <ICONS.add />}
+                icon={isAlreadyAdded ? <ICONS.check /> : <ICONS.add />}
                 disabled={isAlreadyAdded}
                 className={`w-full text-sm text-left truncate justify-start ${
                   isAlreadyAdded ? "opacity-50 cursor-not-allowed" : ""

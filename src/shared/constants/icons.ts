@@ -262,7 +262,7 @@ export const ICONS = {
   shuffle: FaShuffle,
   poweroff: FaPowerOff,
   close: FaXmark,
-  selected: FaCheck,
+  check: FaCheck,
   more: FaEllipsisVertical,
   // Docs
   getStarted: FaRocket,
