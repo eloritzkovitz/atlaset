@@ -10,6 +10,6 @@ This script runs all fetch scripts in `scripts/data/` to ensure your static asse
 
 > In production, the prebuild script is part of the CI process that is used by GitHub Actions, ensuring each build fetches the most recent data from the backend data server.
 
-## **Refreshing data**
+## Refreshing data
 
 When running the app in `development`, you can use the `refresh data` action buttons to quickly refresh the data without having to rerun the app. This allows you to quickly test changes to the JSON files.

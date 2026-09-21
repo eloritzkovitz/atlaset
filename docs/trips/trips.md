@@ -20,11 +20,11 @@ In Atlaset, `trips` let you record, organize and analyze your travels. Each `tri
 | `tags`         | `string[]` | _(optional)_ Tags for the `trip`. Each must be one of the supported tags. See below.      |
 | `notes`        | `string`   | _(optional)_ Notes                                                                        |
 
-### **Tentative trips**
+### Tentative trips
 
 If a `trip` has no `startDate` or `endDate`, it is considered _tentative_. In the UI, tentative trips will display `TBD` for dates and duration.
 
-### **Trip status**
+### Trip status
 
 A `trip`'s `status` is based on `startDate` and is calculated according to the following guidelines:
 
@@ -44,9 +44,9 @@ The user can also manually control a trip's status:
 > When importing `trips` with `categories`, the `category` and each `tag` must match one of the supported values listed above. Invalid values will be ignored or may cause an error.  
 > See the full list of [supported categories and tags](/docs/trips/categories-and-tags.html).
 
-## **Adding trips**
+## Adding trips
 
-### **1. From JSON/CSV files**
+### 1. From JSON/CSV files
 
 - You can import `trips` from `JSON` files or from `CSV` files:
 
@@ -73,12 +73,12 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 [Download a full example trip JSON](/docs/examples/trips.json)  
 [Download a full example trip CSV](/docs/examples/trips.csv)
 
-### **2. Via the UI**
+### 2. Via the UI
 
 - Use the `Trips` panel to create, edit, or delete `trips`.
 - Fill in the `trip name`, select `countries` (by `ISO code`), set `dates`, choose a `category` and add `notes` if desired.
 
-## **Viewing trip details**
+## Viewing trip details
 
 Open a trip from the `Trips` panel to view its details page. The page brings together the main information and content for the trip:
 
@@ -90,17 +90,17 @@ Open a trip from the `Trips` panel to view its details page. The page brings tog
 - `Notes` shows the trip's additional notes.
 - Use the edit action in the trip header to update the trip.
 
-## **Importing/exporting trips**
+## Importing/exporting trips
 
 - `Trips` can be easily imported from and exported to `JSON` or `CSV` files.
 - Use this to back up your `trips` or share them with others.
 
-## **Timeline & layers integration**
+## Timeline & layers integration
 
 - Your `trips` power the `Visited Countries` layer and `timeline` features.
 - Changes to your `trips` are reflected in `layers` and `timeline` coloring automatically.
 
-## **Learn more**
+## Learn more
 
 - [Trip destinations](/docs/trips/destinations.md)  
 - [Trip gallery](/docs/trips/gallery.md)  

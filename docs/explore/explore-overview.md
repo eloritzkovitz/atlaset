@@ -1,10 +1,10 @@
 # Explore overview
 
-The **`Explore`** section provides tools for discovering information about the world and tracking your personal exploration progress.
+The `Explore` section provides tools for discovering information about the world and tracking your personal exploration progress.
 
 You can browse and search geographic and reference data, or track your progress through countries, achievements, and other exploration activities.
 
-## **Sections**
+## Sections
 
 - **`Progress`:** Track your world exploration.
 - **`Discover`:** Learn more about countries and various aspects of the world.
@@ -16,7 +16,7 @@ You can browse and search geographic and reference data, or track your progress 
 
 Data can be searched and filtered where applicable, and supported lists can be displayed in either `grid` or `list` mode.
 
-## **Learn more**
+## Learn more
 
 - [Progress](/docs/explore/progress.md)
 - [Discover](/docs/explore/discover.md)

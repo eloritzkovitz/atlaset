@@ -1,23 +1,23 @@
 # The map
 
-The main component of the atlas is the map - a full, interactive world map showing all the countries, along with user-defined layers and markers.
+The main component of the atlas is the map — a full, interactive world map showing all countries, along with user-defined layers and markers.
 
-## **Map modes**
+## Map modes
 
 Map controls and behavior are dependent on the current map mode - supporting the following modes:
 
 - **`Normal`:** The default mode, showing visited countries and the main layers and markers.
 - **`Timeline`:** Used in `timeline mode`. Highlights countries based on trip/visit data.
 - **`Readonly`:** Used for viewing `shared maps`. Editing is disabled in readonly mode.
-- **`Edit`:** Used for viewing and editing `saved maps`.
+- **`Edit`:** Used for viewing and editing `Saved Maps`.
 
-## **Using the map**
+## Using the map
 
-### **The map area**
+### The map area
 
 The main map area includes interactable countries. You can hover over a country to see its name and clicking on it will open a modal showing country details and `Visit History`.
 
-### **The map toolbar**
+### The map toolbar
 
 The main control housing the map actions, the `map toolbar` is on the bottom-right corner of the screen. Main actions include:
 
@@ -31,20 +31,16 @@ The main control housing the map actions, the `map toolbar` is on the bottom-rig
 - **`Export (E)`:** Download, share or embed maps
 - **`Settings (S)`:** Configure map settings
 
-### **Zoom controls**
+### Zoom controls
 
 To the right of the actions, you will find the zoom controls. Use them to zoom in or out, or reset the map view.
 
-### **More information**
+### Map footer
 
-Below the map toolbar you will find a bar displaying the current zoom level, coordinates and the map scale.
+Below the map toolbar you will find a bar displaying your visited-country progress and the current zoom level.
 
-## **Customizing appearance**
+## Learn more
 
-You can customize the map's appearance with the `Map Settings`. For more information on how to tweak your map to your likeness, continue to the next section.
-
-## **Learn more**
-
-- [Map Settings](/docs/atlas/map-settings.md)  
+- [Customizing your map](/docs/atlas/customizing-your-map.md)  
 - [Saved Maps](/docs/atlas/saved-maps.md)  
-- [Exporting & Sharing Maps](/docs/atlas/export.md)
+- [Exporting & sharing maps](/docs/atlas/export.md)

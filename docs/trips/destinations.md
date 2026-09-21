@@ -2,14 +2,14 @@
 
 Trips can include specific `destinations` in addition to their selected countries.
 
-## **Selecting destinations**
+## Selecting destinations
 
 - Open the `Destinations` tab when creating or editing a trip.
 - Search for `locations` within the trip's selected countries.
 - A trip stores selected locations by their `GeoNames` IDs in `locationIds`.
 - Countries and locations are managed separately, so adding a location does not automatically add its country to the trip.
 
-## **Viewing destinations**
+## Viewing destinations
 
 On the trip details page, locations are grouped by country and administrative region. Locations without an administrative region are listed directly under their country.
 

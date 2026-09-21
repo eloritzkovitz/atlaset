@@ -2,7 +2,7 @@
 
 Atlaset lets you customize your map with layers (highlighting groups of countries) and markers (custom points with details). Both can be managed, exported, imported and shared easily either through the app or from `JSON` files.
 
-## **Layers**
+## Layers
 
 Countries are stored in layers by their `ISO 3166-1 code`, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
@@ -12,17 +12,18 @@ You can open the `Layers` panel from the `map toolbar` or by pressing the <kbd>L
 
 #### Layer JSON fields
 
-| Field          | Type       | Description                                                                                |
-| -------------- | ---------- | ------------------------------------------------------------------------------------------ |
-| `id`           | `string`   | Unique identifier for the layers (_optional_, generated if missing)                        |
-| `name`         | `string`   | Display name for the layers                                                                |
-| `color`        | `string`   | RGBA or hex color for the layers (RGBA will be converted to hex on import)                 |
-| `filterLabels` | `map`      | Customized filter labels (_optional_, replacing labels for `All`/`Include Only`/`Exclude`) |
-| `visible`      | `boolean`  | Whether the layers is visible by default                                                   |
-| `countries`    | `string[]` | Array of ISO 3166-1 country codes                                                          |
-| `listId`       | `string`   | Optional id of a linked list (sharing `name` and `countries`)                              |
+| Field          | Type       | Description                                                                                  |
+| -------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| `id`           | `string`   | Unique identifier for the layers. Generated if missing. _(optional.)_                        |
+| `name`         | `string`   | Display name for the layers                                                                  |
+| `color`        | `string`   | RGBA or hex color for the layers (RGBA will be converted to hex on import)                   |
+| `countries`    | `string[]` | Array of ISO 3166-1 country codes                                                            |
+| `filterLabels` | `map`      | Customized filter labels, replacing labels for `All`/`Include Only`/`Exclude`. _(optional.)_ |
+| `visible`      | `boolean`  | Whether the layers is visible by default                                                     |
+| `order`        | `number`   | Display order for the layer                                                                  |
+| `listId`       | `string`   | ID of a linked list (sharing `name` and `countries`). _(optional.)_                          |
 
-### **Adding layers**
+### Adding layers
 
 #### 1. From JSON files
 
@@ -52,7 +53,7 @@ You can open the `Layers` panel from the `map toolbar` or by pressing the <kbd>L
 - Fill the `countries` array with `ISO 3166-1 codes` for the relevant countries.
 - You can also change the layer's color by changing the `RGBA` value.
 
-## **Markers**
+## Markers
 
 `Markers` are custom pins placed on the map by clicking on a country. Each country can have up to one marker at a time.
 
@@ -68,11 +69,11 @@ You can open the `Markers` panel from the `map toolbar` or by pressing the <kbd>
 | `color`   | `string` | Marker color in hex or RGBA format (_optional_)                     |
 | `notes`   | `string` | Additional information about the marker (_optional_)                |
 
-### **Adding markers**
+### Adding markers
 
 Markers can be added and managed the same way as layers, but with their own respective fields (if importing from JSON).
 
-## **Importing/exporting map data**
+## Importing/exporting map data
 
 - `Layers` and `Markers` can be easily imported from and exported to `JSON` files.
 - Use this to back up your data or share it with others.

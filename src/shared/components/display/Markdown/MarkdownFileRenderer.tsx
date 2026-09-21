@@ -32,14 +32,15 @@ export function MarkdownFileRenderer({
     );
   }
 
-  const { ReactMarkdown, remarkGfm, rehypeRaw, rehypeTypeScript } = plugins;
+  const { ReactMarkdown, remarkGfm, rehypeRaw, rehypeSlug, rehypeSyntaxHighlight } =
+    plugins;
 
   return (
     <div className="prose prose-slate dark:prose-invert mx-auto mb-30 w-full max-w-full px-2 sm:px-4 md:px-0 text-sm sm:text-base">
       {title && <h1>{title}</h1>}
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, rehypeTypeScript]}
+        rehypePlugins={[rehypeRaw, rehypeSlug, rehypeSyntaxHighlight]}
         components={components}
       >
         {content}

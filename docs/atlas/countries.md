@@ -2,13 +2,13 @@
 
 Atlaset provides an interactive world map to discover `countries`, view detailed country information and track your visits. Use search, filters, lists and layers to find, organize and manage your countries and travel data.
 
-## **Browsing countries**
+## Browsing countries
 
 - Use the map or country list to browse all available countries.
 - Click on a country on the map or the country list to open a detailed view with information.
 - Use the `search bar` to quickly find a country by name. For advanced searching, see below.
 
-## **Country details**
+## Country details
 
 Country details include the following sections:
 
@@ -16,7 +16,7 @@ Country details include the following sections:
 - **`Relations`**: If any, including `dependencies`, `internal regions` and `disputes`.
 - **`Visits`**: See below.
 
-## **Tracking your visits**
+## Tracking your visits
 
 - The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the `home country`).
 - By clicking the `Visits` tab, you can open a detailed view of your visit history to the specific country.
@@ -24,7 +24,7 @@ Country details include the following sections:
 
 > For a full breakdown of how tracking methods affect your analytics, timeline and dashboard stats, see [here](/docs/trips/visits.md).
 
-## **Filtering & sorting**
+## Filtering & sorting
 
 - Use the `Filters` panel to:
   - Filter by `region`, `subregion`, `sovereignty`, `visit status` or custom criteria
@@ -35,7 +35,7 @@ Country details include the following sections:
 - Use the `View toggle` to switch between `lists`:
   - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
 
-## **Advanced search**
+## Advanced search
 
 The country search bar supports a variety of `qualifiers` and `modifiers` for more precise searches. To use it, use the following syntax:
 
@@ -47,7 +47,7 @@ qualifier:query modifier:query
 - You can chain multiple qualifiers and/or modifiers.
 - All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
 
-### **Search qualifiers**
+### Search qualifiers
 
 | Qualifier         | Type                |                            Example | Notes                                                                                                                                                                                                                                                                                                                                                                                           |
 | ----------------- | ------------------- | ---------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -74,7 +74,7 @@ qualifier:query modifier:query
 | `visited`         | boolean             |                     `visited:true` | Matches visited countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                             |
 | `wanttovisit`     | boolean             |                 `wanttovisit:true` | Matches 'want to visit' countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                     |
 
-### **Search modifiers**
+### Search modifiers
 
 | Modifier | Type                |                        Example | Notes                                                                                                                                           |
 | -------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,7 +88,7 @@ qualifier:query modifier:query
 
 > **Note:** For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`.
 
-## **Learn more**
+## Learn more
 
 - [Country Lists](/docs/atlas/country-lists.md)
 - [Layers](/docs/atlas/layers-markers.md)

@@ -1,8 +1,8 @@
 # Atlas overview
 
-The **`Atlas`** is the heart of Atlaset, providing an interactive world map where you can explore, track and visualize your travels. The Atlas brings together `Countries`, `Layers`, `Markers`, `Timeline` and sharing features to help you make the most of your travel data.
+The `Atlas` is the heart of Atlaset, providing an interactive world map where you can explore, track and visualize your travels. The Atlas brings together `Countries`, `Layers`, `Markers`, `Timeline` and sharing features to help you make the most of your travel data.
 
-## **Key features**
+## Key features
 
 - **`Countries`:** Explore every country on the map and view details.
 - **`Layers`:** Highlight groups of countries with custom colors and filters. Organize your travels, plans, or interests using layers.
@@ -11,7 +11,7 @@ The **`Atlas`** is the heart of Atlaset, providing an interactive world map wher
 - **`Export & Sharing`:** Export your map data, share interactive maps with friends or embed them in your website.
 - **`Customization`:** Adjust map styles, color palettes and other settings to personalize your experience.
 
-## **Using the atlas**
+## Using the atlas
 
 1. **Explore the map:**
    - Click and drag to move around the world.
@@ -38,11 +38,11 @@ The **`Atlas`** is the heart of Atlaset, providing an interactive world map wher
    - You can save shared maps outside of the main user collections.
    - View, edit and manage shared maps.
 
-## **Learn more**
+## Learn more
 
 - [Countries](/docs/atlas/countries.md)  
 - [Country Lists](/docs/atlas/country-lists.md)  
 - [Layers & Markers](/docs/atlas/layers-markers.md)  
 - [Saved Maps](/docs/atlas/saved-maps.md)  
 - [Timeline](/docs/atlas/timeline.md)  
-- [Exporting & Sharing Maps](/docs/atlas/export.md)
+- [Exporting & sharing maps](/docs/atlas/export.md)

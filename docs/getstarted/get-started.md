@@ -3,7 +3,7 @@
 Welcome to **Atlaset**!  
 Atlaset helps you explore the world, track your travels and visualize your journeys on an interactive map.
 
-## **What Can You Do with Atlaset?**
+## What Can You Do with Atlaset?
 
 - **Browse the World Map:** Discover countries, regions and interesting facts.
 - **Track Your Visits:** Mark places you’ve visited and see your travel history.
@@ -13,7 +13,7 @@ Atlaset helps you explore the world, track your travels and visualize your journ
 - **Connect with Friends:** Share your journeys and see where your friends have been.
 - **Customize Your Experience:** Adjust map layers, settings and preferences.
 
-## **Begin Your Journey**
+## Begin Your Journey
 
 1. **Sign Up or Log In**  
    Create an `account` or `log in` to start tracking your travels and saving your data.  
@@ -34,7 +34,7 @@ Atlaset helps you explore the world, track your travels and visualize your journ
 6. **Customize Your Settings**  
    Adjust `map styles`, `privacy options` and `notification preferences` in the `Settings` menu.
 
-## **Need Help?**
+## Need Help?
 
 - Use the `Help` panel to find guides on customization and more.
 

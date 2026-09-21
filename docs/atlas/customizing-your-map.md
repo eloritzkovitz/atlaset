@@ -1,22 +1,22 @@
-# Map settings
+# Customizing your map
 
-In the `Map Settings`, you can configure the apearance of your map. You can control various settings, such as map projection, map borders and colors.
+In the `Map Settings` panel, you can configure the appearance of your map. You can control various settings, such as map projection, map borders, colors and other visual elements.
 
 You can open the `Map Settings` panel from the `map toolbar` or by pressing the <kbd>S</kbd> key.
 
-## **Projection**
+## Projection
 
 `Projection` controls how the globe surface is represented on a two-dimensional plane. In Atlaset, there are three supported projections: `Natural Earth`, `Equal Earth` and `Mercator`.
 
-While `Mercator` is still the most commonly used projection in maps, it distorts regions further from the equator. Therefore, `Natural Earth` was chosen as the default option, as it provides a more accurate and pleasant display.
+`Mercator` preserves angles and is commonly used for navigation, but it introduces increasing distortion toward the poles. `Natural Earth` is the default projection because it provides a balanced representation of the world's landmasses.
 
-## **Overlays**
+## Overlays
 
-With the `Overlays` section, you can toggle various overlays on top of the map:
+The `Overlays` section allows you to toggle various visual overlays on the map.
 
-- **`Show small country overlays`** will show circles on top of small countries (with a land area smaller than 10,000 km²)
+- `Show small country overlays` will show circles on top of small countries (with a land area smaller than 10,000 km²)
 
-### **Tracking layers**
+### Tracking layers
 
 - **`Show home country`** will visually color the user's home country. You can set it in the `User Settings`.
 - **`Show visited countries`** will color the user's visited countries.
@@ -25,17 +25,17 @@ With the `Overlays` section, you can toggle various overlays on top of the map:
 
 By default, all the tracking layer options are disabled. You can enable or disable them by checking or unchecking their respective boxes.
 
-## **Colors**
+## Colors
 
-With the `Colors` section, you can control how countries are visually distinguished on the map:
+The `Colors` section controls how countries are visually distinguished on the map.
 
-### **Rules & modifiers**
+### Rules & modifiers
 
 - **`Number of atlas colors`:** In `Atlas mode`, determines whether countries will be colored based on the four color theorem (default) or five color theorem.
 
-### **Color palettes**
+### Color palettes
 
-**`Color palettes`** are themed color sets that affect how countries are colored on the map. Each palette is comprised of five different shades, with each value assigned to a specific criteria value when computing the colors.
+`Color palettes` are themed color sets that affect how countries are colored on the map. Each palette is comprised of five different shades, with each value assigned to a specific criteria value when computing the colors.
 
 For reference, the values go from 0 to 4, from left to right.
 
@@ -47,7 +47,7 @@ Color palettes are grouped into various categories:
 - **Seasons:** Representing the seasons of the year
 - **Nature:** Representing natural biomes and features
 
-#### **Standard**
+#### Standard
 
 The `Standard` palette affects the appearance of the main map:
 
@@ -60,11 +60,11 @@ The `Standard` palette affects the appearance of the main map:
 | Upcoming new visit  | 3             | Controls the color of upcoming new visits         |
 | Highlighted country | 4             | Shown when highlighting a country                 |
 
-#### **Atlas**
+#### Atlas
 
 The `Atlas` palette affects the appearance of the atlas map when in `Atlas Mode`. Coloring is based on the **four color theorem**, where no more than four colors are required to color all countries on the map while no country will have an adjacent country of the same color. The coloring logic also takes proximity into account (for cases such as island neighbors).
 
-#### **Timeline Mode**
+#### Timeline Mode
 
 When `Timeline Mode` is active, countries are colored according to the selected `palette` and the `Timeline`’s selected mode:
 

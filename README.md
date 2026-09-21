@@ -11,14 +11,14 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 ## Features
 
-### **Users & Data**
+### Users & Data
 
 - **User accounts:** Sign in with Google to sync your data across devices
 - **Cloud sync:** All user data is securely stored in the cloud (Firebase)
 - **Guest mode:** Use the app without signing in; migrate your data to your account anytime
 - **Offline support:** All data is available offline for guests and authenticated users (via IndexedDB and Firestore persistence)
 
-### **Atlas**
+### Atlas
 
 - **Interactive map:** Explore a customizable world map with detailed country information and dynamic filters
 - **Country lists:** Create and manage your own country lists, including your visits and dream destinations
@@ -28,28 +28,28 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Share maps:** Instantly share your maps via s a special URL
 - **Embed maps:** Embed maps directly into your website using a customized HTML iframe.
 
-### **Explore**
+### Explore
 
 - **Progress:** Track your personal world exploration progress by country and region
 - **Discover:** Explore countries and learn about languages, currencies, timezones and other aspects of the world
 - **Achievements:** Earn personal achievements as you explore the world and interact with the application
 
-### **Trips**
+### Trips
 
 - **Trip management:** Plan, track and recall your travels with flexible trip records
 - **Calendar:** View your trips and events in the calendar
 
-### **Quizzes**
+### Quizzes
 
 - **Competitive quizzes:** Timed challenges to test your speed and accuracy against the clock
 - **Progress tracking:** See your scores, streaks and improvements over time
 - **Leaderboards:** Compare your results with other users and climb the ranks
 
-### **Dashboard**
+### Dashboard
 
 - **Statistics:** View and analyze your visits and travels with interactive statistics
 
-### **User Experience**
+### User Experience
 
 - **Accessible design:** All major actions and navigation are keyboard-friendly
 - **Modern UI:** Responsive design with Tailwind CSS and icons
@@ -57,7 +57,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Multilanguage support:** Supports both English and Hebrew
 - **PWA support:** Install Atlaset as an app on desktop or mobile and use it offline
 
-### **Social Features**
+### Social Features
 
 - **User Profiles:** Show your personal information and milestones
 - **Friends:** Add other users as friends, allowing you to interact and share content

@@ -1,10 +1,10 @@
 # Keyboard Shortcuts
 
-**`Keyboard shortcuts`** let you use various actions with a keyboard in a quicker and more accessible way. You can also press the <kbd>Tab</kbd> key to focus and navigate between page elements for easier access.
+`Keyboard shortcuts` let you use various actions with a keyboard in a quicker and more accessible way. You can also press the <kbd>Tab</kbd> key to focus and navigate between page elements for easier access.
 
 To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</kbd>.
 
-## **General**
+## General
 
 <table class="shortcut-table">
 	<tr><th>Description</th><th>Shortcut</th></tr>
@@ -15,7 +15,7 @@ To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</k
 	<tr><td>Reset filters</td><td><kbd>r</kbd></td></tr>
 </table>
 
-## **User**
+## User
 
 <table class="shortcut-table">
 	<tr><th>Description</th><th>Shortcut</th></tr>
@@ -23,7 +23,7 @@ To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</k
 	<tr><td>Toggle friends</td><td><kbd>n</kbd></td></tr>
 </table>
 
-## **Atlas: Toolbar**
+## Atlas: Toolbar
 
 <table class="shortcut-table">
 	<tr><th>Description</th><th>Shortcut</th></tr>	
@@ -40,7 +40,7 @@ To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</k
 	<tr><td>Toggle UI</td><td><kbd>u</kbd></td></tr>
 </table>
 
-## **Atlas: Countries list**
+## Atlas: Countries list
 
 <table class="shortcut-table">
 	<tr><th>Description</th><th>Shortcut</th></tr>
@@ -53,7 +53,7 @@ To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</k
 	<tr><td>Select country</td><td><kbd>Enter</kbd></td></tr>
 </table>
 
-## **Atlas: Map controls**
+## Atlas: Map controls
 
 <table class="shortcut-table">
 	<tr><th>Description</th><th>Shortcut</th></tr>
@@ -63,7 +63,7 @@ To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</k
 	<tr><td>Center map on country</td><td><kbd>x</kbd></td></tr>
 </table>
 
-## **Atlas: Timeline**
+## Atlas: Timeline
 
 <table class="shortcut-table">
 	<tr><th>Description</th><th>Shortcut</th></tr>

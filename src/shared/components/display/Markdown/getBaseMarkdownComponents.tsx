@@ -1,4 +1,6 @@
 import React, { type AnchorHTMLAttributes, type ReactNode } from "react";
+import { MarkdownCodeBlock } from "./MarkdownCodeBlock";
+import { MarkdownHeading } from "./MarkdownHeading";
 import { KeyCombo } from "../KeyCombo";
 import { Separator } from "../../layout/Separator";
 
@@ -19,13 +21,14 @@ export interface MarkdownComponentOverrides {
 /**
  * Gets the base markdown components with optional overrides.
  * @param overrides - Custom component overrides
- * @returns - Markdown components with applied overrides
+ * @returns Markdown components with applied overrides
  */
 export function getBaseMarkdownComponents(
   overrides: MarkdownComponentOverrides = {},
 ) {
   return {
     hr: () => <Separator className="my-6" />,
+
     blockquote: (props: React.HTMLProps<HTMLElement>) => {
       return (
         <blockquote className="relative my-6 p-4 ps-6 border-l-4 border-surface bg-surface-alt/40 dark:bg-surface/30 text-base rounded-md shadow-sm">
@@ -33,6 +36,9 @@ export function getBaseMarkdownComponents(
         </blockquote>
       );
     },
+
+    pre: MarkdownCodeBlock,
+
     h1:
       overrides.h1 ||
       ((props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -44,6 +50,7 @@ export function getBaseMarkdownComponents(
           <Separator className="mb-4" />
         </>
       )),
+
     h2:
       overrides.h2 ||
       ((
@@ -52,29 +59,40 @@ export function getBaseMarkdownComponents(
         },
       ) => {
         const isFirst = props.node?.position?.start?.line === 3;
-        const { ...rest } = props;
+        const { node, className, ...rest } = props;
+
         return (
           <>
             {!isFirst && <Separator className="my-6" />}
-            <h2
-              className="mt-10 mb-8 text-3xl text-action-text-hover"
+
+            <MarkdownHeading
+              level={2}
+              className={`mt-10 mb-8 text-3xl font-semibold text-action-text-hover hover:underline ${className ?? ""}`}
               {...rest}
             />
           </>
         );
       }),
-    h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-      <h3
-        className="mt-6 mb-2 text-xl font-semibold text-action-text-hover"
-        {...props}
-      />
-    ),
+
+    h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => {
+      const { className, ...rest } = props;
+
+      return (
+        <MarkdownHeading
+          level={3}
+          className={`mt-6 mb-2 text-xl font-semibold text-action-text-hover hover:underline ${className ?? ""}`}
+          {...rest}
+        />
+      );
+    },
+
     h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
       <h4
         className="mt-6 mb-2 text-lg font-semibold text-action-text-hover"
         {...props}
       />
     ),
+
     a:
       overrides.a ||
       (({
@@ -94,11 +112,13 @@ export function getBaseMarkdownComponents(
           {children}
         </a>
       )),
+
     ul:
       overrides.ul ||
       ((props: React.HTMLProps<HTMLUListElement>) => (
         <ul className="list-disc ps-6 mb-4" {...props} />
       )),
+
     li:
       overrides.li ||
       ((props: React.LiHTMLAttributes<HTMLLIElement>) => (
@@ -106,10 +126,9 @@ export function getBaseMarkdownComponents(
           <span className="leading-relaxed">{props.children}</span>
         </li>
       )),
+
     code({ children, className, ...props }: React.ComponentProps<"code">) {
-      const isBlock = className && className.startsWith("language-");
-      // Inline code styling
-      if (!isBlock) {
+      if (!className?.startsWith("language-")) {
         return (
           <code
             className="bg-code-bg text-code-text rounded px-1 py-0.5 text-sm align-baseline font-mono"
@@ -119,16 +138,18 @@ export function getBaseMarkdownComponents(
           </code>
         );
       }
-      // Block code styling
+
       return (
         <code className={className} {...props}>
           {children}
         </code>
       );
     },
+
     kbd: (props: React.HTMLAttributes<HTMLElement>) => {
       const { children } = props;
       let keys: string[] = [];
+
       if (typeof children === "string") {
         keys = children.split("+").map((k) => k.trim());
       } else if (Array.isArray(children)) {
@@ -136,8 +157,10 @@ export function getBaseMarkdownComponents(
       } else if (children) {
         keys = [String(children)];
       }
+
       return <KeyCombo keys={keys} />;
     },
+
     table: (props: React.HTMLProps<HTMLTableElement>) => (
       <table
         className={
@@ -148,16 +171,19 @@ export function getBaseMarkdownComponents(
         {props.children}
       </table>
     ),
+
     th: (props: React.HTMLProps<HTMLTableCellElement>) => (
       <th className="px-4 py-2 text-left font-semibold bg-surface-alt border-b border-surface-alt">
         {props.children}
       </th>
     ),
+
     tr: (props: React.HTMLProps<HTMLTableRowElement>) => (
       <tr className="bg-surface-alt/40 hover:bg-primary-hover/10 transition-colors">
         {props.children}
       </tr>
     ),
+
     td: (props: React.HTMLProps<HTMLTableCellElement>) => (
       <td className="px-4 py-2 border-b border-surface/80">{props.children}</td>
     ),
