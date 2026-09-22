@@ -65,6 +65,7 @@ export default {
         "chip-cancelled-bg": "var(--color-chip-cancelled-bg)",
         "chip-cancelled-text": "var(--color-chip-cancelled-text)",
         // Code colors
+        "code-block": "var(--color-code-block)",
         "code-bg": "var(--color-code-bg)",
         "code-text": "var(--color-code-text)",
       },

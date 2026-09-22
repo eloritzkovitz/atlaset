@@ -47,7 +47,7 @@ export function SidebarLayout({
           {menuWithProps}
         </div>
         <main className={`items-center mx-auto ${contentClassName}`}>
-          <Container className="w-full mt-12">
+          <Container className="w-full">
             {children ?? <Outlet />}
           </Container>
         </main>

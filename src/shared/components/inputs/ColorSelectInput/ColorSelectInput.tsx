@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { ColorPickerModal } from "./ColorPickerModal";
@@ -8,49 +8,57 @@ interface ColorSelectInputProps {
   label?: string;
   value: string;
   onChange: (color: string) => void;
-  onModalOpenChange?: (isOpen: boolean) => void;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
   disabled?: boolean;
+  modalRef?: React.RefObject<HTMLDivElement | null>;
   className?: string;
 }
 
 export function ColorSelectInput({
   value,
   onChange,
-  onModalOpenChange,
+  isOpen,
+  onOpen,
+  onClose,
   disabled = false,
+  modalRef,
   className = "",
 }: ColorSelectInputProps) {
   const { t } = useTranslation("common");
 
-  const [modalOpen, setModalOpen] = useState(false);
-
-  // Notify parent when modal open state changes
-  useEffect(() => {
-    onModalOpenChange?.(modalOpen);
-  }, [modalOpen, onModalOpenChange]);
-
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <div
-        className="w-8 h-8 rounded"
-        style={{ background: value }}
-        title={value}
-      />
-      <ActionButton
-        type="button"
-        icon={<ICONS.editField />}
-        title={t("actions.edit")}
-        aria-label={t("actions.edit")}
-        onClick={() => setModalOpen(true)}
-        rounded
-        disabled={disabled}
-      />
-      <ColorPickerModal
-        isOpen={modalOpen}
-        color={value}
-        onChange={(color) => onChange(color)}
-        onClose={() => setModalOpen(false)}
-      />
-    </div>
+    <>
+      <div className={`flex items-center gap-2 ${className}`}>
+        <div
+          className="w-8 h-8 rounded"
+          style={{ background: value }}
+          title={value}
+        />
+
+        <ActionButton
+          type="button"
+          icon={<ICONS.editField />}
+          title={t("actions.edit")}
+          aria-label={t("actions.edit")}
+          onClick={onOpen}
+          rounded
+          disabled={disabled}
+        />
+      </div>
+
+      {isOpen &&
+        createPortal(
+          <ColorPickerModal
+            isOpen={isOpen}
+            color={value}
+            onChange={onChange}
+            onClose={onClose}
+            containerRef={modalRef}
+          />,
+          document.body,
+        )}
+    </>
   );
 }

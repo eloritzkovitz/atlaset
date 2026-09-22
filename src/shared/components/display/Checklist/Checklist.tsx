@@ -31,7 +31,7 @@ export const Checklist: React.FC<ChecklistProps> = ({
               renderIcon(item.completed)
             ) : item.completed ? (
               <span className="text-success" title="Completed">
-                <ICONS.selected style={{ verticalAlign: "middle" }} />
+                <ICONS.check style={{ verticalAlign: "middle" }} />
               </span>
             ) : (
               <span style={{ width: "1em", display: "inline-block" }}></span>

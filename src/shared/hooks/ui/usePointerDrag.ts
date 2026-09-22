@@ -3,19 +3,23 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
-  useState,
   useRef,
+  useState,
 } from "react";
 import { useEventListener } from "../dom/useEventListener";
 import type { Point } from "@types";
 
 /**
- * Manages the state and behavior for a draggable element. Provides handlers and styles to enable dragging functionality.
+ * Manages the state and behavior for a draggable element.
  * @param draggable - Whether the element should be draggable.
- * @param isOpen - Whether the element is currently open. Used to reset dragging state when element is closed.
- * @returns An object containing dragging state, pointer down handler, ref setter for the element, computed element style, and current element offset.
+ * @param isOpen - Whether the element is currently open.
+ * @param excludedRefs - Elements inside which dragging should not start.
  */
-export function usePointerDrag(draggable: boolean, isOpen: boolean) {
+export function usePointerDrag(
+  draggable: boolean,
+  isOpen: boolean,
+  excludedRefs: React.RefObject<HTMLElement | null>[] = [],
+) {
   const dragState = useRef<Point | null>(null);
   const animationFrameId = useRef<number | null>(null);
   const latestPos = useRef<Point>({ x: 0, y: 0 });
@@ -24,7 +28,6 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
   const modalDomRef = useRef<Element | null>(null);
   const [modalOffset, setModalOffset] = useState<Point | null>(null);
 
-  // Center modal on first open if no position is set, otherwise keep last position
   useLayoutEffect(() => {
     if (isOpen && modalOffset == null && modalDomRef.current) {
       const el = modalDomRef.current;
@@ -47,7 +50,6 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
     }
   }, [isOpen, modalOffset]);
 
-  // Compute the style for the modal (for draggable)
   const modalStyle = useMemo(() => {
     if (!draggable) return {};
 
@@ -72,11 +74,19 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
     };
   }, [draggable, modalOffset]);
 
-  // Pointer down on modal
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<Element>) => {
       if (!draggable || !modalOffset) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
+
+      const target = e.target;
+
+      if (
+        target instanceof Node &&
+        excludedRefs.some((ref) => ref.current && ref.current.contains(target))
+      ) {
+        return;
+      }
 
       dragState.current = {
         x: e.clientX - modalOffset.x,
@@ -86,10 +96,9 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
       setDragging(true);
       document.body.style.userSelect = "none";
     },
-    [draggable, modalOffset],
+    [draggable, modalOffset, excludedRefs],
   );
 
-  // Reset offset and drag state when modal is closed
   useEffect(() => {
     if (!isOpen) {
       dragState.current = null;
@@ -105,7 +114,6 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
     }
   }, [isOpen]);
 
-  // Handle pointer move and pointer up events for dragging
   const updatePosition = () => {
     if (dragState.current) {
       const x = latestPos.current.x - dragState.current.x;
@@ -151,7 +159,6 @@ export function usePointerDrag(draggable: boolean, isOpen: boolean) {
   useEventListener("pointermove", handlePointerMove, window);
   useEventListener("pointerup", handlePointerUp, window);
 
-  // Expose a ref setter for the modal element
   const setModalDomRef = useCallback((el: Element | null) => {
     modalDomRef.current = el;
   }, []);

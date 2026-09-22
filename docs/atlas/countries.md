@@ -1,43 +1,43 @@
 # Countries
 
-Atlaset provides an interactive world map to discover `countries`, view detailed country information and track your visits. Use search, filters, lists and layers to find, organize and manage your countries and travel data.
+Atlaset provides an interactive world map to discover countries, view detailed country information and track your visits. Use search, filters, lists and layers to find, organize and manage your countries and travel data.
 
-## **Browsing countries**
+## Browsing countries
 
-- Use the map or country list to browse all available countries.
-- Click on a country on the map or the country list to open a detailed view with information.
-- Use the `search bar` to quickly find a country by name. For advanced searching, see below.
+- Use the **map** or the **Countries** panel to browse countries.
+- Click on a country on the map or the **Countries** panel to open a detailed view with information.
+- Use the search bar to quickly find a country by name. For advanced searching, see below.
 
-## **Country details**
+## Country details
 
 Country details include the following sections:
 
-- **`Overview`**: Including `name` and `flag`, `sovereignty status`, `region`, `subregion`, `capital`, `currency`, `languages` and more.
-- **`Relations`**: If any, including `dependencies`, `internal regions` and `disputes`.
-- **`Visits`**: See below.
+- **Overview**: Including `name` and `flag`, `sovereignty status`, `region`, `subregion`, `capital`, `currency`, `languages` and more.
+- **Relations**: If any, including `dependencies`, `internal regions` and `disputes`.
+- **Visits**: See below.
 
-## **Tracking your visits**
+## Tracking your visits
 
-- The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the `home country`).
-- By clicking the `Visits` tab, you can open a detailed view of your visit history to the specific country.
+- The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the **home country**).
+- By clicking the **Visits** tab, you can open a detailed view of your visit history to the specific country.
 - Data is based on your trip data, or by manually adding countries through the list.
 
-> For a full breakdown of how tracking methods affect your analytics, timeline and dashboard stats, see [here](/docs/trips/visits.md).
+> For a full breakdown of how tracking methods affect your analytics, timeline and dashboard stats, see [here](/docs/trips/tracking-your-visits.md).
 
-## **Filtering & sorting**
+## Filtering & sorting
 
-- Use the `Filters` panel to:
+- Use the **Filters** panel to:
   - Filter by `region`, `subregion`, `sovereignty`, `visit status` or custom criteria
-  - Apply `layer` or `timeline` filters (depending on active `map mode`)
-- Use the `Sort` button to:
-  - Sort `countries` by `name`, `ISO 3166-1 code`, `area` or `population` and by sort direction (`ascending` or `descending`)
-  - In `timeline` mode, you can also sort by `visit count`, `first visit time` or `last visit time`
-- Use the `View toggle` to switch between `lists`:
+  - Apply layer or timeline filters (depending on active map mode)
+- Use the **Sort** button to:
+  - Sort countries by `name`, `ISO 3166-1 code`, `area` or `population` and by sort direction (`ascending` or `descending`)
+  - In **Timeline mode**, you can also sort by `visit count`, `first visit time` or `last visit time`
+- Use the **View toggle** to switch between lists:
   - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
 
-## **Advanced search**
+## Advanced search
 
-The country search bar supports a variety of `qualifiers` and `modifiers` for more precise searches. To use it, use the following syntax:
+The country search bar supports a variety of **qualifiers and modifiers** for more precise searches. To use it, use the following syntax:
 
 ```bash
 qualifier:query modifier:query
@@ -47,12 +47,12 @@ qualifier:query modifier:query
 - You can chain multiple qualifiers and/or modifiers.
 - All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
 
-### **Search qualifiers**
+### Search qualifiers
 
 | Qualifier         | Type                |                            Example | Notes                                                                                                                                                                                                                                                                                                                                                                                           |
 | ----------------- | ------------------- | ---------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `isocode`         | string              |                       `isocode:gb` | Matches ISO 3166-1 alpha-2 code                                                                                                                                                                                                                                                                                                                                                                 |
-| `iso3code`        | string              |                     `iso3code:gbr` | Matches ISO 3166-1 alpha-3 code                                                                                                                                                                                                                                                                                                                                                                 |
+| `isocode`         | string              |                       `isocode:gb` | Matches ISO 3166-1 alpha-2 code                                                                                                                                                                                                                                                                                                                                                             |
+| `iso3code`        | string              |                     `iso3code:gbr` | Matches ISO 3166-1 alpha-3 code                                                                                                                                                                                                                                                                                                                                                             |
 | `region`          | string              |                      `region:asia` | Matches countries in a given region (continent)                                                                                                                                                                                                                                                                                                                                                 |
 | `subregion`       | string              |         `subregion:southeast asia` | Matches countries in a given subregion                                                                                                                                                                                                                                                                                                                                                          |
 | `tc`              | boolean / string    |                          `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `cultural`, `other`                                                                                                                                                                                                                                                                                     |
@@ -74,7 +74,7 @@ qualifier:query modifier:query
 | `visited`         | boolean             |                     `visited:true` | Matches visited countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                             |
 | `wanttovisit`     | boolean             |                 `wanttovisit:true` | Matches 'want to visit' countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                     |
 
-### **Search modifiers**
+### Search modifiers
 
 | Modifier | Type                |                        Example | Notes                                                                                                                                           |
 | -------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -88,8 +88,8 @@ qualifier:query modifier:query
 
 > **Note:** For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`.
 
-## **Learn more**
+## Further reading
 
 - [Country Lists](/docs/atlas/country-lists.md)
 - [Layers](/docs/atlas/layers-markers.md)
-- [Tracking your visits](/docs/trips/visits.md)
+- [Tracking your visits](/docs/trips/tracking-your-visits.md)

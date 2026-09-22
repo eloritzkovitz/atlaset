@@ -32,6 +32,7 @@ export function getDocsMarkdownComponents(
           </a>
         );
       }
+
       // Default link behavior
       return (
         <a

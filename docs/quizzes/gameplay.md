@@ -1,40 +1,58 @@
-# How to play
+# How to pay
 
-The following guide will instruct you on how to play the Atlaset quizzes!
+Atlaset quizzes let you test your knowledge of countries, flags and capital cities across different difficulty levels and game modes.
 
-## **Starting a new game**
+## Starting a new game
 
-In order to start a new game, choose one of the `game types`:
+To start a new game, choose a **game type**:
 
-- **`Guess the Flag`:** Guess `countries` based on the `flag`
-- **`Guess the Capital`:** Guess `capital cities` of `countries`
+| Game Type             | Description                          |
+| --------------------- | ------------------------------------ |
+| **Guess the Flag**    | Guess the country based on its flag. |
+| **Guess the Capital** | Guess the capital city of a country. |
 
-Once a `game type` is chosen, you will need to choose your `difficulty` and `game mode` before starting the game:
+After choosing a game type, select a **difficulty level** and **game mode** before starting the quiz.
 
-### **Choosing difficulty**
+### Choosing difficulty
 
-`Quizzes` are divided into four `difficulty levels`, with each having its own country pool:
+Quizzes have four **difficulty levels**, each with its own country pool:
 
-- **Easy:** Familiar countries you likely know
-- **Medium:** A mix of common and less-known countries
-- **Hard:** Challenging countries that will test your knowledge
-- **Expert:** Obscure countries and dependencies, only for true experts
+| Difficulty | Description                                              |
+| ---------- | -------------------------------------------------------- |
+| **Easy**   | Familiar countries that are generally well known.        |
+| **Medium** | A mix of common and less well-known countries.           |
+| **Hard**   | More challenging countries that test your knowledge.     |
+| **Expert** | Obscure countries and dependencies for advanced players. |
 
-### **Choosing game mode**
+### Choosing game mode
 
-`Quizzes` currently support two `game modes`:
+Quizzes currently support two **game modes**:
 
-- **Sandbox:** Play freely without a timer or competition.
-- **Timed:** Race against the clock to reach the highest score.
+| Game Mode   | Description                                          |
+| ----------- | ---------------------------------------------------- |
+| **Sandbox** | Play freely without a timer or competition.          |
+| **Timed**   | Play against the clock and compete for a high score. |
 
-## **Gameplay and scoring**
+## Gameplay and scoring
 
-In `sandbox mode`, quizzes have no restrictions.
+**Sandbox mode** has no time limit or question limit, allowing you to play freely.
 
-In `timed mode`, quizzes consist of `25 questions`, and will run for `5 minutes`. The quiz must be completed before the timer runs out, meaning you must pass through all of the questions, whether by answering them or by skipping.
+In **Timed mode**, each quiz consists of **25 questions** and has a **5-minute** time limit. You must progress through all questions before the timer expires, either by answering or skipping each question.
 
-To correctly answer a question, you will need to type the result in the submit form. A correct answer gives the player one point, promoting the winning streak by one; skipping or providing a wrong answer will give no points, and will reset the streak.
+Enter your answer in the **submit form** to answer a question.
 
-## **Finishing a game**
+| Result               | Effect                                                    |
+| -------------------- | --------------------------------------------------------- |
+| **Correct answer**   | Earns one point and increases your winning streak by one. |
+| **Wrong answer**     | Earns no points and resets your winning streak.           |
+| **Skipped question** | Earns no points and resets your winning streak.           |
 
-Once 25 questions have been answered, or the timer has ended, the game will finish. The result screen will be based on your success and score. When playing in `timed mode`, if your score qualifies, it will be saved to the `leaderboards`. For more information about how leaderboards work, visit the [leaderboards documentation](/docs/quizzes/leaderboards.md).
+## Finishing a game
+
+The game ends when all **25 questions** have been completed or the timer expires.
+
+The results screen displays your performance and score. In **Timed mode**, scores that meet the requirements are saved to the **leaderboards**.
+
+## Further reading
+
+- [Leaderboards](/docs/quizzes/leaderboards.md).

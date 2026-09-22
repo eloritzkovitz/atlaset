@@ -50,16 +50,16 @@ export const DOCS_GROUPS = {
         url: "/docs/atlas/atlas-overview",
       },
       {
-        label: "The Map",
+        label: "The map",
         file: "atlas/map.md",
         icon: ICONS.map,
         url: "/docs/atlas/map",
       },
       {
-        label: "Map Settings",
-        file: "atlas/map-settings.md",
+        label: "Customizing your map",
+        file: "atlas/customizing-your-map.md",
         icon: ICONS.mapSettings.configuration,
-        url: "/docs/atlas/map-settings",
+        url: "/docs/atlas/customizing-your-map",
       },
       {
         label: "Countries",
@@ -68,19 +68,19 @@ export const DOCS_GROUPS = {
         url: "/docs/atlas/countries",
       },
       {
-        label: "Country Lists",
+        label: "Country lists",
         file: "atlas/country-lists.md",
         icon: ICONS.countryLists,
         url: "/docs/atlas/country-lists",
       },
       {
-        label: "Layers & Markers",
+        label: "Layers & markers",
         file: "atlas/layers-markers.md",
         icon: ICONS.location,
         url: "/docs/atlas/layers-markers",
       },
       {
-        label: "Saved Maps",
+        label: "Saved maps",
         file: "atlas/saved-maps.md",
         icon: ICONS.savedMaps,
         url: "/docs/atlas/saved-maps",
@@ -98,10 +98,10 @@ export const DOCS_GROUPS = {
         url: "/docs/atlas/timeline",
       },
       {
-        label: "Exporting & Sharing Maps",
-        file: "atlas/export.md",
+        label: "Exporting & sharing maps",
+        file: "atlas/exporting-sharing-maps.md",
         icon: ICONS.export,
-        url: "/docs/atlas/export",
+        url: "/docs/atlas/exporting-sharing-maps",
       },
     ],
   },
@@ -164,10 +164,22 @@ export const DOCS_GROUPS = {
     },
     items: [
       {
-        label: "Trips",
-        file: "trips/trips.md",
+        label: "Overview",
+        file: "trips/trips-overview.md",
         icon: ICONS.trips,
-        url: "/docs/trips/trips",
+        url: "/docs/trips/trips-overview",
+      },
+      {
+        label: "Creating and managing trips",
+        file: "trips/creating-managing-trips.md",
+        icon: ICONS.tripPlanned,
+        url: "/docs/trips/creating-managing-trips",
+      },
+      {
+        label: "Viewing trip details",
+        file: "trips/viewing-trip-details.md",
+        icon: ICONS.view,
+        url: "/docs/trips/viewing-trip-details",
       },
       {
         label: "Destinations",
@@ -182,16 +194,16 @@ export const DOCS_GROUPS = {
         url: "/docs/trips/gallery",
       },
       {
-        label: "Sharing Trips",
+        label: "Sharing trips",
         file: "trips/sharing-trips.md",
         icon: ICONS.sharedTrips,
         url: "/docs/trips/sharing-trips",
       },
       {
-        label: "Tracking Your Visits",
-        file: "trips/visits.md",
+        label: "Tracking your visits",
+        file: "trips/tracking-your-visits.md",
         icon: ICONS.visits,
-        url: "/docs/trips/visits",
+        url: "/docs/trips/tracking-your-visits",
       },
       {
         label: "Calendar",
@@ -280,7 +292,7 @@ export const DOCS_GROUPS = {
     ],
   },
   forDevelopers: {
-    header: { label: "For Developers", file: null, icon: ICONS.developers },
+    header: { label: "For Developers", file: null, icon: ICONS.code },
     items: [
       {
         label: "Developer Guide",

@@ -38,7 +38,7 @@ export function RenameControls({
         ariaLabel="Save"
         title="Save"
         className="ms-2 text-success hover:text-success-hover"
-        icon={<ICONS.selected className="text-xl" />}
+        icon={<ICONS.check className="text-xl" />}
       />
       <ActionButton
         variant="toggle"

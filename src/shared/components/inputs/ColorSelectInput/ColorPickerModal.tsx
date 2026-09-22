@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import { useTranslation } from "react-i18next";
 import { ModalHeader } from "@components";
@@ -15,6 +15,7 @@ interface ColorPickerModalProps {
   color: string;
   onChange: (color: string) => void;
   onClose: () => void;
+  containerRef?: React.Ref<HTMLDivElement>;
 }
 
 export function ColorPickerModal({
@@ -22,6 +23,7 @@ export function ColorPickerModal({
   color,
   onChange,
   onClose,
+  containerRef,
 }: ColorPickerModalProps) {
   const { t } = useTranslation("common");
 
@@ -29,19 +31,21 @@ export function ColorPickerModal({
   const [showRgba, setShowRgba] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  // Copy color value to clipboard
+  // Copy color value to clipboard.
   const handleCopy = async () => {
     await navigator.clipboard.writeText(displayValue);
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   };
 
-  // Sync internal color with prop when modal opens
+  // Sync internal color with prop when modal opens.
   useEffect(() => {
-    if (isOpen) setInternalColor(color);
+    if (isOpen) {
+      setInternalColor(color);
+    }
   }, [isOpen, color]);
 
-  // Only update parent when Done is clicked
+  // Only update parent when Done is clicked.
   const handleDone = () => {
     onChange(internalColor);
     onClose();
@@ -50,13 +54,17 @@ export function ColorPickerModal({
   const displayValue = showRgba
     ? hexToRgba(internalColor)
     : internalColor.toUpperCase();
+
   const displayLabel = showRgba ? "RGBA" : "HEX";
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
+      disableScroll
+      containerRef={containerRef}
       className="rounded-xl shadow-lg p-6 w-[420px]"
+      draggable={false}
     >
       <ModalHeader
         title={
@@ -66,24 +74,24 @@ export function ColorPickerModal({
           </>
         }
       />
-      <div
-        className="flex flex-col items-center gap-4"
-        onPointerDown={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-      >
+
+      <div className="flex flex-col items-center gap-4">
         <HexColorPicker
           color={internalColor}
           onChange={setInternalColor}
           className="colorful-picker"
         />
       </div>
+
       <div className="flex items-end justify-between mt-6 px-2 gap-4">
         <div className="flex items-center gap-3">
           <ColorDot color={internalColor} size={32} />
+
           <div className="flex flex-col">
             <span className="text-xs text-muted font-semibold uppercase tracking-wide mb-1 select-none">
               {displayLabel}
             </span>
+
             <div className="flex items-center gap-1">
               <Tooltip
                 content={
@@ -97,7 +105,7 @@ export function ColorPickerModal({
                   type="button"
                   className="bg-input w-[180px] text-xs font-mono px-2 py-1 rounded border-none select-all transition hover:brightness-95"
                   style={{ textAlign: "left" }}
-                  onClick={() => setShowRgba((v) => !v)}
+                  onClick={() => setShowRgba((value) => !value)}
                 >
                   {displayValue}
                 </button>

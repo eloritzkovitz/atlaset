@@ -19,7 +19,7 @@ export interface SidePanelMenuItem {
 }
 
 export interface SidePanelMenuProps {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   menuItems: SidePanelMenuItem[];
   selectedPanel: string;
   setSelectedPanel: (key: string) => void;
@@ -28,8 +28,10 @@ export interface SidePanelMenuProps {
   width?: number;
   collapsed?: boolean;
   animationsEnabled?: boolean;
+  topOffset?: string;
   menuButtonClassName?: string;
   showSidebar?: boolean;
+  showHeader?: boolean;
   children?: React.ReactNode;
 }
 
@@ -44,8 +46,10 @@ export function SidePanelMenu({
   width = 250,
   collapsed = true,
   animationsEnabled = true,
+  topOffset = "0px",
   menuButtonClassName = "w-full px-2 !text-lg font-semibold",
   showSidebar = true,
+  showHeader = true,
   children,
 }: SidePanelMenuProps) {
   const { isLaptop, isMobile } = useScreenSize();
@@ -64,7 +68,8 @@ export function SidePanelMenu({
     ? TbLayoutSidebarRightExpand
     : TbLayoutSidebarLeftExpand;
 
-  // Panel content
+  const toggleTop = `calc(${topOffset} + 0.875rem)`;
+
   const panelContent = (
     <Panel
       title={title}
@@ -72,7 +77,9 @@ export function SidePanelMenu({
       className={isMobile ? "!start-0" : undefined}
       onHide={isMobile || isLaptop ? handleClose : undefined}
       animationsEnabled={animationsEnabled}
+      topOffset={topOffset}
       showSidebar={showSidebar}
+      showHeader={showHeader}
     >
       <ul className="flex flex-col gap-2 p-1 -mx-2">
         {menuItems.map((item) => (
@@ -84,7 +91,10 @@ export function SidePanelMenu({
               className={menuButtonClassName}
               onClick={() => {
                 setSelectedPanel(item.key);
-                if (isMobile) handleClose();
+
+                if (isMobile) {
+                  handleClose();
+                }
               }}
             >
               {item.label}
@@ -92,6 +102,7 @@ export function SidePanelMenu({
           </li>
         ))}
       </ul>
+
       {children}
     </Panel>
   );
@@ -105,11 +116,13 @@ export function SidePanelMenu({
             type="button"
             icon={<SidebarIcon className="text-3xl text-muted" />}
             onClick={() => modal.open()}
-            className={`fixed top-3.5 ${showSidebar ? "start-18" : "start-2"} z-20`}
+            className={`fixed ${showSidebar ? "start-18" : "start-2"} z-20`}
+            style={{ top: toggleTop }}
             aria-label={t("actions.openMenu", "Open menu")}
             title={t("actions.openMenu", "Open menu")}
           />
         )}
+
         <DrawerPanel
           open={isOpen}
           onClose={handleClose}

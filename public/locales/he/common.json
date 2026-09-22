@@ -242,9 +242,9 @@
 
   "help": {
     "title": "עזרה",
-    "searchPlaceholder": "חיפוש עזרה",
+    "searchPlaceholder": "חיפוש תיעוד",
     "needHelp": "צריך עזרה? גש למדריכים, טיפים ומידע למפתחים ב",
-    "documentation": "דוקומנטציה"
+    "documentation": "תיעוד"
   },
 
   "migration": {

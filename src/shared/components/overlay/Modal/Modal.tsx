@@ -85,7 +85,7 @@ export function Modal({
 
   // Draggable modal logic
   const { dragging, handlePointerDown, setModalDomRef, modalStyle } =
-    usePointerDrag?.(draggable, isOpen) || {
+    usePointerDrag?.(draggable, isOpen, extraRefs) || {
       dragging: false,
       handlePointerDown: undefined,
       setModalDomRef: undefined,

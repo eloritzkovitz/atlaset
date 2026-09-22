@@ -125,12 +125,12 @@ export function useCountryActions({
       ariaLabel: visited ? "Unmark Visited" : "Mark Visited",
       icon: visited ? (
         tripBased ? (
-          <ICONS.selected />
+          <ICONS.check />
         ) : (
           <ICONS.close className="!-mx-1 text-2xl" />
         )
       ) : (
-        <ICONS.selected />
+        <ICONS.check />
       ),
       disabled: tripBased,
       onClick: () => {

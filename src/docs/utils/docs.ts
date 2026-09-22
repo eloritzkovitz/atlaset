@@ -28,14 +28,3 @@ export function getSlugFromPath(pathname: string) {
   if (parts[0] !== "docs") return undefined;
   return parts.length > 1 ? parts[parts.length - 1] : undefined;
 }
-
-/**
- * Navigates to a documentation page by its file name.
- * @param navigate - The navigation function.
- * @param file - The documentation file name.
- */
-export function navigateToDoc(navigate: (path: string) => void, file: string) {
-  if (!file) return;
-  const slug = file.replace(/\.md$/, "");
-  navigate(`/docs/${slug}`);
-}

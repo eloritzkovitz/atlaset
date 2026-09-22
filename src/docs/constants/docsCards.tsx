@@ -11,7 +11,7 @@ export const DOCS_CARDS = [
     icon: <ICONS.profile className="text-5xl mb-4 text-muted" />,
     title: "Account & Profile",
     description: "Manage your account settings and personalize your profile.",
-    file: "get-started/account-profile.md",
+    file: "get-started/profile.md",
   },
   {
     icon: <ICONS.atlas className="text-5xl mb-4 text-info" />,
@@ -29,7 +29,7 @@ export const DOCS_CARDS = [
     icon: <ICONS.trips className="text-5xl mb-4 text-status-planned" />,
     title: "Trips",
     description: "Plan, track and relive your journeys and adventures.",
-    file: "trips/trips.md",
+    file: "trips/trips-overview.md",
   },  
   {
     icon: <ICONS.quizzes className="text-5xl mb-4 text-type-abroad" />,

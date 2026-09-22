@@ -34,9 +34,7 @@ export function LanguageMenuList({
               className="flex h-5 w-5 shrink-0 items-center justify-center"
               aria-hidden="true"
             >
-              {l.code === current ? (
-                <ICONS.selected className="text-xl" />
-              ) : null}
+              {l.code === current ? <ICONS.check className="text-xl" /> : null}
             </span>
             <div className="min-w-0 flex-1">
               <div>{l.native}</div>

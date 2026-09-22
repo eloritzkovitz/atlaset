@@ -6,12 +6,12 @@ For automated addition of new fields and values to the country data, you can use
 > - Lookup uses a property on each country (default: `isoCode`) — override with `--mapKeyField`.
 > - Map may be an object lookup or an array (converted with `--mapFrom`/`--mapTo`).
 
-### **When to use**
+### When to use
 
 - Add the same derived property across all countries (e.g. region groups, classification tags).
 - Merge an external dataset (CSV/JSON) into your countries file via a JSON map.
 
-## **Flags overview**
+## Flags overview
 
 - `--file, -f` — Path to the JSON file to modify (default: `public/data/countries.json`).
 - `--path, -k` — Dot-separated path for the field to add (required).
@@ -24,29 +24,29 @@ For automated addition of new fields and values to the country data, you can use
 - `--dry-run, -d` — Print what would change without writing the file.
 - `--backup, -b` — Create a timestamped backup of the original file before writing (default: true).
 
-## **Usage examples**
+## Usage examples
 
-#### **Dry-run (no file written):**
+#### Dry-run (no file written):
 
 ```sh
 node scripts/assets/add-country-field.js --file=public/data/countries.json --path=test --map=scripts/data/region-map.json --mapKeyField=isoCode --dry-run
 ```
 
-#### **Apply changes (writes file and creates backup):**
+#### Apply changes (writes file and creates backup):
 
 ```sh
 node scripts/assets/add-country-field.js --file=public/data/countries.json --path=test --map=scripts/data/region-map.json --mapKeyField=isoCode
 ```
 
-#### **Skip items without mapping:**
+#### Skip items without mapping:
 
 ```sh
 node scripts/assets/add-country-field.js --file=public/data/countries.json --path=test --map=scripts/data/region-map.json --mapKeyField=isoCode --map-skip-missing
 ```
 
-## **Mapping formats**
+## Mapping formats
 
-#### **Object (simple lookup):**
+#### Object (simple lookup):
 
 ```json
 {
@@ -56,7 +56,7 @@ node scripts/assets/add-country-field.js --file=public/data/countries.json --pat
 }
 ```
 
-#### **Array (convert to lookup with `--mapFrom` / `--mapTo`):**
+#### Array (convert to lookup with `--mapFrom` / `--mapTo`):
 
 ```json
 [
@@ -71,7 +71,7 @@ Run with:
 node scripts/assets/add-country-field.js --file=public/data/countries.json --path=test --map=scripts/data/region-array.json --mapFrom=code --mapTo=region --mapKeyField=isoCode
 ```
 
-## **Inspecting available keys**
+## Inspecting available keys
 
 To see which properties are available on a country object (so you can choose `--mapKeyField`), run:
 
@@ -79,7 +79,7 @@ To see which properties are available on a country object (so you can choose `--
 node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('public/data/countries.json','utf8'));console.log(Object.keys(Array.isArray(d)?d[0]:d));"
 ```
 
-## **Generating a starter map**
+## Generating a starter map
 
 If you don't have a mapping file yet, use the [generate-empty-map.js script](/scripts/assets/generate-empty-map.js) to create an empty object or array map derived from your countries.json file.
 

@@ -1,8 +1,10 @@
-# **Statistics**
+# Statistics
 
-The **`Statistics`** section provides insights and analytics about your travel history. Features include:
+The **Statistics** section provides insights and analytics about your travel history.
 
-- **Overview**: View a top-level summary of your travels, showing details about your trips.
-- **Visits**: Track your most visited countries ranked by frequency based on completed abroad trips.
-- **Categories**: Explore how your trips break down by travel categories: statuses and types.
-- **Trends**: Analyze your travel patterns over time with dynamic yearly and monthly charts and metrics.
+| **Section**    | **Description**                                                                       |
+| -------------- | ------------------------------------------------------------------------------------- |
+| **Overview**   | View a summary of your travels, including key trip statistics.                        |
+| **Visits**     | Track your most visited countries based on completed trips abroad.                    |
+| **Categories** | Explore how your trips are distributed across travel categories, statuses and types. |
+| **Trends**     | Analyze your travel patterns over time with yearly and monthly charts and metrics.    |

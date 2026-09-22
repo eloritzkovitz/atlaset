@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Checkbox,
@@ -46,6 +46,8 @@ export function LayerModal({
   const [useList, setUseList] = useState(false);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
 
+  const colorModalRef = useRef<HTMLDivElement | null>(null);
+
   // Don't render the modal if no layer is being edited
   if (!layer) return null;
 
@@ -92,6 +94,7 @@ export function LayerModal({
         onClose={handleClose}
         className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] flex flex-col"
         disableClose={countryModal.isOpen || colorModal.isOpen}
+        extraRefs={[colorModalRef]}
         draggable
       >
         <div className="flex-shrink-0">
@@ -126,13 +129,7 @@ export function LayerModal({
                   disabled={isListManaged}
                 />
               </FormField>
-              <FormField label={t("layers.form.color", "Color:")}>
-                <ColorSelectInput
-                  value={layer.color}
-                  onChange={(color: string) => onChange({ ...layer, color })}
-                  onModalOpenChange={colorModal.setIsOpen}
-                />
-              </FormField>
+
               <CountrySelectField
                 countryCodes={layer.countries}
                 countries={countries}
@@ -145,6 +142,7 @@ export function LayerModal({
                 required
                 disabled={isListManaged}
               />
+
               {!isEditing && (
                 <FormField label="">
                   <div className="flex items-center gap-2">
@@ -178,6 +176,18 @@ export function LayerModal({
                   </div>
                 </FormField>
               )}
+
+              <FormField label={t("layers.form.color", "Color:")}>
+                <ColorSelectInput
+                  value={layer.color}
+                  onChange={(color: string) => onChange({ ...layer, color })}
+                  isOpen={colorModal.isOpen}
+                  onOpen={colorModal.open}
+                  onClose={colorModal.close}
+                  modalRef={colorModalRef}
+                />
+              </FormField>
+
               {filterLabelKeys.map((key, idx) => (
                 <FormField
                   label={
@@ -198,6 +208,7 @@ export function LayerModal({
                   />
                 </FormField>
               ))}
+
               {isListManaged && (
                 <div className="flex px-3 py-2 mb-2 items-center text-danger ">
                   <ICONS.info className="inline me-2" />
@@ -207,6 +218,7 @@ export function LayerModal({
                   )}
                 </div>
               )}
+
               <div className="flex items-center justify-between mt-6">
                 <ModalActions
                   onCancel={onClose}

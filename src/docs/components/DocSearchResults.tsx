@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { SearchInput, MenuButton, EmptyListMessage } from "@components";
-import { useTranslation } from "react-i18next";
 import { useDocSearch } from "../hooks/useDocSearch";
 
 interface DocSearchResultsProps {
@@ -21,7 +21,7 @@ export function DocSearchResults({
     <>
       <SearchInput
         className="w-full"
-        placeholder={placeholder || "Search documentation..."}
+        placeholder={placeholder || "Search documentation"}
         value={search}
         onChange={setSearch}
       />

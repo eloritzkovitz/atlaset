@@ -14,11 +14,13 @@ export interface PanelProps {
   show?: boolean;
   onHide?: () => void;
   escEnabled?: boolean;
+  showHeader?: boolean;
   showCloseButton?: boolean;
   headerActions?: ReactNode;
   showSeparator?: boolean;
   showPadding?: boolean;
   animationsEnabled?: boolean;
+  topOffset?: string;
   style?: React.CSSProperties;
   className?: string;
 }
@@ -34,11 +36,13 @@ export function Panel({
   show = true,
   onHide,
   escEnabled = true,
+  showHeader = true,
   showCloseButton = true,
   headerActions,
   showSeparator = true,
   showPadding = true,
   animationsEnabled = true,
+  topOffset = "0px",
   style = {},
   className = "",
 }: PanelProps) {
@@ -63,17 +67,26 @@ export function Panel({
       style={
         isMobile
           ? { width: "100vw", height: "100vh", minHeight: 0, ...style }
-          : { width, minWidth: width, ...style }
+          : {
+              width,
+              minWidth: width,
+              top: topOffset,
+              height: `calc(100vh - ${topOffset})`,
+              ...style,
+            }
       }
     >
-      <DialogHeader
-        title={title}
-        showSeparator={showSeparator}
-        onClose={onHide}
-        showCloseButton={showCloseButton}
-      >
-        {headerActions}
-      </DialogHeader>
+      {showHeader && (
+        <DialogHeader
+          title={title}
+          showSeparator={showSeparator}
+          onClose={onHide}
+          showCloseButton={showCloseButton}
+        >
+          {headerActions}
+        </DialogHeader>
+      )}
+
       <div
         className={`flex-1 min-h-0 px-4 ${isMobile ? "pb-20" : showPadding ? "pb-8" : ""}${
           scrollable ? " overflow-y-auto" : ""

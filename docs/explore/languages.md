@@ -1,9 +1,7 @@
-# **Languages**
+# Languages
 
-The **`Languages`** section gives you a detailed list of languages, showing both their `names` and their `ISO 639 code`. Each language shows a detailed view, including countries or territories in which the language is spoken (as official or majority).
+The **Languages** section provides a searchable list of languages, including their names and **ISO 639 codes**.
 
-Languages can be searched and filtered by name and code.
+Open a language to view the countries and territories where it is spoken, including languages that are official or majority languages.
 
-## **Learn more**
-
-- [Countries](/docs/atlas/countries.md)
+Languages can be searched and filtered by name or code.

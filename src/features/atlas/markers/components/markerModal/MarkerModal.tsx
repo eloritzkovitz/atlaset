@@ -40,6 +40,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
   const countrySelect = useDisclosure();
 
   const nameRef = useRef<HTMLInputElement>(null);
+  const colorModalRef = useRef<HTMLDivElement | null>(null);
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -77,6 +78,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       position="center"
       className="modal w-[600px] max-h-[90vh]"
       disableClose={colorModal.isOpen || countrySelect.isOpen}
+      extraRefs={[colorModalRef]}
       draggable
     >
       <ModalHeader
@@ -131,8 +133,10 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
             <ColorSelectInput
               value={marker.color}
               onChange={(color: string) => onChange({ ...marker, color })}
-              onModalOpenChange={colorModal.setIsOpen}
-              disabled={false}
+              isOpen={colorModal.isOpen}
+              onOpen={colorModal.open}
+              onClose={colorModal.close}
+              modalRef={colorModalRef}
             />
           </FormField>
 

@@ -21,7 +21,7 @@ export function FriendRequestActions({
         onClick={() => onAccept(displayName)}
         title={t("friends.actions.accept")}
         ariaLabel={t("friends.actions.accept")}
-        icon={<ICONS.selected />}
+        icon={<ICONS.check />}
         className="text-success"
         rounded
       />

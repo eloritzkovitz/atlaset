@@ -43,7 +43,7 @@ export default function SettingsPage() {
           canEdit={canEdit}
         />
       }
-      contentClassName="w-4xl"
+      contentClassName="mt-12 w-4xl"
     >
       <div>
         {userLoading || profileLoading ? (

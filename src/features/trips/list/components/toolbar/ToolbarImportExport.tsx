@@ -75,7 +75,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
           onCancel={() => setShowImportNotice(false)}
           submitLabel={t("table.toolbar.importExport.continue")}
           cancelLabel={t("table.toolbar.importExport.cancel")}
-          submitIcon={<ICONS.selected className="inline" />}
+          submitIcon={<ICONS.check className="inline" />}
         />
       )}
       <input

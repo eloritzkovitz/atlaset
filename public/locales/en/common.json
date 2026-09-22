@@ -243,7 +243,7 @@
 
   "help": {
     "title": "Help",
-    "searchPlaceholder": "Search help",
+    "searchPlaceholder": "Search documentation",
     "needHelp": "Need help? Access guides, tips and developer info in the full",
     "documentation": "documentation"
   },

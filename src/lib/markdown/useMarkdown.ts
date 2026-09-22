@@ -4,7 +4,8 @@ interface MarkdownPlugins {
   ReactMarkdown: typeof import("react-markdown").default;
   remarkGfm: typeof import("remark-gfm").default;
   rehypeRaw: typeof import("rehype-raw").default;
-  rehypeTypeScript: typeof import("./rehypeTypeScript").rehypeTypeScript;
+  rehypeSlug: typeof import("rehype-slug").default;
+  rehypeSyntaxHighlight: typeof import("./rehypeSyntaxHighlight").rehypeSyntaxHighlight;
 }
 
 /**
@@ -21,14 +22,16 @@ export function useMarkdown() {
       import("react-markdown"),
       import("remark-gfm"),
       import("rehype-raw"),
-      import("./rehypeTypeScript"),
-    ]).then(([rm, gfm, raw, typescript]) => {
+      import("rehype-slug"),
+      import("./rehypeSyntaxHighlight"),
+    ]).then(([rm, gfm, raw, slug, syntax]) => {
       if (isMounted) {
         setPlugins({
           ReactMarkdown: rm.default,
           remarkGfm: gfm.default,
           rehypeRaw: raw.default,
-          rehypeTypeScript: typescript.rehypeTypeScript,
+          rehypeSlug: slug.default,
+          rehypeSyntaxHighlight: syntax.rehypeSyntaxHighlight,
         });
       }
     });
