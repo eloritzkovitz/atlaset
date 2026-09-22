@@ -1,9 +1,9 @@
 import React, { type AnchorHTMLAttributes, type ReactNode } from "react";
 import { MarkdownCodeBlock } from "./MarkdownCodeBlock";
 import { MarkdownHeading } from "./MarkdownHeading";
+import { MarkdownIcon } from "./MarkdownIcon";
 import { KeyCombo } from "../KeyCombo";
 import { Separator } from "../../layout/Separator";
-import { ICONS } from "@constants/icons";
 
 export interface MarkdownComponentOverrides {
   h1?: (props: React.HTMLAttributes<HTMLHeadingElement>) => React.ReactNode;
@@ -169,30 +169,7 @@ export function getBaseMarkdownComponents(
       return <KeyCombo keys={keys} />;
     },
 
-    icon: ({ name, className }: { name?: string; className?: string }) => {
-      if (!name) return null;
-
-      type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
-
-      const icon = name.split(".").reduce<unknown>((value, key) => {
-        if (typeof value !== "object" || value === null) return undefined;
-
-        return key in value
-          ? (value as Record<string, unknown>)[key]
-          : undefined;
-      }, ICONS);
-
-      if (typeof icon !== "function") return null;
-
-      const Icon = icon as IconComponent;
-
-      return (
-        <Icon
-          className={`inline-block h-4 w-4 align-middle ${className ?? ""}`}
-          aria-hidden="true"
-        />
-      );
-    },
+    icon: MarkdownIcon,
 
     table: (props: React.HTMLProps<HTMLTableElement>) => (
       <table

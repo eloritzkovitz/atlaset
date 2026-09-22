@@ -69,7 +69,7 @@ export default function DocsPage() {
       >
         <Container>
           {doc ? (
-            <>
+            <div className="mx-auto w-full !w-4xl">
               <Breadcrumbs
                 crumbs={breadcrumbs}
                 onCrumbClick={handleCrumbClick}
@@ -82,7 +82,7 @@ export default function DocsPage() {
                   navigateToDoc(navigate, file),
                 )}
               />
-            </>
+            </div>
           ) : slug ? (
             <DocsNotFound />
           ) : (
