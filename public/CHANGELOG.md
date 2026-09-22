@@ -6,6 +6,7 @@
 - **[docs]** **Docs:** Redesigned docs formatting elements such as code blocks, icons and more
 - **[docs]** **Docs:** Updated outdated documentation and expanded some entries
 - **[bugfix]** **General:** Fixed some UI bugs
+- **[bugfix]** **Trips:** Fixed a bug that did not apply overrides when loading shared trips with overrides
 
 ## 2026-09-17
 

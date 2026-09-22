@@ -26,10 +26,8 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     let mounted = true;
 
-    // Skip if auth not ready
     if (!ready) return;
 
-    // Only load trips if user is authenticated
     if (!user) {
       setTrips([]);
       setSharedTrips([]);
@@ -43,11 +41,11 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
       tripsService.load(),
       sharedTripsService.getSharedTrips(user.uid),
     ]).then(([allTrips, allSharedTrips]) => {
-      if (mounted) {
-        loadTrips(allTrips);
-        setSharedTrips(allSharedTrips);
-        setLoading(false);
-      }
+      if (!mounted) return;
+
+      loadTrips(allTrips, allSharedTrips);
+      setSharedTrips(allSharedTrips);
+      setLoading(false);
     });
 
     return () => {
@@ -90,13 +88,25 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   }
 
-  // Load trips from IndexedDB on mount
-  function loadTrips(rawTrips: Trip[]) {
+  // Load trips and apply the user's personal overrides
+  function loadTrips(rawTrips: Trip[], sharedTrips: SharedTrip[]) {
+    const sharedTripMap = new Map(
+      sharedTrips.map((sharedTrip) => [sharedTrip.tripId, sharedTrip]),
+    );
+
     setTrips(
-      rawTrips.map((trip) => ({
-        ...trip,
-        status: getAutoTripStatus(trip),
-      })),
+      rawTrips.map((trip) => {
+        const sharedTrip = sharedTripMap.get(trip.id);
+        const effectiveTrip = {
+          ...trip,
+          ...(sharedTrip?.overrides ?? {}),
+        };
+
+        return {
+          ...effectiveTrip,
+          status: getAutoTripStatus(effectiveTrip),
+        };
+      }),
     );
   }
 
