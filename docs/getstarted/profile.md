@@ -13,8 +13,8 @@ Your profile shows your personal information - including personal details, biogr
 
 You can edit your personal information by clicking the `Edit Profile` button. `Visited countries` are based on your `trip data`, and `leaderboards` are based on your best scores, if they exist in the `leaderboards`.
 
-## Learn more
+## Further reading
 
 - [Account Settings](/docs/account/account-settings.md)  
-- [Trips](/docs/trips/trips.md)  
+- [Creating and managing trips](/docs/trips/creating-managing-trips.md)  
 - [Leaderboards](/docs/quizzes/leaderboards.md)

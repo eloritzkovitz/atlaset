@@ -1,12 +1,14 @@
-# Trip Destinations
+# Trip destinations
 
-Trips can include specific `destinations` in addition to their selected countries.
+Trips can include specific **destinations** in addition to their selected countries, allowing you to track your visited locations in a detailed and interactive way.
+
+Destinations rely on the [GeoNames API](https://www.geonames.org/).
 
 ## Selecting destinations
 
-- Open the `Destinations` tab when creating or editing a trip.
-- Search for `locations` within the trip's selected countries.
-- A trip stores selected locations by their `GeoNames` IDs in `locationIds`.
+- Open the **Destinations** tab when creating or editing a trip.
+- Search for **locations** within the trip's selected countries.
+- A trip stores selected locations by their **GeoNames IDs** in `locationIds`.
 - Countries and locations are managed separately, so adding a location does not automatically add its country to the trip.
 
 ## Viewing destinations

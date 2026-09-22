@@ -4,4 +4,4 @@ The map legend helps you interpret the country colors displayed on the Atlas map
 
 The `Legend` appears as a panel on the top-right corner of the map interface. It lists all the layers and special features currently visible on the map, along with their corresponding colors.
 
-`Legend` can be toggled on/off from the `map toolbar` or by pressing the <kbd>G</kbd> key.
+`Legend` can be toggled on/off from the map toolbar or by pressing the <kbd>G</kbd> key.

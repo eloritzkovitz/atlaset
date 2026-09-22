@@ -24,7 +24,7 @@ function displayKey(key: string, isRtl = false) {
     case "Enter":
       return <span>⏎</span>;
     default:
-      return key.length === 1 ? key.toLowerCase() : key;
+      return key.length === 1 ? key.toUpperCase() : key;
   }
 }
 

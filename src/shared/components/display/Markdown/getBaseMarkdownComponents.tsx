@@ -3,19 +3,21 @@ import { MarkdownCodeBlock } from "./MarkdownCodeBlock";
 import { MarkdownHeading } from "./MarkdownHeading";
 import { KeyCombo } from "../KeyCombo";
 import { Separator } from "../../layout/Separator";
+import { ICONS } from "@constants/icons";
 
 export interface MarkdownComponentOverrides {
-  a?: (
-    props: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode },
-  ) => React.ReactNode;
-  ul?: (props: React.HTMLProps<HTMLUListElement>) => React.ReactNode;
-  li?: (props: React.LiHTMLAttributes<HTMLLIElement>) => React.ReactNode;
   h1?: (props: React.HTMLAttributes<HTMLHeadingElement>) => React.ReactNode;
   h2?: (
     props: React.HTMLAttributes<HTMLHeadingElement> & {
       node?: { position?: { start?: { line?: number } } };
     },
   ) => React.ReactNode;
+  a?: (
+    props: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode },
+  ) => React.ReactNode;
+  ul?: (props: React.HTMLProps<HTMLUListElement>) => React.ReactNode;
+  ol?: (props: React.HTMLProps<HTMLOListElement>) => React.ReactNode;
+  li?: (props: React.LiHTMLAttributes<HTMLLIElement>) => React.ReactNode;
 }
 
 /**
@@ -59,7 +61,7 @@ export function getBaseMarkdownComponents(
         },
       ) => {
         const isFirst = props.node?.position?.start?.line === 3;
-        const { node, className, ...rest } = props;
+        const { className, ...rest } = props;
 
         return (
           <>
@@ -80,7 +82,7 @@ export function getBaseMarkdownComponents(
       return (
         <MarkdownHeading
           level={3}
-          className={`mt-6 mb-2 text-xl font-semibold text-action-text-hover hover:underline ${className ?? ""}`}
+          className={`mt-6 mb-4 text-2xl font-semibold text-action-text-hover hover:underline ${className ?? ""}`}
           {...rest}
         />
       );
@@ -117,6 +119,12 @@ export function getBaseMarkdownComponents(
       overrides.ul ||
       ((props: React.HTMLProps<HTMLUListElement>) => (
         <ul className="list-disc ps-6 mb-4" {...props} />
+      )),
+
+    ol:
+      overrides.ol ||
+      ((props: React.OlHTMLAttributes<HTMLOListElement>) => (
+        <ol className="list-decimal ps-6 mb-4" {...props} />
       )),
 
     li:
@@ -159,6 +167,31 @@ export function getBaseMarkdownComponents(
       }
 
       return <KeyCombo keys={keys} />;
+    },
+
+    icon: ({ name, className }: { name?: string; className?: string }) => {
+      if (!name) return null;
+
+      type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+      const icon = name.split(".").reduce<unknown>((value, key) => {
+        if (typeof value !== "object" || value === null) return undefined;
+
+        return key in value
+          ? (value as Record<string, unknown>)[key]
+          : undefined;
+      }, ICONS);
+
+      if (typeof icon !== "function") return null;
+
+      const Icon = icon as IconComponent;
+
+      return (
+        <Icon
+          className={`inline-block h-4 w-4 align-middle ${className ?? ""}`}
+          aria-hidden="true"
+        />
+      );
     },
 
     table: (props: React.HTMLProps<HTMLTableElement>) => (

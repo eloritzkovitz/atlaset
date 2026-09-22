@@ -1,10 +1,10 @@
-import { FaPause, FaPlay } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   ToolbarSelectButton,
   DirectionalIcon,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import type { ColorMode } from "@features/atlas/core/types";
 import { useMapView } from "@features/atlas/map";
 import { useLanguage } from "@features/settings/account";
@@ -43,9 +43,9 @@ export function TimelineNavigator() {
           title={playing ? t("timeline.pause") : t("timeline.play")}
           icon={
             playing ? (
-              <FaPause />
+              <ICONS.pause />
             ) : (
-              <FaPlay className={!canGoForward ? "opacity-50" : ""} />
+              <ICONS.play className={!canGoForward ? "opacity-50" : ""} />
             )
           }
           disabled={!canGoForward}

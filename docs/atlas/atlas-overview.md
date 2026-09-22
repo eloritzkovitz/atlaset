@@ -1,15 +1,17 @@
 # Atlas overview
 
-The `Atlas` is the heart of Atlaset, providing an interactive world map where you can explore, track and visualize your travels. The Atlas brings together `Countries`, `Layers`, `Markers`, `Timeline` and sharing features to help you make the most of your travel data.
+The **Atlas** is the heart of Atlaset, providing an interactive world map where you can explore, track and visualize your travels. The Atlas brings together **Countries**, **Layers**, **Markers**, **Timeline** and sharing features to help you make the most of your travel data.
 
 ## Key features
 
-- **`Countries`:** Explore every country on the map and view details.
-- **`Layers`:** Highlight groups of countries with custom colors and filters. Organize your travels, plans, or interests using layers.
-- **`Markers`:** Add custom points to the map for places, memories, or notes. Markers can be customized and exported.
-- **`Timeline`:** Visualize your travel history over time. See how your journeys have evolved year by year.
-- **`Export & Sharing`:** Export your map data, share interactive maps with friends or embed them in your website.
-- **`Customization`:** Adjust map styles, color palettes and other settings to personalize your experience.
+| **Feature**          | **Description**                                                                                                       |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Countries**        | Explore every country on the map and view details.                                                                    |
+| **Layers**           | Highlight groups of countries with custom colors and filters. Organize your travels, plans or interests using layers. |
+| **Markers**          | Add custom points to the map for places, memories or notes. Markers can be customized and exported.                   |
+| **Timeline**         | Visualize your travel history over time and see how your journeys have evolved year by year.                          |
+| **Export & Sharing** | Export your map data, share interactive maps with friends or embed them on your website.                              |
+| **Customization**    | Adjust map styles, color palettes and other settings to personalize your experience.                                  |
 
 ## Using the atlas
 
@@ -38,11 +40,11 @@ The `Atlas` is the heart of Atlaset, providing an interactive world map where yo
    - You can save shared maps outside of the main user collections.
    - View, edit and manage shared maps.
 
-## Learn more
+## Next steps
 
-- [Countries](/docs/atlas/countries.md)  
-- [Country Lists](/docs/atlas/country-lists.md)  
-- [Layers & Markers](/docs/atlas/layers-markers.md)  
-- [Saved Maps](/docs/atlas/saved-maps.md)  
-- [Timeline](/docs/atlas/timeline.md)  
-- [Exporting & sharing maps](/docs/atlas/export.md)
+- [Learn about countries](/docs/atlas/countries.md)
+- [Organize countries into lists](/docs/atlas/country-lists.md)
+- [Enhance your map with layers and markers](/docs/atlas/layers-markers.md)
+- [Save your maps](/docs/atlas/saved-maps.md)
+- [Visualise your visits in the Timeline](/docs/atlas/timeline.md)
+- [Export & share your maps](/docs/atlas/exporting-sharing-maps.md)

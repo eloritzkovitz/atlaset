@@ -6,12 +6,14 @@ import {
   DrawerPanel,
   mapMenuItems,
   MenuButton,
+  Separator,
   SidePanelMenu,
   SubmenuSection,
 } from "@components";
 import { useAccessibility } from "@features/settings/accessibility";
 import { useScreenSize } from "@hooks";
 import { DOCS_GROUPS } from "../constants/docsMenu";
+import React from "react";
 
 interface DocsPanelMenuProps {
   selectedPanel?: string;
@@ -39,10 +41,10 @@ export function DocsPanelMenu({
   // Expand the relevant section if selectedPanel changes
   useEffect(() => {
     if (!selectedPanel) return;
-    // Find which group contains the selectedPanel (by file)
     const found = groupEntries.find(([, group]) =>
       group.items.some((doc) => doc.file === selectedPanel),
     );
+
     if (found) {
       const [foundKey] = found;
       setExpanded((prev) => ({ ...prev, [foundKey]: true }));
@@ -67,7 +69,7 @@ export function DocsPanelMenu({
       showSidebar={false}
     >
       {selectedPanel && (
-        <div className="flex justify-center mb-2 mt-2">
+        <div className="flex flex-col justify-center mb-2 mt-2">
           <MenuButton
             icon={<DirectionalIcon variant="chevron" direction="prev" />}
             className="w-full"
@@ -76,27 +78,31 @@ export function DocsPanelMenu({
           >
             Return to Home
           </MenuButton>
+          <Separator className="my-2" />
         </div>
       )}
-      <ul className="mt-2">
+
+      <ul>
         {groupEntries.map(([key, group]) => (
-          <SubmenuSection
-            key={key}
-            icon={group.header.icon ? <group.header.icon /> : null}
-            label={group.header.label}
-            expanded={expanded[key]}
-            onToggle={() =>
-              setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))
-            }
-            submenu={mapMenuItems(
-              group.items.map((item) => ({ ...item, key: item.file })),
-            )}
-            selectedPanel={selectedPanel}
-            setSelectedPanel={(panelFile) => {
-              setSelectedPanel(panelFile);
-              if (isMobile && onClose) onClose();
-            }}
-          />
+          <React.Fragment key={key}>
+            <SubmenuSection
+              icon={group.header.icon ? <group.header.icon /> : null}
+              label={group.header.label}
+              expanded={expanded[key]}
+              onToggle={() =>
+                setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+              submenu={mapMenuItems(
+                group.items.map((item) => ({ ...item, key: item.file })),
+              )}
+              selectedPanel={selectedPanel}
+              setSelectedPanel={(panelFile) => {
+                setSelectedPanel(panelFile);
+                if (isMobile && onClose) onClose();
+              }}
+            />
+            <Separator className="my-2" />
+          </React.Fragment>
         ))}
       </ul>
     </SidePanelMenu>

@@ -11,7 +11,6 @@ This guide will help you set up the project locally, configure your data sources
 
 ## Installation
 
-
 1. **Clone the repository**
 
    ```bash
@@ -25,7 +24,6 @@ This guide will help you set up the project locally, configure your data sources
    ```
 
 ## Configuration
-
 
 1. **Environmental variables**
 
@@ -44,7 +42,6 @@ See [Data Sources](/docs/developers/data-sources.md) for details on file formats
 
 ## Running the app
 
-
 **Start the development server**
 
 ```bash
@@ -53,7 +50,6 @@ npm run dev
 
 - Open `http://localhost:5173` in your browser.
 
-
 **Build for production**
 
 ```bash
@@ -61,7 +57,6 @@ npm run build
 ```
 
 - The output will be in the [`/dist`](../dist) folder.
-
 
 **Preview the production build**
 

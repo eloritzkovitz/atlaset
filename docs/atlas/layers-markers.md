@@ -1,38 +1,40 @@
 # Layers & markers
 
-Atlaset lets you customize your map with layers (highlighting groups of countries) and markers (custom points with details). Both can be managed, exported, imported and shared easily either through the app or from `JSON` files.
+Atlaset lets you customize your map with layers (highlighting groups of countries) and markers (custom points with details). Both can be managed, exported, imported and shared easily either through the app or from JSON files.
 
 ## Layers
 
-Countries are stored in layers by their `ISO 3166-1 code`, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
+Countries are stored in layers by their **ISO 3166-1 code**, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
-You can open the `Layers` panel from the `map toolbar` or by pressing the <kbd>L</kbd> key.
+You can open the **Layers** panel from the map toolbar or by pressing the <kbd>L</kbd> key.
 
-**Layer colors** use `RGBA` or `8-digit hex` color formats to support optional alpha transparency. You can find the correct value by using [this tool](https://rgbacolorpicker.com/).
+**Layer colors** use **RGBA** or **hex** color formats to support optional alpha transparency. You can find the correct value by using [this tool](https://rgbacolorpicker.com/).
 
-#### Layer JSON fields
+#### Layer fields
 
-| Field          | Type       | Description                                                                                  |
-| -------------- | ---------- | -------------------------------------------------------------------------------------------- |
-| `id`           | `string`   | Unique identifier for the layers. Generated if missing. _(optional.)_                        |
-| `name`         | `string`   | Display name for the layers                                                                  |
-| `color`        | `string`   | RGBA or hex color for the layers (RGBA will be converted to hex on import)                   |
-| `countries`    | `string[]` | Array of ISO 3166-1 country codes                                                            |
-| `filterLabels` | `map`      | Customized filter labels, replacing labels for `All`/`Include Only`/`Exclude`. _(optional.)_ |
-| `visible`      | `boolean`  | Whether the layers is visible by default                                                     |
-| `order`        | `number`   | Display order for the layer                                                                  |
-| `listId`       | `string`   | ID of a linked list (sharing `name` and `countries`). _(optional.)_                          |
+| Field          | Type       | Description                                                                    |
+| -------------- | ---------- | ------------------------------------------------------------------------------ |
+| `id`\*         | `string`   | Unique identifier for the layers. Generated if missing.                        |
+| `name`\*       | `string`   | Display name for the layers.                                                   |
+| `color`\*      | `string`   | RGBA or hex color for the layers (RGBA will be converted to hex on import).    |
+| `countries`\*  | `string[]` | Array of ISO 3166-1 codes.                                                     |
+| `filterLabels` | `map`      | Customized filter labels, replacing labels for `All`/`Include Only`/`Exclude`. |
+| `visible`\*    | `boolean`  | Whether the layers is visible. `true` by default.                              |
+| `order`        | `number`   | Display order for the layer.                                                   |
+| `listId`       | `string`   | ID of a linked list (sharing `name` and `countries`).                          |
+
+`*` Required fields.
 
 ### Adding layers
 
 #### 1. From JSON files
 
-- You can import `layers` from `JSON` files. You can see a minimal example (the `id` field is optional and will be generated if omitted) here:
+- You can import layers from JSON files. You can see a minimal example (the `id` field is optional and will be generated if omitted) here:
 
 ```json
 {
   "name": "Example",
-  "color": "#ffffffff", //8-digit hex, ("rgba(255, 255, 255, 1)" if using RGBA)
+  "color": "#ffffff",
   "filterLabels": {
     "all": "All",
     "only": "Include Only",
@@ -45,29 +47,33 @@ You can open the `Layers` panel from the `map toolbar` or by pressing the <kbd>L
 
 [Download a full example layers JSON](/docs/examples/layers.json)
 
-- To import, use the `Layers` panel in the app and select your `JSON` file.
+- To import, use the **Layers** panel in the app and select your JSON file.
 
 #### 2. Via the UI
 
-- Use the `Layers` panel in the app to create, edit, or delete `layers`.
-- Fill the `countries` array with `ISO 3166-1 codes` for the relevant countries.
-- You can also change the layer's color by changing the `RGBA` value.
+- Use the **Layers** panel in the app to create, edit, or delete layers.
+- Fill the **countries** array with **ISO 3166-1 codes** for the relevant countries.
+- You can also change the layer's color by changing the **RGBA** value.
 
 ## Markers
 
-`Markers` are custom pins placed on the map by clicking on a country. Each country can have up to one marker at a time.
+Markers are custom pins placed on the map by clicking on a country. Each country can have up to one marker at a time.
 
-You can open the `Markers` panel from the `map toolbar` or by pressing the <kbd>M</kbd> key.
+You can open the **Markers** panel from the map toolbar or by pressing the <kbd>M</kbd> key.
 
-#### Marker JSON Fields
+#### Marker fields
 
-| Field     | Type     | Description                                                         |
-| --------- | -------- | ------------------------------------------------------------------- |
-| `id`      | `string` | Unique identifier for the marker (_optional_, generated if missing) |
-| `name`    | `string` | Display name for the mmearker (_optional_)                          |
-| `isoCode` | `string` | The ISO 3166-1 code of the country                                  |
-| `color`   | `string` | Marker color in hex or RGBA format (_optional_)                     |
-| `notes`   | `string` | Additional information about the marker (_optional_)                |
+| Field       | Type      | Description                                             |
+| ----------- | --------- | ------------------------------------------------------- |
+| `id`\*      | `string`  | Unique identifier for the marker. Generated if missing. |
+| `name`\*    | `string`  | Display name for the marker.                            |
+| `isoCode`\* | `string`  | The ISO 3166-1 code of the country.                     |
+| `color`\*   | `string`  | Marker color in hex or RGBA format.                     |
+| `notes`     | `string`  | Additional information about the marker.                |
+| `visible`\* | `boolean` | Whether the marker is visible. `true` by default.       |
+| `order`     | `number`  | Display order for the marker.                           |
+
+`*` Required fields.
 
 ### Adding markers
 
@@ -75,6 +81,6 @@ Markers can be added and managed the same way as layers, but with their own resp
 
 ## Importing/exporting map data
 
-- `Layers` and `Markers` can be easily imported from and exported to `JSON` files.
+- Layers and Markers can be easily imported from and exported to JSON files.
 - Use this to back up your data or share it with others.
-- You can also download the entire map data through the `Export` panel, `"Download as JSON"`.
+- You can also download the entire map data by using the **Export** panel.

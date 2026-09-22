@@ -75,16 +75,19 @@ import {
   FaMoon,
   FaPaintbrush,
   FaPalette,
+  FaPause,
   FaPencil,
   FaPenToSquare,
   FaPercent,
   FaPlane,
+  FaPlay,
   FaPlus,
   FaPowerOff,
   FaRegCircleQuestion,
   FaRegClock,
   FaRegEye,
   FaRegHeart,
+  FaRegLightbulb,
   FaRightFromBracket,
   FaRocket,
   FaRotateLeft,
@@ -129,6 +132,7 @@ export const ICONS = {
   settings: FaGear,
   activity: FaRegClock,
   signOut: FaRightFromBracket,
+  
   // Atlas
   atlas: FaEarthAmericas,
   map: FaMap,
@@ -159,6 +163,7 @@ export const ICONS = {
     overlays: TbSquaresSelected,
     colors: FaPalette,
   },
+  
   // Explore
   explore: FaBinoculars,
   progress: FaBarsProgress,
@@ -166,6 +171,7 @@ export const ICONS = {
   didYouKnow: FaLightbulb,
   currencies: FaCoins,
   timezones: FaClock,
+  
   // Trips
   trips: FaSuitcaseRolling,
   tripDates: FaCalendarDays,
@@ -182,11 +188,13 @@ export const ICONS = {
   tripFilters: FaPercent,
   photoAlbum: FaImages,
   sharedTrips: FaUsers,
+  
   // Dashboard
   dashboard: DashboardIcon,
   overview: FaHouse,
   achievements: FaMedal,
   statistics: FaChartSimple,
+  
   // Quizzes
   quizzes: FaGamepad,
   gameplay: FaChessKnight,
@@ -197,6 +205,7 @@ export const ICONS = {
   quizHard: FaFire,
   quizExpert: FaHatWizard,
   leaderboards: FaTrophy,
+  
   //Settings
   home: FaHouse,
   language: IoLanguage,
@@ -220,21 +229,26 @@ export const ICONS = {
     mobile: FaMobile,
     tablet: FaTablet,
   },
+  
   // Misc
   search: FaMagnifyingGlass,
   calendar: FaCalendar,
   notifications: FaBell,
+  tip: FaRegLightbulb,
   help: FaCircleQuestion,
   helpTooltip: FaRegCircleQuestion,
   info: FaCircleInfo,
   warning: FaTriangleExclamation,
   reportBug: FaBug,
   appearance: FaMoon,
+  code: FaCode,
+  
   //UI
   viewMode: {
     grid: BsGrid,
     list: FaList,
   },
+  
   // Actions
   add: FaPlus,
   importFile: FaFileImport,
@@ -264,9 +278,12 @@ export const ICONS = {
   close: FaXmark,
   check: FaCheck,
   more: FaEllipsisVertical,
+
+  pause: FaPause,
+  play: FaPlay,
+  
   // Docs
-  getStarted: FaRocket,
-  developers: FaCode,
+  getStarted: FaRocket,  
   laptopCode: FaLaptopCode,
   data: FaDatabase,
   scripts: FaFilePen,

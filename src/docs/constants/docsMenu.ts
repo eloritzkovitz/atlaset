@@ -99,9 +99,9 @@ export const DOCS_GROUPS = {
       },
       {
         label: "Exporting & sharing maps",
-        file: "atlas/export.md",
+        file: "atlas/exporting-sharing-maps.md",
         icon: ICONS.export,
-        url: "/docs/atlas/export",
+        url: "/docs/atlas/exporting-sharing-maps",
       },
     ],
   },
@@ -164,10 +164,22 @@ export const DOCS_GROUPS = {
     },
     items: [
       {
-        label: "Trips",
-        file: "trips/trips.md",
+        label: "Overview",
+        file: "trips/trips-overview.md",
         icon: ICONS.trips,
-        url: "/docs/trips/trips",
+        url: "/docs/trips/trips-overview",
+      },
+      {
+        label: "Creating and managing trips",
+        file: "trips/creating-managing-trips.md",
+        icon: ICONS.tripPlanned,
+        url: "/docs/trips/creating-managing-trips",
+      },
+      {
+        label: "Viewing trip details",
+        file: "trips/viewing-trip-details.md",
+        icon: ICONS.view,
+        url: "/docs/trips/viewing-trip-details",
       },
       {
         label: "Destinations",
@@ -189,9 +201,9 @@ export const DOCS_GROUPS = {
       },
       {
         label: "Tracking your visits",
-        file: "trips/visits.md",
+        file: "trips/tracking-your-visits.md",
         icon: ICONS.visits,
-        url: "/docs/trips/visits",
+        url: "/docs/trips/tracking-your-visits",
       },
       {
         label: "Calendar",
@@ -280,7 +292,7 @@ export const DOCS_GROUPS = {
     ],
   },
   forDevelopers: {
-    header: { label: "For Developers", file: null, icon: ICONS.developers },
+    header: { label: "For Developers", file: null, icon: ICONS.code },
     items: [
       {
         label: "Developer Guide",

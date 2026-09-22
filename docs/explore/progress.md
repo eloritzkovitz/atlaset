@@ -1,9 +1,9 @@
 # Progress
 
-The `Progress` section gives you a detailed view of your exploraion progress, organized by regions and subregions. Each section highlights your visited countries by their flag, serving as an expanded version of the `Countries` panel in the atlas page.
+The **Progress** section provides a detailed view of your exploration progress, organized by regions and subregions. Each section displays your visited countries by flag, providing an expanded view of the atlas's **Countries** panel.
 
-Countries can be searched, filtered by region/subregion/sovereignty/visit status, and viewed in `grid view` or `list view`.
+Countries can be searched and filtered by **region**, **subregion**, **sovereignty** and **visit status**. Supported lists can be displayed in either **grid view** or **list view**.
 
-## Learn more
+## Further reading
 
-[Countries](/docs/atlas/countries.md)  
+- [Tracking your visits](/docs/trips/tracking-your-visits.md)

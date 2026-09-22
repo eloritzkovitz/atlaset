@@ -1,16 +1,16 @@
 # Quizzes overview
 
-Atlaset features interactive geography `quizzes` to help you learn and test your knowledge about the world. Compete for high scores, challenge your `friends` and climb the `leaderboards`!
+Atlaset features interactive geography **quizzes** to help you learn and test your knowledge about the world. Compete for high scores, challenge your **friends** and climb the **leaderboards**!
 
 ## Key features
 
-- **`Competitive quizzes`:** Play one of the quizzes:
-  - **`Guess the Flag`:** Guess `countries` based on the `flag`
-  - **`Guess the Capital`:** Guess `capital cities` of `countries`
-- **`Customizable difficulty and modes`:** Choose your own difficulty and play relaxed or competitive
-- **`Leaderboards`:** When playing in `timed mode`, your scores might enter the `leaderboards`! Only the top 25 highest entries are saved, so make sure you do your best!
+| Feature                       | Description                                                                                                                         |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Quiz Types**                | Play **Guess the Flag** to identify countries from their flags, or **Guess the Capital** to identify the capital city of a country. |
+| **Difficulty and Game Modes** | Choose your difficulty level and play in **Sandbox** or **Timed** mode.                                                             |
+| **Leaderboards**              | Scores from **Timed** mode can qualify for the leaderboards. Only the top 25 scores are saved.                                      |
 
-## Read more
+## Next steps
 
-[Gameplay](/docs/quizzes/gameplay.md)  
-[Leaderboards](/docs/quizzes/leaderboards.md)
+- [How to play](/docs/quizzes/gameplay.md)
+- [Leaderboards](/docs/quizzes/leaderboards.md)
