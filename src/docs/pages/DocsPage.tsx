@@ -55,7 +55,7 @@ export default function DocsPage() {
   };
 
   return (
-    <div dir="ltr">
+    <div className="relative min-h-screen">
       <DocsHeader show={true} />
       <SidebarLayout
         menu={

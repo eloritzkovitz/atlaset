@@ -68,7 +68,8 @@ export function SidePanelMenu({
     ? TbLayoutSidebarRightExpand
     : TbLayoutSidebarLeftExpand;
 
-  // Panel content
+  const toggleTop = `calc(${topOffset} + 0.875rem)`;
+
   const panelContent = (
     <Panel
       title={title}
@@ -90,7 +91,10 @@ export function SidePanelMenu({
               className={menuButtonClassName}
               onClick={() => {
                 setSelectedPanel(item.key);
-                if (isMobile) handleClose();
+
+                if (isMobile) {
+                  handleClose();
+                }
               }}
             >
               {item.label}
@@ -98,6 +102,7 @@ export function SidePanelMenu({
           </li>
         ))}
       </ul>
+
       {children}
     </Panel>
   );
@@ -111,11 +116,13 @@ export function SidePanelMenu({
             type="button"
             icon={<SidebarIcon className="text-3xl text-muted" />}
             onClick={() => modal.open()}
-            className={`fixed top-3.5 ${showSidebar ? "start-18" : "start-2"} z-20`}
+            className={`fixed ${showSidebar ? "start-18" : "start-2"} z-20`}
+            style={{ top: toggleTop }}
             aria-label={t("actions.openMenu", "Open menu")}
             title={t("actions.openMenu", "Open menu")}
           />
         )}
+
         <DrawerPanel
           open={isOpen}
           onClose={handleClose}
