@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import {
-  Branding,
   DrawerPanel,
   mapMenuItems,
   Separator,
@@ -51,17 +50,14 @@ export function DocsPanelMenu({
   // Panel content
   const panelContent = (
     <SidePanelMenu
-      title={
-        <div className="flex items-center gap-2 px-2">
-          <Branding size={36} />
-          <span className="font-bold text-2xl">Atlaset Docs</span>
-        </div>
-      }
+      title={null}
       width={340}
       animationsEnabled={animationsEnabled}
+      topOffset={isMobile ? "0px" : "64px"}
       menuItems={[]}
       selectedPanel={selectedPanel || ""}
       setSelectedPanel={setSelectedPanel}
+      showHeader={false}
       showSidebar={false}
     >
       <ul>

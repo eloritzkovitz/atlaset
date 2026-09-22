@@ -19,7 +19,7 @@ export interface SidePanelMenuItem {
 }
 
 export interface SidePanelMenuProps {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   menuItems: SidePanelMenuItem[];
   selectedPanel: string;
   setSelectedPanel: (key: string) => void;
@@ -28,8 +28,10 @@ export interface SidePanelMenuProps {
   width?: number;
   collapsed?: boolean;
   animationsEnabled?: boolean;
+  topOffset?: string;
   menuButtonClassName?: string;
   showSidebar?: boolean;
+  showHeader?: boolean;
   children?: React.ReactNode;
 }
 
@@ -44,8 +46,10 @@ export function SidePanelMenu({
   width = 250,
   collapsed = true,
   animationsEnabled = true,
+  topOffset = "0px",
   menuButtonClassName = "w-full px-2 !text-lg font-semibold",
   showSidebar = true,
+  showHeader = true,
   children,
 }: SidePanelMenuProps) {
   const { isLaptop, isMobile } = useScreenSize();
@@ -72,7 +76,9 @@ export function SidePanelMenu({
       className={isMobile ? "!start-0" : undefined}
       onHide={isMobile || isLaptop ? handleClose : undefined}
       animationsEnabled={animationsEnabled}
+      topOffset={topOffset}
       showSidebar={showSidebar}
+      showHeader={showHeader}
     >
       <ul className="flex flex-col gap-2 p-1 -mx-2">
         {menuItems.map((item) => (

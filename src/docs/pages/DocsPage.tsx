@@ -4,6 +4,7 @@ import { SidebarLayout } from "@app/layouts/app/SidebarLayout";
 import { Breadcrumbs, Container, MarkdownFileRenderer } from "@components";
 import { usePageTitle } from "@hooks";
 import { useMarkdownFile } from "@lib/markdown";
+import { DocsHeader } from "../components/DocsHeader";
 import { DocsNotFound } from "../components/DocsNotFound";
 import { DocsPanelMenu } from "../components/DocsPanelMenu";
 import { WelcomeDocsSection } from "../components/WelcomeSection";
@@ -55,6 +56,7 @@ export default function DocsPage() {
 
   return (
     <div dir="ltr">
+      <DocsHeader show={true} />
       <SidebarLayout
         menu={
           !(slug && !doc) ? (

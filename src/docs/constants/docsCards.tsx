@@ -11,7 +11,7 @@ export const DOCS_CARDS = [
     icon: <ICONS.profile className="text-5xl mb-4 text-muted" />,
     title: "Account & Profile",
     description: "Manage your account settings and personalize your profile.",
-    file: "get-started/account-profile.md",
+    file: "get-started/profile.md",
   },
   {
     icon: <ICONS.atlas className="text-5xl mb-4 text-info" />,
