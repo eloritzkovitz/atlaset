@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Branding,
-  DirectionalIcon,
   DrawerPanel,
   mapMenuItems,
-  MenuButton,
   Separator,
   SidePanelMenu,
   SubmenuSection,
@@ -30,7 +27,6 @@ export function DocsPanelMenu({
 }: DocsPanelMenuProps) {
   const { animationsEnabled } = useAccessibility();
   const { isMobile } = useScreenSize();
-  const navigate = useNavigate();
 
   // Track expanded state for each section by key
   const groupEntries = Object.entries(DOCS_GROUPS);
@@ -68,20 +64,6 @@ export function DocsPanelMenu({
       setSelectedPanel={setSelectedPanel}
       showSidebar={false}
     >
-      {selectedPanel && (
-        <div className="flex flex-col justify-center mb-2 mt-2">
-          <MenuButton
-            icon={<DirectionalIcon variant="chevron" direction="prev" />}
-            className="w-full"
-            onClick={() => navigate("/docs")}
-            ariaLabel="Return to docs home"
-          >
-            Return to Home
-          </MenuButton>
-          <Separator className="my-2" />
-        </div>
-      )}
-
       <ul>
         {groupEntries.map(([key, group]) => (
           <React.Fragment key={key}>

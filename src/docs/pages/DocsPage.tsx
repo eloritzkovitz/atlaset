@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarLayout } from "@app/layouts/app/SidebarLayout";
-import { Container, MarkdownFileRenderer } from "@components";
+import { Breadcrumbs, Container, MarkdownFileRenderer } from "@components";
 import { usePageTitle } from "@hooks";
 import { useMarkdownFile } from "@lib/markdown";
 import { DocsNotFound } from "../components/DocsNotFound";
@@ -9,7 +9,13 @@ import { DocsPanelMenu } from "../components/DocsPanelMenu";
 import { WelcomeDocsSection } from "../components/WelcomeSection";
 import { DOCS_PATH } from "../constants/docsMenu";
 import { getDocsMarkdownComponents } from "../markdown/DocsMarkdownComponents";
-import { getDocBySlug, getSlugFromPath, navigateToDoc } from "../utils/docs";
+import { getDocBySlug, getSlugFromPath } from "../utils/docs";
+import {
+  getDocsBreadcrumbs,
+  navigateToDoc,
+  navigateToDocs,
+  navigateToDocsGroup,
+} from "../utils/docsNavigation";
 
 export default function DocsPage() {
   const navigate = useNavigate();
@@ -33,6 +39,20 @@ export default function DocsPage() {
     fallback: "Atlaset Docs",
   });
 
+  const breadcrumbs = useMemo(
+    () => (doc ? getDocsBreadcrumbs(doc.file) : []),
+    [doc],
+  );
+
+  const handleCrumbClick = (key: string) => {
+    if (key === "docs") {
+      navigateToDocs(navigate);
+      return;
+    }
+
+    navigateToDocsGroup(navigate, key);
+  };
+
   return (
     <div dir="ltr">
       <SidebarLayout
@@ -47,13 +67,20 @@ export default function DocsPage() {
       >
         <Container>
           {doc ? (
-            <MarkdownFileRenderer
-              content={content}
-              error={error}
-              components={getDocsMarkdownComponents((file) =>
-                navigateToDoc(navigate, file),
-              )}
-            />
+            <>
+              <Breadcrumbs
+                crumbs={breadcrumbs}
+                onCrumbClick={handleCrumbClick}
+              />
+
+              <MarkdownFileRenderer
+                content={content}
+                error={error}
+                components={getDocsMarkdownComponents((file) =>
+                  navigateToDoc(navigate, file),
+                )}
+              />
+            </>
           ) : slug ? (
             <DocsNotFound />
           ) : (
