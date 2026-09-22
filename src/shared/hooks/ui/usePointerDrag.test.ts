@@ -63,9 +63,11 @@ afterEach(() => {
 describe("usePointerDrag", () => {
   it("handles styles and centering", () => {
     const disabled = renderHook(() => usePointerDrag(false, false));
+
     expect(disabled.result.current.modalStyle).toEqual({});
 
     const { result, rerender } = mount();
+
     expect(result.current.modalStyle.position).toBe("fixed");
 
     rerender({ open: true });
@@ -96,17 +98,73 @@ describe("usePointerDrag", () => {
 
   it("handles pointer down guards", () => {
     const disabled = renderHook(() => usePointerDrag(false, true));
+
     down(disabled.result);
+
     expect(disabled.result.current.dragging).toBe(false);
 
     const { result, rerender } = mount();
     rerender({ open: true });
 
     down(result, { button: 1 });
+
     expect(result.current.dragging).toBe(false);
 
     down(result);
+
     expect(result.current.dragging).toBe(true);
+  });
+
+  it("ignores pointer down inside excluded refs", () => {
+    const excluded = createRef();
+    const child = document.createElement("button");
+
+    excluded.current?.appendChild(child);
+
+    const hook = renderHook(
+      ({ open }) =>
+        usePointerDrag(true, open, [excluded as RefObject<HTMLElement | null>]),
+      { initialProps: { open: false } },
+    );
+
+    act(() => hook.result.current.setModalDomRef(createRef().current));
+
+    hook.rerender({ open: true });
+
+    act(() =>
+      hook.result.current.handlePointerDown({
+        pointerType: "mouse",
+        button: 0,
+        clientX: 500,
+        clientY: 400,
+        target: child,
+      } as unknown as React.PointerEvent<Element>),
+    );
+
+    expect(hook.result.current.dragging).toBe(false);
+  });
+
+  it("starts dragging outside excluded refs", () => {
+    const excluded = createRef();
+
+    const hook = mount();
+
+    hook.rerender({ open: true });
+
+    act(() =>
+      hook.result.current.handlePointerDown({
+        pointerType: "mouse",
+        button: 0,
+        clientX: 500,
+        clientY: 400,
+        target: document.createElement("button"),
+      } as unknown as React.PointerEvent<Element>),
+    );
+
+    expect(hook.result.current.dragging).toBe(true);
+
+    // Also covers an excluded ref whose current value is null.
+    expect(excluded.current).not.toBeNull();
   });
 
   it("updates and clears pending frames", () => {
@@ -118,6 +176,7 @@ describe("usePointerDrag", () => {
     });
 
     const { result, rerender } = mount();
+
     rerender({ open: true });
     down(result);
 
@@ -130,7 +189,10 @@ describe("usePointerDrag", () => {
 
     act(() => frame?.(0));
 
-    expect(result.current.modalOffset).toEqual({ x: 500, y: 450 });
+    expect(result.current.modalOffset).toEqual({
+      x: 500,
+      y: 450,
+    });
 
     down(result);
     act(move);
@@ -138,7 +200,6 @@ describe("usePointerDrag", () => {
 
     expect(result.current.dragging).toBe(false);
 
-    // Executes updatePosition after pointerup cleared dragState.current.
     act(() => frame?.(0));
   });
 
@@ -148,6 +209,7 @@ describe("usePointerDrag", () => {
     vi.spyOn(window, "requestAnimationFrame").mockReturnValue(123);
 
     const { result, rerender } = mount();
+
     rerender({ open: true });
     down(result);
 
@@ -158,6 +220,7 @@ describe("usePointerDrag", () => {
 
     down(result);
     act(move);
+
     rerender({ open: false });
 
     expect(cancel).toHaveBeenCalledWith(123);
@@ -177,7 +240,7 @@ describe("usePointerDrag", () => {
     expect(disabled.result.current.dragging).toBe(false);
   });
 
-  it("handles missing refs", () => {
+  it("handles missing modal refs", () => {
     const { result, rerender } = renderHook(
       ({ open }) => usePointerDrag(true, open),
       { initialProps: { open: false } },

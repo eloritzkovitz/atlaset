@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, ColorSelectInput } from "@components";
+import { useDisclosure } from "@hooks";
 import type { ImageFormat } from "../../types";
 
 type ImageOptionsProps = {
@@ -24,6 +25,8 @@ export function ImageOptions({
   const [quality, setQuality] = useState(5);
   const qualityFloat = quality * 0.2;
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+
+  const colorModal = useDisclosure();
 
   // Notify parent of option changes
   useEffect(() => {
@@ -85,6 +88,10 @@ export function ImageOptions({
           <ColorSelectInput
             value={backgroundColor}
             onChange={setBackgroundColor}
+            isOpen={colorModal.isOpen}
+            onOpen={colorModal.open}
+            onClose={colorModal.close}
+            disabled={false}
           />
         </div>
       )}
