@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-23
+
+- **[bugfix]** **Countries:** Improved search behavior for qualifiers and modifiers in the qualifier search
+
 ## 2026-09-22
 
 - **[docs]** **Docs:** Redesigned docs page with improved layout and navigation

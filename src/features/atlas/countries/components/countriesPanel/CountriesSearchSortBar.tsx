@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, SegmentedToggle, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
@@ -19,6 +19,47 @@ interface CountriesSearchSortBarProps {
   setSelectedListId?: (id: string | null) => void;
   onAddList?: () => void;
   onEditList?: (id: string) => void;
+}
+
+type ConditionToggle = "visited" | "wantToVisit" | "sovereign";
+
+const CONDITIONS: Record<ConditionToggle, { prefix: string; search: string }> =
+  {
+    visited: {
+      prefix: "visited",
+      search: "visited:true",
+    },
+    wantToVisit: {
+      prefix: "wanttovisit",
+      search: "wanttovisit:true",
+    },
+    sovereign: {
+      prefix: "sovereign",
+      search: "sovereign:true",
+    },
+  };
+
+const SPECIAL_LIST_IDS: Record<string, string> = {
+  visited: "VISITED_COUNTRIES",
+  wantToVisit: "WANT_TO_VISIT",
+};
+
+// Checks if the search string contains a condition prefix and returns the corresponding toggle if found.
+function getSearchCondition(value: string): ConditionToggle | null {
+  const normalized = value.trim().toLowerCase();
+
+  for (const [toggle, { prefix }] of Object.entries(CONDITIONS) as [
+    ConditionToggle,
+    (typeof CONDITIONS)[ConditionToggle],
+  ][]) {
+    const pattern = new RegExp(`(?:^|\\s)${prefix}\\s*:\\s*true(?:\\s|$)`, "i");
+
+    if (pattern.test(normalized)) {
+      return toggle;
+    }
+  }
+
+  return null;
 }
 
 export function CountriesSearchSortBar({
@@ -44,11 +85,12 @@ export function CountriesSearchSortBar({
     search,
     setSearch,
   } = useCountryFilters();
+
   const { timelineMode } = useTimeline();
   const { t } = useTranslation("atlas");
 
-  // Drag scroll state
   const togglesRef = useRef<HTMLDivElement>(null);
+
   const { isOverflowing, dragClassName } = useDragScroll(togglesRef, [
     countryLists,
     allCount,
@@ -85,7 +127,6 @@ export function CountriesSearchSortBar({
     })),
   ];
 
-  // Determine selected toggle
   const selectedToggle = wantToVisitOnly
     ? "wantToVisit"
     : visitedOnly
@@ -94,23 +135,53 @@ export function CountriesSearchSortBar({
         ? "sovereign"
         : selectedListId || "all";
 
-  // Qualifier should only be clearable when 'All' is selected; disable for sovereign, visited, and custom lists
-  const qualifierClearable = selectedToggle === "all";
+  const setCondition = useCallback(
+    (condition: ConditionToggle | null) => {
+      setVisitedOnly?.(condition === "visited");
+      setWantToVisitOnly?.(condition === "wantToVisit");
+      setSovereignOnly?.(condition === "sovereign");
+      setSelectedListId?.(null);
+    },
+    [setVisitedOnly, setWantToVisitOnly, setSovereignOnly, setSelectedListId],
+  );
 
-  // Handler for double-click editing
-  const handleToggleDoubleClick = (val: string) => {
-    if (val === "all" || val === "sovereign") return;
-
-    // If the toggle corresponds to "visited" or a custom list, trigger the edit callback
-    if (typeof onEditList === "function") {
-      if (val === "visited") {
-        onEditList("VISITED_COUNTRIES");
-      } else if (val === "wantToVisit") {
-        onEditList("WANT_TO_VISIT");
-      } else {
-        onEditList(val);
-      }
+  // Update condition based on search changes, but only if not in timeline mode
+  useEffect(() => {
+    if (timelineMode) {
+      return;
     }
+
+    const condition = getSearchCondition(search);
+
+    setCondition(condition);
+  }, [search, timelineMode, setCondition]);
+
+  const handleToggleDoubleClick = (value: string) => {
+    if (value === "all" || value === "sovereign") {
+      return;
+    }
+
+    onEditList?.(SPECIAL_LIST_IDS[value] ?? value);
+  };
+
+  const handleToggleChange = (value: string) => {
+    if (value in CONDITIONS) {
+      const condition = value as ConditionToggle;
+
+      setCondition(condition);
+      setSearch(CONDITIONS[condition].search);
+      return;
+    }
+
+    if (value === "all") {
+      setCondition(null);
+      setSearch("");
+      return;
+    }
+
+    setCondition(null);
+    setSelectedListId?.(value);
+    setSearch("");
   };
 
   return (
@@ -121,27 +192,17 @@ export function CountriesSearchSortBar({
           onChange={setSearch}
           qualifiers={SUPPORTED_QUALIFIERS}
           modifiers={SUPPORTED_MODIFIERS}
-          clearable={qualifierClearable}
-          lockedPrefix={
-            !timelineMode
-              ? selectedToggle === "wantToVisit"
-                ? "wanttovisit"
-                : selectedToggle === "visited"
-                  ? "visited"
-                  : selectedToggle === "sovereign"
-                    ? "sovereign"
-                    : undefined
-              : undefined
-          }
           placeholder={t("countries.searchPlaceholder")}
           className="flex-1 h-10"
         />
+
         <CountrySortSelect
           value={sortBy}
           onChange={(v: string) => setSortBy(v)}
           visitedOnly={visitedOnly}
         />
       </div>
+
       <div
         ref={togglesRef}
         className={`flex mt-2 py-2 items-center gap-2 overflow-x-auto whitespace-nowrap toggles-scroll ${dragClassName}`}
@@ -154,48 +215,11 @@ export function CountriesSearchSortBar({
             options={[opt]}
             onDoubleClick={(val) => handleToggleDoubleClick(val)}
             className={isOverflowing ? "!cursor-inherit" : "!cursor-pointer"}
-            onChange={(val) => {
-              const ensurePrefix = (prefix: string) => {
-                const current = String(search ?? "").trim();
-                const low = current.toLowerCase();
-                if (low.startsWith(prefix + ":")) return;
-                setSearch(`${prefix}: true`);
-              };
-              if (val === "wantToVisit") {
-                setWantToVisitOnly?.(true);
-                setVisitedOnly?.(false);
-                setSovereignOnly?.(false);
-                setSelectedListId?.(null);
-                ensurePrefix("wanttovisit");
-              } else if (val === "visited") {
-                setVisitedOnly?.(true);
-                setWantToVisitOnly?.(false);
-                setSovereignOnly?.(false);
-                setSelectedListId?.(null);
-                ensurePrefix("visited");
-              } else if (val === "sovereign") {
-                setVisitedOnly?.(false);
-                setWantToVisitOnly?.(false);
-                setSovereignOnly?.(true);
-                setSelectedListId?.(null);
-                ensurePrefix("sovereign");
-              } else if (val === "all") {
-                setVisitedOnly?.(false);
-                setWantToVisitOnly?.(false);
-                setSovereignOnly?.(false);
-                setSelectedListId?.(null);
-                setSearch("");
-              } else {
-                setVisitedOnly?.(false);
-                setWantToVisitOnly?.(false);
-                setSovereignOnly?.(false);
-                setSelectedListId?.(val);
-                setSearch("");
-              }
-            }}
+            onChange={handleToggleChange}
             disabled={timelineMode}
           />
         ))}
+
         <ActionButton
           icon={<ICONS.add />}
           ariaLabel={t("countries.actions.newList")}

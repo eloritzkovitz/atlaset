@@ -34,39 +34,37 @@ export function useTripCategoryData() {
     cancelledTrips,
   } = useTripsStats();
 
-  const tripCounts: Record<TripStatus, number> = {
-    planned: plannedTrips.length,
-    upcoming: upcomingTrips.length,
-    "in-progress": inProgressTrips.length,
-    completed: completedTrips.length,
-    cancelled: cancelledTrips.length,
-  };
+  const statusData = useMemo<TripCategoryItem[]>(() => {
+    const tripCounts: Record<TripStatus, number> = {
+      planned: plannedTrips.length,
+      upcoming: upcomingTrips.length,
+      "in-progress": inProgressTrips.length,
+      completed: completedTrips.length,
+      cancelled: cancelledTrips.length,
+    };
 
-  const statusData = useMemo<TripCategoryItem[]>(
-    () =>
-      (Object.keys(TRIP_STATUS_CONFIG) as TripStatus[]).map((status) => {
-        const config = TRIP_STATUS_CONFIG[status];
+    return (Object.keys(TRIP_STATUS_CONFIG) as TripStatus[]).map((status) => {
+      const config = TRIP_STATUS_CONFIG[status];
 
-        return {
-          key: status,
-          name: t(`trips:statuses.${status}`, {
-            defaultValue: config.label,
-          }),
-          value: tripCounts[status],
-          color: config.color,
-          colorClass: STATUS_COLOR_CLASSES[status],
-          icon: config.icon,
-        };
-      }),
-    [
-      cancelledTrips.length,
-      completedTrips.length,
-      inProgressTrips.length,
-      plannedTrips.length,
-      upcomingTrips.length,
-      t,
-    ],
-  );
+      return {
+        key: status,
+        name: t(`trips:statuses.${status}`, {
+          defaultValue: config.label,
+        }),
+        value: tripCounts[status],
+        color: config.color,
+        colorClass: STATUS_COLOR_CLASSES[status],
+        icon: config.icon,
+      };
+    });
+  }, [
+    cancelledTrips.length,
+    completedTrips.length,
+    inProgressTrips.length,
+    plannedTrips.length,
+    upcomingTrips.length,
+    t,
+  ]);
 
   const typeData = useMemo<TripCategoryItem[]>(
     () =>

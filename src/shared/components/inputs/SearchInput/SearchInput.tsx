@@ -1,4 +1,15 @@
-import { useRef, useState, forwardRef, useId } from "react";
+import {
+  forwardRef,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  type UIEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { useKeyHandler } from "@hooks";
@@ -8,17 +19,18 @@ interface SearchInputProps {
   name?: string;
   value: string;
   onChange: (value: string) => void;
-  onClick?: (e: React.MouseEvent) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onClick?: (e: MouseEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   showClear?: boolean;
   onClear?: () => void;
   showIcon?: boolean;
   className?: string;
-  style?: React.CSSProperties;
-  overlayContent?: React.ReactNode;
+  style?: CSSProperties;
+  overlayContent?: ReactNode;
 }
 
+/** Renders a search input with optional icon and clear button. */
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   (
     {
@@ -38,50 +50,58 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     },
     ref,
   ) => {
+    const { t } = useTranslation("common");
+
     const generatedId = useId();
     const inputId = id || generatedId;
-
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const overlayRef = useRef<HTMLDivElement | null>(null);
-
-    const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
     const isMousedown = useRef(false);
 
-    // Focus search input when / is pressed
+    const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
+    const [scrollLeft, setScrollLeft] = useState(0);
+
+    const overlayStart = showIcon ? 40 : 12;
+    const overlayEnd = showClear ? 44 : 12;
+
+    const clearLabel = `${t("components.search.clear", "Clear")} ${t(
+      "components.search.placeholder",
+      "Search",
+    )}`;
+
+    const setInputRef = (element: HTMLInputElement | null) => {
+      inputRef.current = element;
+
+      if (typeof ref === "function") {
+        ref(element);
+      } else if (ref) {
+        ref.current = element;
+      }
+    };
+
     useKeyHandler(
       (e) => {
         e.preventDefault();
         setIsKeyboardFocused(true);
-        if (typeof ref === "function") {
-          inputRef.current?.focus();
-        } else if (ref && "current" in ref && ref.current) {
-          ref.current.focus();
-        } else {
-          inputRef.current?.focus();
-        }
+        inputRef.current?.focus();
       },
       ["/"],
       { allowSingleKeyShortcuts: true },
     );
 
-    // Blur search input when Escape is pressed
     useKeyHandler(
       (e) => {
-        const active =
-          typeof ref === "function"
-            ? inputRef.current
-            : ref && "current" in ref
-              ? ref.current
-              : inputRef.current;
-        if (document.activeElement === active) {
+        if (document.activeElement === inputRef.current) {
           e.preventDefault();
-          active?.blur();
+          inputRef.current?.blur();
         }
       },
       ["Escape"],
     );
 
-    const { t } = useTranslation("common");
+    // Update scrollLeft when value or overlayContent changes
+    useLayoutEffect(() => {
+      setScrollLeft(inputRef.current?.scrollLeft ?? 0);
+    }, [value, overlayContent]);
 
     return (
       <div
@@ -90,35 +110,33 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         }`}
       >
         {overlayContent && (
-          <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+          <div
+            className="absolute inset-0 pointer-events-none z-10 overflow-hidden"
+            aria-hidden="true"
+          >
             <div
-              ref={overlayRef}
-              className={`w-full text-base whitespace-pre flex items-center ${
-                showIcon === false ? "ps-3" : "ps-10"
-              } pe-10 py-2`}
-              style={{
-                paddingRight: showClear ? 44 : undefined,
-                overflow: "hidden",
-              }}
+              className="absolute inset-y-0 overflow-hidden"
+              style={{ left: overlayStart, right: overlayEnd }}
             >
               <div
-                className="w-full"
+                className="absolute inset-y-0 flex items-center whitespace-pre"
                 style={{
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "clip",
+                  minWidth: "max-content",
+                  transform: `translateX(-${scrollLeft}px)`,
                 }}
               >
-                <div style={{ display: "inline-block" }}>{overlayContent}</div>
+                {overlayContent}
               </div>
             </div>
           </div>
         )}
-        {showIcon !== false && (
+
+        {showIcon && (
           <ICONS.search className="absolute start-3 top-1/2 transform -translate-y-1/2 text-muted z-20" />
         )}
+
         <input
-          ref={ref || inputRef}
+          ref={setInputRef}
           id={inputId}
           name={name || "search"}
           type="text"
@@ -127,12 +145,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           autoCorrect="off"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onScroll={(e) => {
-            if (overlayRef.current)
-              overlayRef.current.scrollLeft = (
-                e.target as HTMLInputElement
-              ).scrollLeft;
-          }}
+          onScroll={(e: UIEvent<HTMLInputElement>) =>
+            setScrollLeft(e.currentTarget.scrollLeft)
+          }
           onMouseDown={() => {
             isMousedown.current = true;
           }}
@@ -146,50 +161,43 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             isMousedown.current = false;
           }}
           onClick={(e) => {
-            if (onClick) onClick(e);
+            onClick?.(e);
             isMousedown.current = false;
           }}
           onKeyDown={(e) => {
-            if (onKeyDown) {
-              onKeyDown(e);
-            }
+            onKeyDown?.(e);
+
             if (e.key === "Escape") {
               e.preventDefault();
-              const active =
-                typeof ref === "function"
-                  ? inputRef.current
-                  : ref && "current" in ref
-                    ? ref.current
-                    : inputRef.current;
-              active?.blur();
+              inputRef.current?.blur();
             }
           }}
           placeholder={placeholder}
           aria-label={
             placeholder || t("components.search.placeholder", "Search")
           }
-          className={`w-full ${showIcon === false ? "ps-3" : "ps-10"} pe-10 py-2 bg-input rounded-full border border-none text-base outline-none focus:outline-none focus:ring-0 ${className}`}
+          className={`w-full ${
+            showIcon ? "ps-10" : "ps-3"
+          } pe-10 py-2 bg-input rounded-full border border-none text-base outline-none focus:outline-none focus:ring-0 ${className}`}
           style={{
-            ...(style || {}),
+            ...style,
             ...(overlayContent
-              ? { color: "transparent", caretColor: "var(--color-text)" }
+              ? {
+                  color: "transparent",
+                  caretColor: "var(--color-text)",
+                }
               : {}),
             paddingRight: showClear ? 44 : undefined,
             zIndex: 20,
           }}
         />
-        {showClear && value.length > 0 && (
+
+        {showClear && value && (
           <button
             type="button"
-            aria-label={`${t("components.search.clear", "Clear")} ${t("components.search.placeholder", "Search")}`}
-            title={`${t("components.search.clear", "Clear")} ${t("components.search.placeholder", "Search")}`}
-            onClick={() => {
-              if (onClear) {
-                onClear();
-                return;
-              }
-              onChange("");
-            }}
+            aria-label={clearLabel}
+            title={clearLabel}
+            onClick={() => onClear?.() ?? onChange("")}
             className="absolute end-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus rounded-full z-30"
           >
             <ICONS.close />
