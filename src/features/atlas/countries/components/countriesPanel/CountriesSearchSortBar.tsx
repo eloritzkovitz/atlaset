@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, SegmentedToggle, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
@@ -10,6 +10,10 @@ import { useDragScroll } from "@hooks";
 import type { SortValue } from "@types";
 import { useCountryFilters } from "../../context/CountryFiltersContext";
 import type { CountryList } from "../../types";
+import {
+  useSearchCondition,
+  type ConditionToggle,
+} from "../../hooks/useSearchCondition";
 
 interface CountriesSearchSortBarProps {
   sortBy: SortValue<string>;
@@ -21,46 +25,10 @@ interface CountriesSearchSortBarProps {
   onEditList?: (id: string) => void;
 }
 
-type ConditionToggle = "visited" | "wantToVisit" | "sovereign";
-
-const CONDITIONS: Record<ConditionToggle, { prefix: string; search: string }> =
-  {
-    visited: {
-      prefix: "visited",
-      search: "visited:true",
-    },
-    wantToVisit: {
-      prefix: "wanttovisit",
-      search: "wanttovisit:true",
-    },
-    sovereign: {
-      prefix: "sovereign",
-      search: "sovereign:true",
-    },
-  };
-
 const SPECIAL_LIST_IDS: Record<string, string> = {
   visited: "VISITED_COUNTRIES",
   wantToVisit: "WANT_TO_VISIT",
 };
-
-// Checks if the search string contains a condition prefix and returns the corresponding toggle if found.
-function getSearchCondition(value: string): ConditionToggle | null {
-  const normalized = value.trim().toLowerCase();
-
-  for (const [toggle, { prefix }] of Object.entries(CONDITIONS) as [
-    ConditionToggle,
-    (typeof CONDITIONS)[ConditionToggle],
-  ][]) {
-    const pattern = new RegExp(`(?:^|\\s)${prefix}\\s*:\\s*true(?:\\s|$)`, "i");
-
-    if (pattern.test(normalized)) {
-      return toggle;
-    }
-  }
-
-  return null;
-}
 
 export function CountriesSearchSortBar({
   sortBy,
@@ -135,26 +103,14 @@ export function CountriesSearchSortBar({
         ? "sovereign"
         : selectedListId || "all";
 
-  const setCondition = useCallback(
-    (condition: ConditionToggle | null) => {
-      setVisitedOnly?.(condition === "visited");
-      setWantToVisitOnly?.(condition === "wantToVisit");
-      setSovereignOnly?.(condition === "sovereign");
-      setSelectedListId?.(null);
-    },
-    [setVisitedOnly, setWantToVisitOnly, setSovereignOnly, setSelectedListId],
-  );
-
-  // Update condition based on search changes, but only if not in timeline mode
-  useEffect(() => {
-    if (timelineMode) {
-      return;
-    }
-
-    const condition = getSearchCondition(search);
-
-    setCondition(condition);
-  }, [search, timelineMode, setCondition]);
+  const { conditions, setCondition } = useSearchCondition({
+    search,
+    timelineMode,
+    setVisitedOnly,
+    setWantToVisitOnly,
+    setSovereignOnly,
+    setSelectedListId,
+  });
 
   const handleToggleDoubleClick = (value: string) => {
     if (value === "all" || value === "sovereign") {
@@ -165,11 +121,11 @@ export function CountriesSearchSortBar({
   };
 
   const handleToggleChange = (value: string) => {
-    if (value in CONDITIONS) {
+    if (value in conditions) {
       const condition = value as ConditionToggle;
 
       setCondition(condition);
-      setSearch(CONDITIONS[condition].search);
+      setSearch(conditions[condition].search);
       return;
     }
 
