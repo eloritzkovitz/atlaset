@@ -4,6 +4,7 @@ import { ActionButton } from "../../inputs/Button/ActionButton";
 
 interface CollapsibleHeaderProps {
   icon: React.ReactNode;
+  iconClassName?: string;
   label: React.ReactNode;
   count?: number | React.ReactNode;
   expanded: boolean;
@@ -14,6 +15,7 @@ interface CollapsibleHeaderProps {
 
 export function CollapsibleHeader({
   icon,
+  iconClassName = "",
   label,
   count,
   expanded,
@@ -25,7 +27,7 @@ export function CollapsibleHeader({
   const toggleLabel = `${expanded ? "Collapse" : "Expand"} ${labelText}`;
 
   return (
-    <div className="w-full mb-4">
+    <div className="w-full">
       <div
         className={`flex items-center justify-between select-none cursor-pointer group ${className}`}
         onClick={onToggle}
@@ -39,8 +41,11 @@ export function CollapsibleHeader({
           }
         }}
       >
-        <span className="flex items-center gap-2 h-8 text-lg font-bold">
-          {icon}
+        <span className="flex items-center gap-3 text-lg font-bold">
+          <span className={iconClassName}>
+            <span className="text-lg">{icon}</span>
+          </span>
+
           <span className="inline-flex items-center gap-2">
             <span>{label}</span>
             {count !== undefined && (
@@ -60,6 +65,7 @@ export function CollapsibleHeader({
           rounded
         />
       </div>
+
       {expanded && children}
     </div>
   );

@@ -11,7 +11,6 @@ export const MODIFIER_MAP: Record<
   }
 > = {
   match: { key: "match", label: "Match mode", type: "string" },
-  tc: { key: "tc", label: "Transcontinental", type: "string" },
   dst: { key: "dst", label: "Include DST timezones", type: "boolean" },
   count: { key: "count", label: "Visit count", type: "number" },
   year: { key: "year", label: "Year", type: "number" },

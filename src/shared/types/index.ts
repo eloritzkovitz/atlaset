@@ -6,5 +6,6 @@ export * from "./language";
 export * from "./number";
 export * from "./option";
 export * from "./position";
+export * from "./search";
 export * from "./sort";
 export * from "./ui";

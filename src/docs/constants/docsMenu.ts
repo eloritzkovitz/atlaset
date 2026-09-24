@@ -240,6 +240,27 @@ export const DOCS_GROUPS = {
       },
     ],
   },
+  search: {
+    header: {
+      label: "Search",
+      file: null,
+      icon: ICONS.search,
+    },
+    items: [
+      {
+        label: "Overview",
+        file: "search/search-overview.md",
+        icon: ICONS.search,
+        url: "/docs/search/search-overview",
+      },
+      {
+        label: "Country search",
+        file: "search/country-search.md",
+        icon: ICONS.search,
+        url: "/docs/search/country-search",
+      },
+    ],
+  },
   dashboard: {
     header: {
       label: "Dashboard",
@@ -328,6 +349,7 @@ export const DOCS = [
   ...DOCS_GROUPS.explore.items,
   ...DOCS_GROUPS.trips.items,
   ...DOCS_GROUPS.quizzes.items,
+  ...DOCS_GROUPS.search.items,
   ...DOCS_GROUPS.dashboard.items,
   ...DOCS_GROUPS.account.items,
   ...DOCS_GROUPS.accessibility.items,

@@ -67,7 +67,7 @@ export type TranscontinentalScope =
   | "other";
 
 /** Represents the mode for transcontinental country inclusion in filters. */
-export type TranscontinentalMode = "default" | "include" | "only";
+export type TranscontinentalMode = "include" | "exclude" | "only";
 
 /** Sovereignty statuses for countries. */
 export type SovereigntyStatus =

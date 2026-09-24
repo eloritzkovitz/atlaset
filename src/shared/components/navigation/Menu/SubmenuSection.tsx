@@ -25,14 +25,18 @@ export function SubmenuSection({
   selectedPanel,
   setSelectedPanel,
 }: SubmenuSectionProps) {
+  const iconClassName =
+    "flex items-center justify-center w-10 h-10 rounded-full bg-muted/25";
+
   return (
     <li className="mb-2">
       <CollapsibleHeader
         icon={icon}
+        iconClassName={iconClassName}
         label={label}
         expanded={expanded}
         onToggle={onToggle}
-        className="px-2 py-1 rounded-lg hover:bg-sidebar-btn-hover transition-colors"
+        className="px-2 py-2 rounded-lg hover:bg-sidebar-btn-hover transition-colors"
       >
         <ul className="mt-2">
           {submenu.map((sub) => (
@@ -42,7 +46,8 @@ export function SubmenuSection({
                 onClick={() => setSelectedPanel(sub.key)}
                 ariaLabel={sub.label}
                 icon={sub.icon}
-                className="w-full mx-2 font-semibold gap-5"
+                iconClassName={iconClassName}
+                className="w-full mx-2 gap-4"
                 url={sub.url}
               >
                 {sub.label}

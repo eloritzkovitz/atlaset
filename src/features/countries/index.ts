@@ -14,6 +14,7 @@ export { CountrySelectModal } from "./browse/components/CountrySelectModal";
 export { CountrySortSelect } from "./browse/components/CountrySortSelect";
 export * from "./browse/utils/countryFilters";
 export * from "./browse/utils/countrySearch";
+export * from "./browse/utils/countrySearchExpression";
 export * from "./browse/utils/countrySort";
 
 // Details

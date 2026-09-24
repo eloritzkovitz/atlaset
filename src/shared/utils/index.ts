@@ -8,6 +8,7 @@ export * from "./browser/url";
 export * from "./collections/compare";
 export * from "./collections/filter";
 export * from "./collections/search";
+export * from "./collections/searchParser";
 export * from "./collections/sort";
 
 export * from "./date/date";
