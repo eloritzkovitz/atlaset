@@ -1,8 +1,10 @@
 {
   "pageTitle": "אטלס",
+
   "map": {
     "loading": "טוען מפה..."
   },
+
   "toolbar": {
     "openMapActions": "פתח פעולות מפה",
     "closeMapActions": "סגור פעולות מפה",
@@ -21,17 +23,20 @@
     "exitEditMode": "צא ממצב עריכה",
     "exitSharedView": "צא מצפייה משותפת"
   },
+
   "controls": {
     "zoomIn": "הגדל",
     "zoomOut": "הקטן",
     "resetView": "אתחול תצוגה"
   },
+
   "footer": {
     "countriesVisited": "מדינות שביקרתי בהן: {{visited}}/{{total}} ({{percent}})",
     "allCountriesTooltip": "כיסוי עולמי: כל הטריטוריות",
     "sovereignOnlyTooltip": "כיסוי עולמי: מדינות ריבוניות",
     "zoomTooltip": "רמת זום: {{zoom}}x"
   },
+
   "shared": {
     "viewingPrefix": "צופה ב־",
     "byPrefix": "על־ידי",
@@ -40,8 +45,10 @@
     "defaultMap": "מפה משותפת",
     "defaultSharer": "משתמש אנונימי"
   },
+
   "countries": {
     "title": "מדינות",
+
     "actions": {
       "refreshData": "רענון נתוני מדינות",
       "showFilters": "הצגת מסננים",
@@ -58,7 +65,12 @@
       "visited": "ביקרתי",
       "centerMap": "מרכוז על המפה"
     },
-    "searchPlaceholder": "חפש מדינות",
+
+    "search": {
+      "placeholder": "חפש מדינות",
+      "tooltip": "למד על תחביר חיפוש"
+    },
+
     "lists": {
       "all": "הכל",
       "sovereign": "ריבוני",
@@ -75,6 +87,7 @@
         "delete": "מחק רשימה"
       }
     },
+
     "sort": {
       "by": "מיין לפי",
       "name": "שם",
@@ -85,11 +98,13 @@
       "firstVisit": "ביקור ראשון",
       "lastVisit": "ביקור אחרון"
     },
+
     "select": {
       "label": "מדינות:",
       "noneSelected": "לא נבחרו מדינות.",
       "title": "בחר מדינות"
     },
+
     "filters": {
       "title": "מסננים",
       "core": {
@@ -113,6 +128,7 @@
         "to": "עד"
       }
     },
+
     "details": {
       "status": {
         "home": "מדינת בית",
@@ -157,6 +173,7 @@
       }
     }
   },
+
   "layers": {
     "title": "שכבות",
     "add": "הוסף שכבה",
@@ -175,6 +192,7 @@
     "linkedListWarning": "שכבה זו מקושרת לרשימה. כדי לערוך את שמה או את המדינות שבה, עדכן את הרשימה עצמה.",
     "saveChanges": "שמירת שינויים"
   },
+
   "markers": {
     "title": "סימונים",
     "add": "הוסף סימון",
@@ -196,6 +214,7 @@
     "locationLabel": "מיקום:",
     "saveChanges": "שמירת שינויים"
   },
+
   "legend": {
     "title": "מקרא",
     "homeCountry": "מדינת מגורים",
@@ -220,6 +239,7 @@
       "visitedPreviousYears": "ביקרתי בשנים קודמות"
     }
   },
+
   "savedMaps": {
     "title": "המפות שלי",
     "save": "שמור מפה נוכחית",
@@ -234,10 +254,12 @@
     "saveChanges": "שמירת שינויים",
     "add": "הוסף מפה"
   },
+
   "colorModes": {
     "standard": "רגיל",
     "atlas": "אטלס"
   },
+
   "timeline": {
     "play": "הפעל",
     "pause": "השהה",
@@ -251,6 +273,7 @@
     "colorMode": "מצב צבע",
     "hint": "מצב ציר זמן פעיל. לחץ T כדי לבטל."
   },
+
   "mapExport": {
     "title": "ייצוא",
     "options": "אפשרויות",
@@ -294,6 +317,7 @@
       "description": "הטמע את המפה באתרי האינטרנט שלך על ידי הקוד למעלה."
     }
   },
+
   "mapSettings": {
     "title": "הגדרות מפה",
     "configuration": {

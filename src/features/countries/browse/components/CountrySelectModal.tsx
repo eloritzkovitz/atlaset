@@ -98,7 +98,9 @@ export function CountrySelectModal({
           onChange={searchProps.onChange}
           qualifiers={SUPPORTED_QUALIFIERS}
           modifiers={SUPPORTED_MODIFIERS}
-          placeholder={t("atlas:countries.searchPlaceholder")}
+          placeholder={t("atlas:countries.search.placeholder")}
+          docsPath="/docs/search/country-search"
+          tooltip={t("countries.search.tooltip")}
         />
       )}
       renderItem={(country) => (

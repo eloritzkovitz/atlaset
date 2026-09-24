@@ -194,7 +194,7 @@ export function CountrySection({
               value={search}
               onChange={setSearch}
               placeholder={tAtlas(
-                "countries.searchPlaceholder",
+                "countries.search.placeholder",
                 "Search countries",
               )}
               className="mt-1 rounded-xl"

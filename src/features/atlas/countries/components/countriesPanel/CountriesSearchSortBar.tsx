@@ -148,7 +148,9 @@ export function CountriesSearchSortBar({
           onChange={setSearch}
           qualifiers={SUPPORTED_QUALIFIERS}
           modifiers={SUPPORTED_MODIFIERS}
-          placeholder={t("countries.searchPlaceholder")}
+          placeholder={t("countries.search.placeholder")}
+          docsPath="/docs/search/country-search"
+          tooltip={t("countries.search.tooltip")}
           className="flex-1 h-10"
         />
 
