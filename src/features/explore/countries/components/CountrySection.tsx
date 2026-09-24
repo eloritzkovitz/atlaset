@@ -150,7 +150,9 @@ export function CountrySection({
         selectedRegion: normalizedRegion,
         selectedSubregion: normalizedSubregion,
         selectedSovereignty: selectedSovereignOnly ? "sovereign" : "",
-        modifiers: showTranscontinental ? { tc: "include" } : undefined,
+        tcOption: showTranscontinental
+          ? { scope: "all", mode: "include" }
+          : undefined,
       }),
     [
       countries,

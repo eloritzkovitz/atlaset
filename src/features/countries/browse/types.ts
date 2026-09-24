@@ -53,5 +53,9 @@ export type CountryFilterOptions = {
   selectedSovereignty?: SovereigntyStatus | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
+  tcOption?: {
+    scope: TranscontinentalScope;
+    mode: TranscontinentalMode;
+  };
   modifiers?: CountryModifiers;
 };

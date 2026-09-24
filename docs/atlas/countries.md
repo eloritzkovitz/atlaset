@@ -1,12 +1,14 @@
 # Countries
 
-Atlaset provides an interactive world map to discover countries, view detailed country information and track your visits. Use search, filters, lists and layers to find, organize and manage your countries and travel data.
+Countries are political entities in the world. Atlaset provides an interactive world map for exploring countries and managing your travel data. Use search, filters, lists and layers to find, organize and track countries throughout the application.
+
+Countries are identified by their **ISO 3166-1 alpha-2 code**. You can find the complete list of codes [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
 ## Browsing countries
 
 - Use the **map** or the **Countries** panel to browse countries.
 - Click on a country on the map or the **Countries** panel to open a detailed view with information.
-- Use the search bar to quickly find a country by name. For advanced searching, see below.
+- Use the search bar to quickly find a country by name or use [search qualifiers](/docs/search/country-search.md) for more advanced searching.
 
 ## Country details
 
@@ -26,70 +28,19 @@ Country details include the following sections:
 
 ## Filtering & sorting
 
-- Use the **Filters** panel to:
-  - Filter by `region`, `subregion`, `sovereignty`, `visit status` or custom criteria
-  - Apply layer or timeline filters (depending on active map mode)
+- Click on the <icon name="filters"></icon> **Filters** button to open the **Filters** panel:
+  - Filter countries by parameters such as region, subregion and more.
+  - Apply layer or timeline filters (depending on active map mode).
 - Use the **Sort** button to:
-  - Sort countries by `name`, `ISO 3166-1 code`, `area` or `population` and by sort direction (`ascending` or `descending`)
-  - In **Timeline mode**, you can also sort by `visit count`, `first visit time` or `last visit time`
+  - Sort countries by `name`, `ISO 3166-1 code`, `area` or `population` and by sort direction (`ascending` or `descending`).
+  - In **Timeline mode**, you can also sort by `visit count`, `first visit time` or `last visit time`.
 - Use the **View toggle** to switch between lists:
-  - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
-
-## Advanced search
-
-The country search bar supports a variety of **qualifiers and modifiers** for more precise searches. To use it, use the following syntax:
-
-```bash
-qualifier:query modifier:query
-```
-
-- Modifiers rely on certain qualifiers, as explained below.
-- You can chain multiple qualifiers and/or modifiers.
-- All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
-
-### Search qualifiers
-
-| Qualifier         | Type                |                            Example | Notes                                                                                                                                                                                                                                                                                                                                                                                           |
-| ----------------- | ------------------- | ---------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `isocode`         | string              |                       `isocode:gb` | Matches ISO 3166-1 alpha-2 code                                                                                                                                                                                                                                                                                                                                                             |
-| `iso3code`        | string              |                     `iso3code:gbr` | Matches ISO 3166-1 alpha-3 code                                                                                                                                                                                                                                                                                                                                                             |
-| `region`          | string              |                      `region:asia` | Matches countries in a given region (continent)                                                                                                                                                                                                                                                                                                                                                 |
-| `subregion`       | string              |         `subregion:southeast asia` | Matches countries in a given subregion                                                                                                                                                                                                                                                                                                                                                          |
-| `tc`              | boolean / string    |                          `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `cultural`, `other`                                                                                                                                                                                                                                                                                     |
-| `geotype`         | string              |                   `geotype:island` | Matches geographic types. Values: `coastal`, `landlocked`, `island`                                                                                                                                                                                                                                                                                                                             |
-| `capital`         | string              |                    `capital:paris` | Matches capital name                                                                                                                                                                                                                                                                                                                                                                            |
-| `language`        | string              |                 `language:spanish` | Matches language. Supports both ISO 639 code or name                                                                                                                                                                                                                                                                                                                                            |
-| `government`      | string              | `government:presidential republic` | Matches government type. Supports `constitutional_monarchy`, `parliamentary_republic`, `presidential_republic`, `semi_presidential_republic`, `assembly_independent_republic`, `theocratic_republic`, `islamic_theocracy`, `semi_constitutional_monarchy`,`absolute_monarchy`, `communist_state`, `one_party_state`, `military_junta`, `provisional_government`, `dependent_territory`, `other` |
-| `structure`       | string              |                `structure:federal` | Matches state structure. Supports `unitary`, `federal`                                                                                                                                                                                                                                                                                                                                          |
-| `area`            | number (comparison) |                       `area:~2000` | Matches area (in km²). Supports plain or comma-separated numbers                                                                                                                                                                                                                                                                                                                                |
-| `population`      | number (comparison) |           `population:>=1,000,000` | Matches population. Supports plain or comma-separated numbers                                                                                                                                                                                                                                                                                                                                   |
-| `currency`        | string              |                     `currency:eur` | Matches ISO 4217 code                                                                                                                                                                                                                                                                                                                                                                           |
-| `timezone` / `tz` | string              |                  `timezone:utc+03` | Matches countries by UTC offset. Accepts `UTC±HH`, `UTC±HH:MM`, `±HH:MM` or `±HHMM`                                                                                                                                                                                                                                                                                                             |
-| `callingcode`     | string              |                  `callingcode:+44` | Matches calling code                                                                                                                                                                                                                                                                                                                                                                            |
-| `drivingside`     | string              |                 `drivingside:left` | Matches driving side. Values: `left`, `right`                                                                                                                                                                                                                                                                                                                                                   |
-| `sovereignty`     | string              |            `sovereignty:sovereign` | Matches sovereignty status. Values: `sovereign`, `dependency`, `overseas region`, `partially_recognized`, `unrecognized`, `disputed`                                                                                                                                                                                                                                                            |
-| `sovereign`       | string              |                   `sovereign:true` | Matches sovereign status or governing sovereign state. Values: `true` / `false`, `<isocode>`                                                                                                                                                                                                                                                                                                    |
-| `unmember`        | boolean             |                    `unmember:true` | Matches UN membership. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                                 |
-| `memberof`        | string              |                      `memberof:eu` | Matches membership in international organizations                                                                                                                                                                                                                                                                                                                                               |
-| `visited`         | boolean             |                     `visited:true` | Matches visited countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                             |
-| `wanttovisit`     | boolean             |                 `wanttovisit:true` | Matches 'want to visit' countries. Values: `true` / `false`                                                                                                                                                                                                                                                                                                                                     |
-
-### Search modifiers
-
-| Modifier | Type                |                        Example | Notes                                                                                                                                           |
-| -------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `match`  | string              | `language:english match:exact` | Supports `prefix` (default), `substring`, `exact`, `regex`                                                                                      |
-| `tc`     | string              |  `region:europe tc:other:only` | Supports additional modes: `default`, `include`, `only`                                                                                         |
-| `dst`    | boolean             |      `timezone:+0200 dst:true` | For `timezone`, matches countries based on daylight saving time offsets. Zones without DST will filter by winter time. Values: `true` / `false` |
-| `count`  | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count                                                                                                      |
-| `year`   | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year                                                                                                       |
-| `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by year of first visit                                                                                              |
-| `last`   | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by year of last visit                                                                                               |
-
-> **Note:** For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`.
+  - Default lists include **All** (showing all countries and territories), **Sovereign** (showing sovereign countries only), **Visited** and **Want to Visit**.
+  - Create your own custom lists, either independent or synced with layers.
 
 ## Further reading
 
-- [Country Lists](/docs/atlas/country-lists.md)
-- [Layers](/docs/atlas/layers-markers.md)
+- [Searching countries with qualifiers](/docs/search/country-search.md)
+- [Using country lists](/docs/atlas/country-lists.md)
+- [Using layers, which group countries ](/docs/atlas/layers-markers.md)
 - [Tracking your visits](/docs/trips/tracking-your-visits.md)

@@ -29,6 +29,7 @@ export function filterCountries(
     selectedGeoType,
     selectedSovereignty,
     layerCountries,
+    tcOption,
   } = options;
 
   const mods = options.modifiers ?? {};
@@ -40,7 +41,9 @@ export function filterCountries(
       selectedRegion &&
       (country as unknown as Record<string, unknown>).regionKey !==
         selectedRegion &&
-      !getQualifierTokens(country, "region").includes(selectedRegion)
+      !getQualifierTokens(country, "region", { tcOption }).includes(
+        selectedRegion,
+      )
     ) {
       return false;
     }
@@ -49,7 +52,9 @@ export function filterCountries(
       selectedSubregion &&
       (country as unknown as Record<string, unknown>).subregionKey !==
         selectedSubregion &&
-      !getQualifierTokens(country, "subregion").includes(selectedSubregion)
+      !getQualifierTokens(country, "subregion", { tcOption }).includes(
+        selectedSubregion,
+      )
     ) {
       return false;
     }
