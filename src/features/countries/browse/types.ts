@@ -23,17 +23,26 @@ export type CountryQualifierConfig = {
   type?: "string" | "boolean" | "number" | "date";
 };
 
-/** Modifier configuration for country filtering. */
-export type CountryModifiers = {
+/** Options that affect how a country qualifier is evaluated. */
+export type CountryQualifierOptions = {
   match?: "prefix" | "substring" | "exact" | "regex";
-  tc?: string;
-  tcOption?: { scope?: TranscontinentalScope; mode?: TranscontinentalMode };
+  tcOption?: {
+    scope?: TranscontinentalScope;
+    mode?: TranscontinentalMode;
+  };
   dst?: boolean | string;
-  count?: { op: Operator; value: number } | undefined;
-  year?: { op: Operator; year: number } | undefined;
-  first?: { op: Operator; year: number } | undefined;
-  last?: { op: Operator; year: number } | undefined;
 };
+
+/** Modifiers that filter countries by visit history. */
+export type CountryVisitModifiers = {
+  count?: { op: Operator; value: number };
+  year?: { op: Operator; year: number };
+  first?: { op: Operator; year: number };
+  last?: { op: Operator; year: number };
+};
+
+/** All supported country search modifiers. */
+export type CountryModifiers = CountryQualifierOptions & CountryVisitModifiers;
 
 /** Options for filtering countries. */
 export type CountryFilterOptions = {
@@ -44,5 +53,9 @@ export type CountryFilterOptions = {
   selectedSovereignty?: SovereigntyStatus | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
+  tcOption?: {
+    scope: TranscontinentalScope;
+    mode: TranscontinentalMode;
+  };
   modifiers?: CountryModifiers;
 };

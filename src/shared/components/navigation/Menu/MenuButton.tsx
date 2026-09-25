@@ -11,6 +11,7 @@ interface MenuButtonProps extends Omit<
 > {
   variant?: "default" | "danger" | "sidebar";
   icon?: React.ReactNode;
+  iconClassName?: string;
   children: React.ReactNode;
   active?: boolean;
   title?: string;
@@ -24,6 +25,7 @@ export function MenuButton({
   type = "button",
   variant = "default",
   icon,
+  iconClassName = "",
   children,
   active = false,
   className = "",
@@ -68,7 +70,9 @@ export function MenuButton({
         }}
         {...props}
       >
-        {icon && <span className="flex-shrink-0">{icon}</span>}
+        {icon && (
+          <span className={`flex-shrink-0 ${iconClassName}`}>{icon}</span>
+        )}
         {children}
       </InteractiveBase>
 

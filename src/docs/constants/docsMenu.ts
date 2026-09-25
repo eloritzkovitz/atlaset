@@ -11,19 +11,19 @@ export const DOCS_GROUPS = {
     },
     items: [
       {
-        label: "Get Started",
+        label: "Get started",
         file: "getstarted/get-started.md",
         icon: ICONS.getStarted,
         url: "/docs/getstarted/get-started",
       },
       {
-        label: "Creating an Account",
+        label: "Creating an account",
         file: "getstarted/creating-an-account.md",
         icon: ICONS.account,
         url: "/docs/getstarted/creating-an-account",
       },
       {
-        label: "Your Profile",
+        label: "Your profile",
         file: "getstarted/profile.md",
         icon: ICONS.profile,
         url: "/docs/getstarted/profile",
@@ -227,7 +227,7 @@ export const DOCS_GROUPS = {
         url: "/docs/quizzes/quizzes-overview",
       },
       {
-        label: "How to Play",
+        label: "How to play",
         file: "quizzes/gameplay.md",
         icon: ICONS.gameplay,
         url: "/docs/quizzes/gameplay",
@@ -237,6 +237,27 @@ export const DOCS_GROUPS = {
         file: "quizzes/leaderboards.md",
         icon: ICONS.leaderboards,
         url: "/docs/quizzes/leaderboards",
+      },
+    ],
+  },
+  search: {
+    header: {
+      label: "Search",
+      file: null,
+      icon: ICONS.search,
+    },
+    items: [
+      {
+        label: "Overview",
+        file: "search/search-overview.md",
+        icon: ICONS.search,
+        url: "/docs/search/search-overview",
+      },
+      {
+        label: "Country search",
+        file: "search/country-search.md",
+        icon: ICONS.search,
+        url: "/docs/search/country-search",
       },
     ],
   },
@@ -263,16 +284,34 @@ export const DOCS_GROUPS = {
   },
   account: {
     header: {
-      label: "Managing Your Account",
+      label: "Managing your account",
       file: null,
       icon: ICONS.accountManagement,
     },
     items: [
       {
-        label: "Account Settings",
+        label: "Account settings",
         file: "account/account-settings.md",
         icon: ICONS.settings,
         url: "/docs/account/account-settings",
+      },
+      {
+        label: "Deleting your account",
+        file: "account/deleting-your-account.md",
+        icon: ICONS.accountManagement,
+        url: "/docs/account/deleting-your-account",
+      },
+      {
+        label: "Privacy settings",
+        file: "account/privacy-settings.md",
+        icon: ICONS.privacy,
+        url: "/docs/account/privacy-settings",
+      },
+      {
+        label: "Security and devices",
+        file: "account/security-and-devices.md",
+        icon: ICONS.security,
+        url: "/docs/account/security-and-devices",
       },
     ],
   },
@@ -283,6 +322,12 @@ export const DOCS_GROUPS = {
       icon: ICONS.accessibility,
     },
     items: [
+      {
+        label: "Accessibility settings",
+        file: "accessibility/accessibility-settings.md",
+        icon: ICONS.accessibility,
+        url: "/docs/accessibility/accessibility-settings",
+      },
       {
         label: "Keyboard Shortcuts",
         file: "accessibility/keyboard-shortcuts.md",
@@ -328,6 +373,7 @@ export const DOCS = [
   ...DOCS_GROUPS.explore.items,
   ...DOCS_GROUPS.trips.items,
   ...DOCS_GROUPS.quizzes.items,
+  ...DOCS_GROUPS.search.items,
   ...DOCS_GROUPS.dashboard.items,
   ...DOCS_GROUPS.account.items,
   ...DOCS_GROUPS.accessibility.items,

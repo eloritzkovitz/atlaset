@@ -1,8 +1,10 @@
 {
   "pageTitle": "Atlas",
+
   "map": {
     "loading": "Loading map..."
   },
+
   "toolbar": {
     "openMapActions": "Open map actions",
     "closeMapActions": "Close map actions",
@@ -21,17 +23,20 @@
     "exitEditMode": "Exit Edit Mode",
     "exitSharedView": "Exit Shared View"
   },
+
   "controls": {
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "resetView": "Reset view"
   },
+
   "footer": {
     "countriesVisited": "Countries visited: {{visited}}/{{total}} ({{percent}})",
     "sovereignOnlyTooltip": "World coverage: Sovereign states",
     "allCountriesTooltip": "World coverage: All territories",
     "zoomTooltip": "Zoom level: {{zoom}}x"
   },
+
   "shared": {
     "viewingPrefix": "Viewing",
     "byPrefix": "by",
@@ -40,8 +45,10 @@
     "defaultMap": "a shared map",
     "defaultSharer": "an anonymous user"
   },
+
   "countries": {
     "title": "Countries",
+
     "actions": {
       "refreshData": "Refresh country data",
       "showFilters": "Show Filters",
@@ -58,7 +65,12 @@
       "editMarker": "Edit Marker",
       "centerMap": "Center on Map"
     },
-    "searchPlaceholder": "Search countries",
+
+    "search": {
+      "placeholder": "Search countries",
+      "tooltip": "Learn about search syntax"
+    },
+
     "lists": {
       "all": "All",
       "sovereign": "Sovereign",
@@ -75,6 +87,7 @@
         "delete": "Delete List"
       }
     },
+
     "sort": {
       "by": "SORT BY",
       "name": "Name",
@@ -85,11 +98,13 @@
       "firstVisit": "First visit time",
       "lastVisit": "Last visit time"
     },
+
     "select": {
       "label": "Countries:",
       "noneSelected": "No countries selected.",
       "title": "Select Countries"
     },
+
     "filters": {
       "title": "Filters",
       "core": {
@@ -113,6 +128,7 @@
         "to": "to"
       }
     },
+
     "details": {
       "status": {
         "home": "Home country",
@@ -157,6 +173,7 @@
       }
     }
   },
+
   "layers": {
     "title": "Layers",
     "add": "Add Layer",
@@ -175,6 +192,7 @@
     "linkedListWarning": "This layer is linked with a list. To edit its name or countries, update the list itself.",
     "saveChanges": "Save Changes"
   },
+
   "markers": {
     "hint": "Click on the map to add a marker. Press Escape to cancel.",
     "title": "Markers",
@@ -196,6 +214,7 @@
     "locationLabel": "Location:",
     "saveChanges": "Save Changes"
   },
+
   "legend": {
     "title": "Legend",
     "homeCountry": "Home country",
@@ -220,6 +239,7 @@
       "visitedPreviousYears": "Visited in previous years"
     }
   },
+
   "savedMaps": {
     "title": "My Maps",
     "save": "Save current map",
@@ -234,10 +254,12 @@
     "saveChanges": "Save Changes",
     "add": "Add Map"
   },
+
   "colorModes": {
     "standard": "Standard",
     "atlas": "Atlas"
   },
+
   "timeline": {
     "hint": "Timeline mode enabled. Press T to toggle off.",
     "play": "Play",
@@ -251,6 +273,7 @@
     "yearlyVisits": "Yearly visits",
     "colorMode": "Color mode"
   },
+
   "mapExport": {
     "title": "Export",
     "options": "Options",
@@ -294,6 +317,7 @@
       "description": "Embed this map in your website using the code above."
     }
   },
+
   "mapSettings": {
     "title": "Map Settings",
     "configuration": {

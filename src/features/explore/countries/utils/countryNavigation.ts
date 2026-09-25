@@ -59,7 +59,9 @@ export function getCountryNavigation({
         selectedSubregion:
           scope === "subregion" && subregion ? subregion : undefined,
         selectedSovereignty: showSovereignOnly ? "sovereign" : "",
-        modifiers: showTranscontinental ? { tc: "include" } : undefined,
+        tcOption: showTranscontinental
+          ? { scope: "all", mode: "include" }
+          : undefined,
       })
         .filter(
           (country) =>

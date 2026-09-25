@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { ModalSelect, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
-import { filterBySearch, parseQualifierSearch } from "@utils";
+import { filterBySearch, parseSearchQuery } from "@utils";
 import { SUPPORTED_MODIFIERS } from "../constants/modifierConfig";
 import { SUPPORTED_QUALIFIERS } from "../constants/qualifierConfig";
-import { applyQualifierSearch } from "../utils/countryFilters";
+import { applyQualifierSearch } from "../utils/countrySearchExpression";
 import { buildSearchString } from "../utils/countrySearch";
 import { CountryWithFlag } from "../../flags/components/CountryWithFlag";
 import type { Country } from "../../types";
@@ -46,7 +46,7 @@ export function CountrySelectModal({
   const filteredOptions = useMemo(() => {
     if (!isOpen) return [];
 
-    const parsed = parseQualifierSearch(search);
+    const parsed = parseSearchQuery(search);
 
     if (parsed) {
       return applyQualifierSearch(
@@ -98,14 +98,13 @@ export function CountrySelectModal({
           onChange={searchProps.onChange}
           qualifiers={SUPPORTED_QUALIFIERS}
           modifiers={SUPPORTED_MODIFIERS}
-          placeholder={t("atlas:countries.searchPlaceholder")}
+          placeholder={t("atlas:countries.search.placeholder")}
+          docsPath="/docs/search/country-search"
+          tooltip={t("countries.search.tooltip")}
         />
       )}
       renderItem={(country) => (
-        <CountryWithFlag
-          country={country}
-          className="me-2"
-        />
+        <CountryWithFlag country={country} className="me-2" />
       )}
     />
   );

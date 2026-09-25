@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-25
+
+- **[feature]** **Countries:** Improved country search with new features, such as boolean expressions, quoted terms and more
+- **[feature]** **Countries:** Refined UI to reflect the new changes to queries
+- **[docs]** **Docs:** Added new search section and linked the search UI
+- **[docs]** **Docs:** Updated account and settings documentation
+
 ## 2026-09-23
 
 - **[bugfix]** **Countries:** Improved search behavior for qualifiers and modifiers in the qualifier search

@@ -22,7 +22,7 @@ Data can be searched and filtered where applicable, and supported lists can be d
 
 - [Progress](/docs/explore/progress.md)
 - [Discover](/docs/explore/discover.md)
-- [Countries](/docs/explore/countries.md)
+- [Countries](/docs/atlas/countries.md)
 - [Languages](/docs/explore/languages.md)
 - [Currencies](/docs/explore/currencies.md)
 - [Timezones](/docs/explore/timezones.md)

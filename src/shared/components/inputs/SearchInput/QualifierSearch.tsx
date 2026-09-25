@@ -1,4 +1,7 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { ActionButton } from "@components";
+import { ICONS } from "@constants/icons";
 import { SearchInput } from "./SearchInput";
 import { buildSearchRegex, escapeRegex, tokenizeSearch } from "./utils";
 
@@ -9,6 +12,8 @@ interface QualifierSearchProps {
   modifiers?: string[];
   clearable?: boolean;
   placeholder?: string;
+  docsPath?: string;
+  tooltip?: string;
   className?: string;
 }
 
@@ -22,6 +27,8 @@ export function QualifierSearch({
   modifiers,
   clearable = true,
   placeholder,
+  docsPath,
+  tooltip,
   className,
 }: QualifierSearchProps) {
   const providedQualifiers = qualifiers ?? EMPTY_STRINGS;
@@ -76,14 +83,30 @@ export function QualifierSearch({
   }, [value, regex, hasQualifiers, hasModifiers]);
 
   return (
-    <SearchInput
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className={className}
-      overlayContent={overlayContent}
-      showClear={clearable && value.length > 0}
-      onClear={() => onChange("")}
-    />
+    <div className="relative flex-1">
+      <SearchInput
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={className}
+        overlayContent={overlayContent}
+        showClear={clearable && value.length > 0}
+        onClear={() => onChange("")}
+      />
+
+      {docsPath && !value && (
+        <Link
+          to={docsPath}
+          className="absolute right-1 top-1/2 z-10 -translate-y-1/2"
+        >
+          <ActionButton
+            icon={<ICONS.helpTooltip />}
+            ariaLabel={tooltip}
+            title={tooltip}
+            rounded
+          />
+        </Link>
+      )}
+    </div>
   );
 }

@@ -1,23 +1,21 @@
 # Account settings
 
-Through your `account settings`, you can control the behavior of the application and personalize your Atlaset experience.
+**Account settings** allow you to manage your account and personalize your Atlaset experience. They bring together your account preferences, display options, accessibility features, privacy controls and security settings.
 
-## Account
+## Setting groups
 
-Edit your `profile`, select a `home country` and `manage your account`.
+| Group             | Description                                                                |
+| ----------------- | -------------------------------------------------------------------------- |
+| **Account**       | Manage your account, profile and preferences.                              |
+| **Display**       | Customize appearance, including theme and accent settings.                 |
+| **Accessibility** | Configure accessibility options such as keyboard shortcuts and animations. |
+| **Privacy**       | Control profile visibility and data consent.                               |
+| **Security**      | Manage your account security, devices and active sessions.                 |
 
-## Sound
+## Next steps
 
-Control sound settings - sound effects and volume.
-
-## Display
-
-Toggle app theme - choose between dark (default) and light.
-
-## Activity
-
-View your `user activity`, showing the history of actions you've performed.
-
-## Security
-
-View security information, manage your devices and sessions.
+- [Learn about your profile](/docs/account/profile.md)
+- [Hibernate or delete your account](/docs/account/deleting-your-accounts.md)
+- [Accessibility settings](/docs/accessibility/accessibility-settings.md)
+- [Privacy settings](/docs/account/privacy-settings.md)
+- [Manage devices and security](/docs/account/security-and-devices.md)

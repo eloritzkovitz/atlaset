@@ -51,7 +51,7 @@ export function DocsPanelMenu({
   const panelContent = (
     <SidePanelMenu
       title={null}
-      width={340}
+      width={380}
       animationsEnabled={animationsEnabled}
       topOffset={isMobile ? "0px" : "64px"}
       menuItems={[]}

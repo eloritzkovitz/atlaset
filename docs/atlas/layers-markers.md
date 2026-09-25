@@ -4,7 +4,7 @@ Atlaset lets you customize your map with layers (highlighting groups of countrie
 
 ## Layers
 
-Countries are stored in layers by their **ISO 3166-1 code**, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
+Layers are interactive groups of countries that are colored on the map.
 
 You can open the **Layers** panel from the map toolbar or by pressing the <kbd>L</kbd> key.
 

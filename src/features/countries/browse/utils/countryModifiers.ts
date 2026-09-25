@@ -10,13 +10,8 @@ import {
   hasVisitInYearFor,
 } from "@features/visits/utils/visitHelpers";
 import { compareNumeric, parseComparator, parseYearComparator } from "@utils";
-import type { CountryModifiers } from "../types";
-import { getTranscontinentalInfo } from "../../core/utils/countryData";
-import type {
-  Country,
-  TranscontinentalMode,
-  TranscontinentalScope,
-} from "../../types";
+import type { CountryModifiers, CountryVisitModifiers } from "../types";
+import type { Country } from "../../types";
 
 /**
  * Normalizes raw modifier inputs into a structured CountryModifiers object.
@@ -30,8 +25,6 @@ export function normalizeModifiers(
 ): CountryModifiers {
   const out: CountryModifiers = {};
   if (!mods) return out;
-  if (typeof mods.tc !== "undefined")
-    out.tc = mods.tc as CountryModifiers["tc"];
   out.count = mods.count
     ? (parseComparator(String(mods.count), "\\d+") ?? undefined)
     : undefined;
@@ -89,83 +82,16 @@ export function ensureModifiers(mods?: unknown): CountryModifiers {
 }
 
 /**
- * Parses the scope and mode of transcontinental inclusion for country filtering.
- * @param raw - The raw input value for the transcontinental modifier.
- * @returns An object containing the parsed scope and mode for transcontinental country inclusion in filters.
- * @see TranscontinentalScope for the expected scope values and their meanings.
- * @see TranscontinentalMode for the expected mode values and their meanings.
- */
-export function parseTCOption(raw?: string): {
-  scope?: TranscontinentalScope;
-  mode: TranscontinentalMode;
-} {
-  if (typeof raw === "string") {
-    const v = raw.toLowerCase().trim();
-    if (!v) return { mode: "default" };
-
-    const parts = v
-      .split(":")
-      .map((p) => p.trim())
-      .filter(Boolean);
-    let scope: TranscontinentalScope | undefined;
-    let mode: TranscontinentalMode = "default";
-
-    for (const p of parts) {
-      if (p === "only") {
-        mode = "only";
-      } else if (p === "include") {
-        mode = "include";
-      } else if (p === "all") {
-        scope = "all";
-      } else if (
-        p === "contiguous" ||
-        p === "overseas" ||
-        p === "cultural" ||
-        p === "other"
-      ) {
-        scope = p as TranscontinentalScope;
-      }
-    }
-
-    // Determine final scope based on mode if not explicitly set
-    const finalScope: TranscontinentalScope | undefined =
-      typeof scope !== "undefined"
-        ? scope
-        : mode === "only" || mode === "include"
-          ? "all"
-          : undefined;
-
-    return { scope: finalScope, mode };
-  }
-  return { mode: "default" };
-}
-
-/**
- * Returns true if the given country matches the requested transcontinental option.
- */
-export function matchesTranscontinental(
-  country: Country,
-  tcOption?: TranscontinentalScope,
-) {
-  if (!tcOption) return false;
-  const entry = getTranscontinentalInfo(country);
-  if (!entry) return false;
-  if (tcOption === "all") return true;
-  const entryScope = (entry.scope ?? "contiguous").toLowerCase();
-  return entryScope === String(tcOption).toLowerCase();
-}
-
-/**
  * Applies modifiers to a country to determine if it matches visit-related criteria.
  * @param country - The country to check against the modifiers.
  * @param mods - The modifiers to apply, which may include visit-related criteria.
  * @param visitContext - Optional context containing visit information for evaluating visit-related modifiers.
  * @returns True if the country matches the modifiers, false otherwise.
- * @see CountryModifiers for supported modifiers.
+ * @see CountryVisitModifiers for supported modifiers.
  */
-export function applyModifiersToCountry(
+export function applyVisitModifiersToCountry(
   country: Country,
-  mods: CountryModifiers,
+  mods: CountryVisitModifiers,
   visitContext?: VisitContext,
 ) {
   if (!mods) return true;
