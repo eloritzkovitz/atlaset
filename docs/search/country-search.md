@@ -22,7 +22,7 @@ region:europe
 
 This query will return all the countries in Europe, including dependencies and territories.
 
-You can combine multiple qualifiers and modifiers in a single search, separated by a whitespace. For example, adding the `sovereign` qualifier will narrow down the results to all sovereign countries in Europe. For example:
+You can combine multiple qualifiers and modifiers in a single search, separated by a whitespace. For example, adding the `sovereign` qualifier will narrow down the results to all sovereign countries in Europe:
 
 ```bash
 region:europe sovereign:true

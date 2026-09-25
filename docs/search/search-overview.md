@@ -32,4 +32,4 @@ Some features allow for more advanced search, using a more complex syntax to fil
 
 ## Next steps
 
-- [Learn more about country search syntax](/docs/search/search-countries.md)
+- [Learn more about country search](/docs/search/search-countries.md)

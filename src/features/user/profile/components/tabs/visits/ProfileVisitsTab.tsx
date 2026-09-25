@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import {
   ActionButton,
@@ -8,6 +7,7 @@ import {
   TabControl,
   type TabControlItem,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { CountryFlagGrid } from "@features/countries";
 import { useAuth } from "@features/user/auth";
 import { useQueryParam } from "@hooks";
@@ -64,7 +64,7 @@ export function ProfileVisitsTab({ profileUser }: ProfileVisitsTabProps) {
         {!isOwnProfile && (
           <ActionButton
             onClick={handleCompare}
-            icon={<FaArrowRightArrowLeft />}
+            icon={<ICONS.compare />}
             title={t("profile.visits.tabs.compare", "Compare")}
             rounded
           />
