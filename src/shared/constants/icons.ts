@@ -29,6 +29,7 @@ import {
   FaCloudArrowUp,
   FaCode,
   FaCoins,
+  FaCompass,
   FaCompassDrafting,
   FaCopy,
   FaCrosshairs,
@@ -286,6 +287,7 @@ export const ICONS = {
 
   // Docs
   getStarted: FaRocket,
+  navigation: FaCompass,
   laptopCode: FaLaptopCode,
   data: FaDatabase,
   scripts: FaFilePen,

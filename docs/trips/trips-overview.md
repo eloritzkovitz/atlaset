@@ -17,12 +17,12 @@ Trip data powers many features - including **visited countries**, **timeline nav
 
 ## How trips are used
 
-| Feature                                                      | Usage                                                        |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [**Visited Countries**](/docs/trips/tracking-your-visits.md) | Trip data is used to determine your visited countries.       |
-| [**Timeline**](/docs/atlas/timeline.md)                      | Timeline data is based on your trip and visit history.       |
-| [**Statistics**](/docs/dashboard/statistics.md)              | Trip data is used to calculate travel statistics and trends. |
-| [**Calendar**](/docs/trips/calendar.md)                      | Trips are displayed as events in the calendar                |
+| Feature                                                           | Usage                                                        |
+| ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| [**Visited Countries**](/docs/getstarted/tracking-your-visits.md) | Trip data is used to determine your visited countries.       |
+| [**Timeline**](/docs/atlas/timeline.md)                           | Timeline data is based on your trip and visit history.       |
+| [**Statistics**](/docs/dashboard/statistics.md)                   | Trip data is used to calculate travel statistics and trends. |
+| [**Calendar**](/docs/trips/calendar.md)                           | Trips are displayed as events in the calendar                |
 
 Changes to your trips are automatically reflected in the relevant features.
 

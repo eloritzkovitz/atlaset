@@ -45,7 +45,7 @@ export function DashboardOverview() {
   const stats = [
     {
       label: t("overview.stats.countriesVisited", {
-        defaultValue: "Countries Visited",
+        defaultValue: "Countries visited",
       }),
       value: countriesLoading
         ? "..."
@@ -93,7 +93,7 @@ export function DashboardOverview() {
       <h2 className="text-3xl font-bold mb-6">
         {t("overview.stats.heading", {
           name: firstName,
-          defaultValue: `${firstName}'s Overview`,
+          defaultValue: `${firstName}'s overview`,
         })}
       </h2>
       <StatsGrid stats={stats} />

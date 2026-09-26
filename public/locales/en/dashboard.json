@@ -9,8 +9,8 @@
     "user": "User",
     "welcomeBack": "Welcome back!",
     "stats": {
-      "heading": "{{name}}'s Overview",
-      "countriesVisited": "Countries Visited",
+      "heading": "{{name}}'s overview",
+      "countriesVisited": "Countries visited",
       "achievements": "Achievements",
       "statistics": "Statistics",
       "view": "View"

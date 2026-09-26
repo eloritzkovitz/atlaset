@@ -36,4 +36,3 @@ Achievements can have one of the following statuses:
 ## Further reading
 
 - [Creating and managing trips](/docs/trips/creating-managing-trips.md)
-- [Your visits contribute towards achievements](/docs/trips/tracking-your-visits.md)

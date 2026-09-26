@@ -71,6 +71,6 @@ Profile search visibility is also controlled separately, so a profile can be exc
 ## Further reading
 
 - [Manage your account settings](/docs/account/account-settings.md)
-- [Add and manage friends](/docs/getstarted/friends.md)
+- [Add and manage friends](/docs/account/friends.md)
 - [Learn more about organizing your travel data](/docs/trips/creating-managing-trips.md)
 - [More about the leaderboards](/docs/quizzes/leaderboards.md)

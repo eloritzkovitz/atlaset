@@ -5,7 +5,7 @@ export const DOCS_PATH = "/docs/";
 export const DOCS_GROUPS = {
   getStarted: {
     header: {
-      label: "Get Started",
+      label: "Get started",
       file: null,
       icon: ICONS.getStarted,
     },
@@ -17,22 +17,34 @@ export const DOCS_GROUPS = {
         url: "/docs/getstarted/get-started",
       },
       {
+        label: "Using Atlaset",
+        file: "getstarted/using-atlaset.md",
+        icon: ICONS.navigation,
+        url: "/docs/getstarted/using-atlaset",
+      },
+      {
+        label: "Keyboard shortcuts",
+        file: "getstarted/keyboard-shortcuts.md",
+        icon: ICONS.shortcuts,
+        url: "/docs/getstarted/keyboard-shortcuts",
+      },
+      {
         label: "Creating an account",
         file: "getstarted/creating-an-account.md",
         icon: ICONS.account,
         url: "/docs/getstarted/creating-an-account",
       },
       {
-        label: "Your profile",
-        file: "getstarted/profile.md",
-        icon: ICONS.profile,
-        url: "/docs/getstarted/profile",
+        label: "Migrating guest data",
+        file: "getstarted/migrating-guest-data.md",
+        icon: ICONS.importFile,
+        url: "/docs/getstarted/migrating-guest-data",
       },
       {
-        label: "Friends",
-        file: "getstarted/friends.md",
-        icon: ICONS.friends,
-        url: "/docs/getstarted/friends",
+        label: "Tracking your visits",
+        file: "getstarted/tracking-your-visits.md",
+        icon: ICONS.visits,
+        url: "/docs/getstarted/tracking-your-visits",
       },
     ],
   },
@@ -131,6 +143,12 @@ export const DOCS_GROUPS = {
         url: "/docs/explore/discover",
       },
       {
+        label: "Exploring countries",
+        file: "explore/exploring-countries.md",
+        icon: ICONS.countries,
+        url: "/docs/explore/exploring-countries",
+      },
+      {
         label: "Languages",
         file: "explore/languages.md",
         icon: ICONS.language,
@@ -198,12 +216,6 @@ export const DOCS_GROUPS = {
         file: "trips/sharing-trips.md",
         icon: ICONS.sharedTrips,
         url: "/docs/trips/sharing-trips",
-      },
-      {
-        label: "Tracking your visits",
-        file: "trips/tracking-your-visits.md",
-        icon: ICONS.visits,
-        url: "/docs/trips/tracking-your-visits",
       },
       {
         label: "Calendar",
@@ -275,6 +287,12 @@ export const DOCS_GROUPS = {
         url: "/docs/dashboard/dashboard-overview",
       },
       {
+        label: "Activity",
+        file: "dashboard/activity.md",
+        icon: ICONS.activity,
+        url: "/docs/dashboard/activity",
+      },
+      {
         label: "Statistics",
         file: "dashboard/statistics.md",
         icon: ICONS.statistics,
@@ -284,11 +302,23 @@ export const DOCS_GROUPS = {
   },
   account: {
     header: {
-      label: "Managing your account",
+      label: "Account & profile",
       file: null,
-      icon: ICONS.accountManagement,
+      icon: ICONS.account,
     },
     items: [
+      {
+        label: "Your profile",
+        file: "account/your-profile.md",
+        icon: ICONS.profile,
+        url: "/docs/account/your-profile",
+      },
+      {
+        label: "Friends",
+        file: "account/friends.md",
+        icon: ICONS.friends,
+        url: "/docs/account/friends",
+      },
       {
         label: "Account settings",
         file: "account/account-settings.md",
@@ -302,6 +332,12 @@ export const DOCS_GROUPS = {
         url: "/docs/account/deleting-your-account",
       },
       {
+        label: "Accessibility settings",
+        file: "account/accessibility-settings.md",
+        icon: ICONS.accessibility,
+        url: "/docs/account/accessibility-settings",
+      },
+      {
         label: "Privacy settings",
         file: "account/privacy-settings.md",
         icon: ICONS.privacy,
@@ -312,27 +348,6 @@ export const DOCS_GROUPS = {
         file: "account/security-and-devices.md",
         icon: ICONS.security,
         url: "/docs/account/security-and-devices",
-      },
-    ],
-  },
-  accessibility: {
-    header: {
-      label: "Accessibility",
-      file: null,
-      icon: ICONS.accessibility,
-    },
-    items: [
-      {
-        label: "Accessibility settings",
-        file: "accessibility/accessibility-settings.md",
-        icon: ICONS.accessibility,
-        url: "/docs/accessibility/accessibility-settings",
-      },
-      {
-        label: "Keyboard Shortcuts",
-        file: "accessibility/keyboard-shortcuts.md",
-        icon: ICONS.shortcuts,
-        url: "/docs/accessibility/keyboard-shortcuts",
       },
     ],
   },
@@ -376,6 +391,5 @@ export const DOCS = [
   ...DOCS_GROUPS.search.items,
   ...DOCS_GROUPS.dashboard.items,
   ...DOCS_GROUPS.account.items,
-  ...DOCS_GROUPS.accessibility.items,
   ...DOCS_GROUPS.forDevelopers.items,
 ];

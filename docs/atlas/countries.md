@@ -24,7 +24,7 @@ Country details include the following sections:
 - By clicking the **Visits** tab, you can open a detailed view of your visit history to the specific country.
 - Data is based on your trip data, or by manually adding countries through the list.
 
-> For a full breakdown of how tracking methods affect your analytics, timeline and dashboard stats, see [here](/docs/trips/tracking-your-visits.md).
+> For a full breakdown of how tracking methods affect your analytics, timeline and dashboard stats, see [here](/docs/getstarted/tracking-your-visits.md).
 
 ## Filtering & sorting
 
@@ -34,13 +34,13 @@ Country details include the following sections:
 - Use the **Sort** button to:
   - Sort countries by `name`, `ISO 3166-1 code`, `area` or `population` and by sort direction (`ascending` or `descending`).
   - In **Timeline mode**, you can also sort by `visit count`, `first visit time` or `last visit time`.
-- Use the **View toggle** to switch between lists:
+- Use the **list toggle** to switch between lists:
   - Default lists include **All** (showing all countries and territories), **Sovereign** (showing sovereign countries only), **Visited** and **Want to Visit**.
   - Create your own custom lists, either independent or synced with layers.
 
 ## Further reading
 
-- [Searching countries with qualifiers](/docs/search/country-search.md)
-- [Using country lists](/docs/atlas/country-lists.md)
-- [Using layers, which group countries ](/docs/atlas/layers-markers.md)
-- [Tracking your visits](/docs/trips/tracking-your-visits.md)
+- [Learn how to search countries with qualifiers](/docs/search/country-search.md)
+- [Learn about country lists and creating your own lists](/docs/atlas/country-lists.md)
+- [Learn about layers and markers, which group and mark countries on your map ](/docs/atlas/layers-markers.md)
+- [Browse countries in the Explore section, with grid layouts and navigation](/docs/explore/exploring-countries.md)

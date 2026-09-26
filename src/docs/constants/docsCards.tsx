@@ -3,15 +3,15 @@ import { ICONS } from "@constants/icons";
 export const DOCS_CARDS = [
   {
     icon: <ICONS.getStarted className="text-5xl mb-4 text-danger" />,
-    title: "Get Started",
+    title: "Get started",
     description: "Learn the basics and set up your Atlaset experience.",
     file: "get-started/get-started.md",
   },
   {
     icon: <ICONS.profile className="text-5xl mb-4 text-muted" />,
-    title: "Account & Profile",
+    title: "Account & profile",
     description: "Manage your account settings and personalize your profile.",
-    file: "get-started/profile.md",
+    file: "account/your-profile.md",
   },
   {
     icon: <ICONS.atlas className="text-5xl mb-4 text-info" />,

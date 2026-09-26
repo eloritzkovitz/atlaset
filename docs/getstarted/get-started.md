@@ -1,41 +1,45 @@
 # Getting started
 
-Welcome to **Atlaset**!  
+Welcome to **Atlaset**!
+
 Atlaset helps you explore the world, track your travels and visualize your journeys on an interactive map.
 
-## What can you do with Atlaset?
+## Start using Atlaset
 
-- **Browse the World Map:** Discover countries, regions and interesting facts.
-- **Track Your Visits:** Mark places you’ve visited and see your travel history.
-- **Plan and Manage Trips:** Create, edit and organize your trips with custom details.
-- **View Your Dashboard:** Get insights and stats about your travels.
-- **Test Your Knowledge:** Play some quizzes that test your knowledge of the world.
-- **Connect with Friends:** Share your journeys and see where your friends have been.
-- **Customize Your Experience:** Adjust map layers, settings and preferences.
+### 1. Sign up or log in
 
-## Begin your journey
+**Create an account or log in** to save your travel data and access Atlaset across sessions.
 
-1. **Sign up or log in**  
-   **Create an account or log in** to start tracking your travels and saving your data.  
-   Note that guest mode is available for the Atlas page - your data will be saved locally and migrated upon account creation.
+You can also use **guest mode** on the Atlas page. Guest data is stored locally and can be migrated to your account when you create one.
 
-2. **Explore the map**  
-   Use the interactive map to browse countries and regions. Click on a country to see details.
+### 2. Explore the Atlas
 
-3. **Add your first trip**  
-   Go to the **Trips** page to create a new trip. Add destinations, dates and notes to remember your adventures.
+Open the **Atlas** to explore the interactive world map. Browse countries, select a country to view its details, and use the available map tools to customize your view.
 
-4. **Check your dashboard**  
-   Visit the **Dashboard** to view your travel stats, achievements and recent activity.
+### 3. Track your visits
 
-5. **Invite or find friends**  
-   Connect with friends to share your journeys and compare your travel maps.
+Mark countries you've visited or want to visit. Visits can be tracked through your trips or manually using the appropriate country lists.
 
-6. **Customize your settings**  
-   Adjust your app preferences and experience in the **Settings** menu.
+Your visited countries are used throughout Atlaset, including your Atlas, exploration progress and travel statistics.
+
+For more information, see [Tracking your visits](/docs/getstarted/tracking-your-visits).
+
+### 4. Create your first trip
+
+Open **Trips** and create a trip to record one of your journeys. Add destinations, dates and other details to build a record of your travel.
+
+### 5. Explore your progress
+
+Visit **Dashboard** to see an overview of your travel activity and statistics, or open **Explore** to browse countries, reference data and your exploration progress.
+
+### 6. Discover more
+
+Once you've explored the basics, try **Quizzes**, customize your Atlas, search for countries, or connect with friends.
+
+See [Using Atlaset](/docs/getstarted/using-atlaset) for an overview of the application's main areas and features.
 
 ## Need help?
 
-- Use the **Help** panel to find guides on customization and more.
+Use the **Help** panel to access the Atlaset documentation and find guides for specific features.
 
 Enjoy exploring with Atlaset!

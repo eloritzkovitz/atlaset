@@ -45,5 +45,6 @@ You can also track countries you'd like to visit using the **Want to Visit** lis
 
 ## Further reading
 
-- [More about country lists](/docs/atlas/country-lists.md)
+- [Learn about country lists](/docs/atlas/country-lists.md)
 - [Visualize your visits in the Timeline](/docs/atlas/timeline.md)
+- [Learn about achievements earned by your visits](/docs/explore/achievements.md)

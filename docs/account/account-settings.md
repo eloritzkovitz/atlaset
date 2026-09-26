@@ -14,8 +14,7 @@
 
 ## Next steps
 
-- [Learn about your profile](/docs/account/profile.md)
 - [Hibernate or delete your account](/docs/account/deleting-your-accounts.md)
-- [Accessibility settings](/docs/accessibility/accessibility-settings.md)
+- [Accessibility settings](/docs/account/accessibility-settings.md)
 - [Privacy settings](/docs/account/privacy-settings.md)
 - [Manage devices and security](/docs/account/security-and-devices.md)

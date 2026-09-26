@@ -1,4 +1,4 @@
-# Explore Overview
+# Explore overview
 
 The **Explore** section provides tools for discovering information about the world and tracking your personal exploration progress.
 
@@ -20,9 +20,9 @@ Data can be searched and filtered where applicable, and supported lists can be d
 
 ## Next steps
 
-- [Progress](/docs/explore/progress.md)
-- [Discover](/docs/explore/discover.md)
-- [Countries](/docs/atlas/countries.md)
+- [View your visit progress](/docs/explore/progress.md)
+- [Discover new countries and interesting facts](/docs/explore/discover.md)
+- [Explore countries](/docs/explore/exploring-countries.md)
 - [Languages](/docs/explore/languages.md)
 - [Currencies](/docs/explore/currencies.md)
 - [Timezones](/docs/explore/timezones.md)

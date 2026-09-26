@@ -174,8 +174,8 @@ export function getBaseMarkdownComponents(
     table: (props: React.HTMLProps<HTMLTableElement>) => (
       <table
         className={
-          (props.className ? props.className + " " : "") +
-          "min-w-full border-collapse my-6 rounded-xl overflow-hidden"
+          (props.className ? `${props.className} ` : "") +
+          "w-full table-fixed border-collapse my-6 rounded-xl overflow-hidden"
         }
       >
         {props.children}
@@ -183,7 +183,7 @@ export function getBaseMarkdownComponents(
     ),
 
     th: (props: React.HTMLProps<HTMLTableCellElement>) => (
-      <th className="px-4 py-2 text-left font-semibold bg-surface-alt border-b border-surface-alt">
+      <th className="px-4 py-3 text-left font-semibold bg-surface-alt border-b border-surface-alt first:w-[20%]">
         {props.children}
       </th>
     ),
@@ -195,7 +195,9 @@ export function getBaseMarkdownComponents(
     ),
 
     td: (props: React.HTMLProps<HTMLTableCellElement>) => (
-      <td className="px-4 py-2 border-b border-surface/80">{props.children}</td>
+      <td className="px-4 py-3 border-b border-surface/80 first:w-[20%]">
+        {props.children}
+      </td>
     ),
   };
 }

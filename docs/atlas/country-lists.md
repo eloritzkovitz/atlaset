@@ -42,4 +42,4 @@ This list represents a "bucket list", where you can manage your dream destinatio
 ## Further reading
 
 - [More about layers](/docs/atlas/layers-markers.md)
-- [Tracking your visits](/docs/trips/tracking-your-visits.md)
+- [Tracking your visits](/docs/getstarted/tracking-your-visits.md)

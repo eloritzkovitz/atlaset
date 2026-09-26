@@ -4,7 +4,7 @@ Atlaset provides accessibility options that can help you adapt the application.
 
 ## Managing keyboard shortcuts
 
-By default, all keyboard shortcuts are enabled. For the complete list of available shortcuts, see [Keyboard shortcuts](/docs/accessibility/keyboard-shortcuts.md).
+By default, all keyboard shortcuts are enabled. For the complete list of available shortcuts, see [Keyboard shortcuts](/docs/agetstarted/keyboard-shortcuts.md).
 
 If you want to disable **Single-character shortcuts**, follow these steps:
 
