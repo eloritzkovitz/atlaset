@@ -1,39 +1,44 @@
-# Data Sources
+# Data sources
 
-## Static Data (JSON)
+## Static data (JSON)
 
-All main `data sources` are loaded from static `JSON` files, either directly from the [`public/data`](../public/data/) folder (in development) or from a remote `URL` (in production, if configured). Localized data is loaded from the `public/locales/{lang}` folder, and includes the translated countries.json, along with currency and language data.
+All main data sources are loaded from static JSON files, either directly from the [`public/data`](../public/data/) folder (in development) or from a remote URL (in production, if configured). Localized data is loaded from the `public/locales/{lang}` folder, and includes the translated countries.json, along with currency and language data.
 
 You can change their location or swap datasets by editing the `.env` file.
 
-### Data Types and Variables
+### Data types and variables
 
-| Data Type      | Default Path              | Environment Variable         |
-| -------------- | ------------------------- | ---------------------------- |
-| `Map GeoJSON`  | `/data/countries.geojson` | `VITE_MAP_GEO_URL`           |
-| `Countries`    | `/data/countries.json`    | `VITE_COUNTRY_DATA_URL`      |
-| `Achievements` | `/data/achievements.json` | `VITE_ACHIEVEMENTS_DATA_URL` |
+| Data type         | Default path              |
+| ----------------- | ------------------------- |
+| **Map GeoJSON**   | `/data/countries.geojson` |
+| **Countries**     | `/data/countries.json`    |
+| **Country facts** | `/data/countryFacts.json` |
+| **Achievements**  | `/data/achievements.json` |
 
-### Localized Data Types and Variables
+When fetching from a remote source, all paths are constructing using the `VITE_DATA_URL` environment variable.
 
-| Data Type                      | Default Path                      | Environment Variable |
-| ------------------------------ | --------------------------------- | -------------------- |
-| `Countries` _(translations\*)_ | `/locales/{lang}/countries.json`  | `VITE_LOCALES_URL`   |
-| `Currencies`                   | `/locales/{lang}/currencies.json` | `VITE_LOCALES_URL`   |
-| `Languages`                    | `/locales/{lang}/languages.json`  | `VITE_LOCALES_URL`   |
+### Localized data types and variables
 
-> \* Translations include unique data like country names and capitals, as well as field and enum localization.
+| Data type                        | Default path                      | Environment variable |
+| -------------------------------- | --------------------------------- | -------------------- |
+| **Countries** _(translations\*)_ | `/locales/{lang}/countries.json`  | `VITE_LOCALES_URL`   |
+| **Currencies**                   | `/locales/{lang}/currencies.json` | `VITE_LOCALES_URL`   |
+| **Languages**                    | `/locales/{lang}/languages.json`  | `VITE_LOCALES_URL`   |
+
+> <icon name="info"></icon> **Note**
+>
+> Translations include unique data like country names and capitals, as well as field and enum localization.
 
 ### Sources
 
-- `Country boundaries`: [datasets/geo-countries](https://github.com/datasets/geo-countries)
-- `Country data`: [REST Countries](https://restcountries.com/)
-- `Currency data`: [Open Exchange Rates](https://openexchangerates.org/api/currencies.json)
-- `Language data`: [ISO-639-1-language.json](https://gist.github.com/jrnk/8eb57b065ea0b098d571)
+- **Country boundaries**: [datasets/geo-countries](https://github.com/datasets/geo-countries)
+- **Country data**: [REST Countries](https://restcountries.com/)
+- **Currency data**: [Open Exchange Rates](https://openexchangerates.org/api/currencies.json)
+- **Language data**: [ISO-639-1-language.json](https://gist.github.com/jrnk/8eb57b065ea0b098d571)
 
-## Flag Data
+## Flag data
 
-`Country flags` are loaded either from `SVG files` or from `React components`. Atlases uses flags in two separate forms:
+**Country flags** are loaded either from SVG files or from React components. Atlases uses flags in two separate forms:
 
 - **Original proportions flags**, used in country details, are loaded from SVG files in the `public/flags` folder.
 - **3x2 flags**, displayed in lists, loaded as React components from a private npm package based on the flags from [country-flag-icons](https://www.npmjs.com/package/country-flag-icons), along with additional flags.
@@ -57,12 +62,12 @@ You will need an `index.json` file listing the ISO 3166 codes for the flags you 
 
 Another alternative is using the package mentioned above, which will require a minor import change in the `CountryFlag` component.
 
-## Adding Country Fields
+## Adding country fields
 
 Atlaset uses a few additional fields in addition to the ones provided in the basic dataset. The `scripts` folder provides various built-in scripts for automated addition of new fields to your countries.json file. You can find more detailed information in [this section](/docs/developers/adding-country-fields.md).
 
 ## Further reading
 
-[Countries](/docs/atlas/countries.md)  
+[Learn more about countries](/docs/atlas/countries.md)  
 [Adding country fields](/docs/developers/adding-country-fields.md)  
 [Data sync & updates](/docs/developers/data-syncing.md)

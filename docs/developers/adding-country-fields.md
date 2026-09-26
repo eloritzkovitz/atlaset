@@ -2,6 +2,8 @@
 
 For automated addition of new fields and values to the country data, you can use the built-in [add-country-field.js script](/scripts/assets/add-country-field.js). The script reads a JSON map and appends the supplied values based on matching ISO 3166 Alpha-2 codes.
 
+> <icon name="info"></icon> **Notes**
+>
 > - The script requires a mapping file (`--map`) that supplies values per-country.
 > - Lookup uses a property on each country (default: `isoCode`) — override with `--mapKeyField`.
 > - Map may be an object lookup or an array (converted with `--mapFrom`/`--mapTo`).
@@ -103,7 +105,7 @@ node scripts/assets/generate-empty-map.js --file=scripts/assets/countries.json -
 
 After generating, pass the produced map to `add-country-field.js` via `--map`.
 
-> **Notes**
+> <icon name="info"></icon> **Notes**
 >
 > - Use `--mapDefault` with JSON syntax when you want a literal string default (e.g. `--mapDefault='"Unknown"'`).
 > - `--skip-existing` prevents overwriting fields already set in the JSON.

@@ -5,9 +5,9 @@ This guide will help you set up the project locally, configure your data sources
 
 ## Prerequisites
 
-- `Node.js` (v18 or newer recommended)
-- `npm` (v9 or newer recommended)
-- (Optional) `Git` for cloning the repository
+- **Node.js** (v18 or newer recommended)
+- **npm** (v9 or newer recommended)
+- (Optional) **Git** for cloning the repository
 
 ## Installation
 
@@ -35,7 +35,7 @@ cp .env.example .env
 
 2. **Data sources**
 
-Atlaset loads `map`, `country` and `currency` data from `JSON` files in [`public/data`](../public/data/).
+Atlaset loads map, country and currency data from JSON files in [`public/data`](../public/data/).
 You can customize these sources or swap datasets by editing the `.env` file.
 
 See [Data Sources](/docs/developers/data-sources.md) for details on file formats and environment variables.

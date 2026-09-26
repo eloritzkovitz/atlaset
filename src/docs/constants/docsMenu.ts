@@ -351,29 +351,29 @@ export const DOCS_GROUPS = {
       },
     ],
   },
-  forDevelopers: {
-    header: { label: "For Developers", file: null, icon: ICONS.code },
+  developers: {
+    header: { label: "Developers", file: null, icon: ICONS.code },
     items: [
       {
-        label: "Developer Guide",
+        label: "Developer guide",
         file: "developers/developer-guide.md",
         icon: ICONS.laptopCode,
         url: "/docs/developers/developer-guide",
       },
       {
-        label: "Data Sources",
+        label: "Data sources",
         file: "developers/data-sources.md",
         icon: ICONS.data,
         url: "/docs/developers/data-sources",
       },
       {
-        label: "Adding Country Fields",
+        label: "Adding country fields",
         file: "developers/adding-country-fields.md",
         icon: ICONS.scripts,
         url: "/docs/developers/adding-country-fields",
       },
       {
-        label: "Data Sync & Updates",
+        label: "Data sync & updates",
         file: "developers/data-syncing.md",
         icon: ICONS.refresh,
         url: "/docs/developers/data-syncing",
@@ -391,5 +391,5 @@ export const DOCS = [
   ...DOCS_GROUPS.search.items,
   ...DOCS_GROUPS.dashboard.items,
   ...DOCS_GROUPS.account.items,
-  ...DOCS_GROUPS.forDevelopers.items,
+  ...DOCS_GROUPS.developers.items,
 ];
