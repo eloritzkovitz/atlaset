@@ -1,7 +1,9 @@
 import { useLayoutEffect } from "react";
 import {
   autoUpdate,
+  flip,
   offset,
+  shift,
   size,
   useFloating,
   type Placement,
@@ -38,13 +40,15 @@ export function DropdownMenu({
 }: DropdownMenuProps) {
   const isVisible = isOpen && enabled;
 
-  const { refs, floatingStyles } = useFloating({
+  const { refs, floatingStyles, update } = useFloating({
     open: isVisible && floating,
     placement,
     strategy: "fixed",
     transform: false,
     middleware: [
       offset(offsetDistance),
+      flip(),
+      shift({ padding: 8 }),
       ...(matchTriggerWidth
         ? [
             size({
@@ -58,7 +62,7 @@ export function DropdownMenu({
     whileElementsMounted: autoUpdate,
   });
 
-  // Update the reference element for the floating UI when the menu is open
+  // Set the reference element for the floating UI to the trigger element
   useLayoutEffect(() => {
     if (!floating) return;
 
@@ -68,6 +72,13 @@ export function DropdownMenu({
       refs.setReference(null);
     };
   }, [floating, triggerRef, refs]);
+
+  // Update the position of the floating menu when it becomes visible
+  useLayoutEffect(() => {
+    if (!floating || !isVisible) return;
+
+    void update();
+  }, [floating, isVisible, placement, update]);
 
   useClickOutside([triggerRef, refs.floating], onClose, isVisible);
 

@@ -97,7 +97,7 @@ export function QualifierSearch({
       {docsPath && !value && (
         <Link
           to={docsPath}
-          className="absolute right-1 top-1/2 z-10 -translate-y-1/2"
+          className="absolute end-1 top-1/2 z-10 -translate-y-1/2"
         >
           <ActionButton
             icon={<ICONS.helpTooltip />}
