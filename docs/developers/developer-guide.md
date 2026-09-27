@@ -7,7 +7,7 @@ This guide will help you set up the project locally, configure your data sources
 
 - **Node.js** (v18 or newer recommended)
 - **npm** (v9 or newer recommended)
-- (Optional) **Git** for cloning the repository
+- **Git** for cloning the repository
 
 ## Installation
 
@@ -25,7 +25,7 @@ This guide will help you set up the project locally, configure your data sources
 
 ## Configuration
 
-1. **Environmental variables**
+1. **Environment variables**
 
 Copy the example environment file and adjust the data sources as needed:
 
@@ -35,34 +35,47 @@ cp .env.example .env
 
 2. **Data sources**
 
-Atlaset loads map, country and currency data from JSON files in [`public/data`](../public/data/).
-You can customize these sources or swap datasets by editing the `.env` file.
-
-See [Data Sources](/docs/developers/data-sources.md) for details on file formats and environment variables.
+See the [data sources guide](/docs/developers/data-sources.md) for information about configuring data sources.
 
 ## Running the app
 
-**Start the development server**
+**Development**
+
+Start the development server with:
 
 ```bash
 npm run dev
 ```
 
-- Open `http://localhost:5173` in your browser.
+The application will be available at `http://localhost:5173`.
 
-**Build for production**
+**Production build**
+
+Create a production build with:
 
 ```bash
 npm run build
 ```
 
-- The output will be in the [`/dist`](../dist) folder.
+The production files are generated in the `dist` directory.
 
-**Preview the production build**
+Before the build is created, Atlaset runs its data synchronization process to fetch and generate the static data used by the application.
+
+The resulting data is included in the production build and served as part of the application. Static data is therefore not fetched from the source datasets at runtime.
+
+**Preview**
+
+Preview the production build locally with:
 
 ```bash
 npm run preview
 ```
+
+## Working with data
+
+Atlaset uses static datasets for countries, geographic data, currencies, languages, achievements and other application data.
+
+For production builds, the data synchronization process fetches the configured source data and generates the static assets that are included in the application build.
 
 ## Next steps
 

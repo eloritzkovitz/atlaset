@@ -16,7 +16,6 @@ Use the main sidebar to switch between the different sections of the application
 | <icon name="explore"></icon> **Explore**     | Browse countries and world reference data, and track your exploration progress through regions, countries and achievements.      |
 | <icon name="trips"></icon> **Trips**         | Create and manage trips, organize destinations and itineraries, add photos, view trip details, and share trips with others.      |
 | <icon name="quizzes"></icon> **Quizzes**     | Test your geographic knowledge through quizzes and compare your scores on leaderboards.                                          |
-| <icon name="atlas"></icon> **Search**        | Search Atlaset data using regular search and advanced country search syntax.                                                     |
 | <icon name="dashboard"></icon> **Dashboard** | View an overview of your activity, travel data and statistics.                                                                   |
 | <icon name="settings"></icon> **Settings**   | Configure your account, preferences and application settings.                                                                    |
 
