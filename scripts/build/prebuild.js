@@ -18,13 +18,15 @@ function runScript(script) {
   }
 }
 
-// Run the fetch scripts sequentially
+// Fetch necessary data before building the project
 runScript("scripts/data/fetch-country-data.js");
+runScript("scripts/data/fetch-country-facts.js");
 runScript("scripts/data/fetch-flags.js");
 runScript("scripts/data/fetch-geodata.js");
 runScript("scripts/data/fetch-achievements.js");
-runScript("scripts/data/fetch-country-facts.js");
 runScript("scripts/data/fetch-locales.js");
+
+// Copy documentation files to the public directory
 runScript("scripts/build/copy-docs-to-public.js");
 
 console.log("All fetch scripts completed.");

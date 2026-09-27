@@ -1,37 +1,46 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /**
- * Loads a markdown file from the given path
- * @param path - Path to the markdown file (string or undefined)
- * @returns Object containing file content and error (if any)
+ * Fetches the content of a markdown file from the given path and returns it along with any error encountered during the fetch.
+ * If no path is provided, it returns an empty content and null error.
+ * @param path - The path to the markdown file to be fetched. If undefined, no fetch will be performed.
+ * @returns An object containing the fetched content and any error encountered during the fetch.
  */
 export function useMarkdownFile(path?: string) {
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  // Load markdown file when path changes
   useEffect(() => {
     if (!path) {
       setContent("");
       setError(null);
       return;
     }
+
     let isMounted = true;
+
+    setContent("");
     setError(null);
-    // Only call fetch if path is a non-empty string
-    if (typeof path === "string" && path.length > 0) {
-      fetch(path)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to load file");
-          return res.text();
-        })
-        .then((text) => {
-          if (isMounted) setContent(text);
-        })
-        .catch((err) => {
-          if (isMounted) setError(err.message);
-        });
-    }
+
+    fetch(path)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to load file");
+        }
+
+        return response.text();
+      })
+      .then((text) => {
+        if (isMounted) {
+          setContent(text);
+        }
+      })
+      .catch((err: unknown) => {
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load file");
+        }
+      });
+
     return () => {
       isMounted = false;
     };
