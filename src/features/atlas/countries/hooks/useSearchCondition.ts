@@ -61,7 +61,10 @@ export function useSearchCondition({
       setVisitedOnly?.(condition === "visited");
       setWantToVisitOnly?.(condition === "wantToVisit");
       setSovereignOnly?.(condition === "sovereign");
-      setSelectedListId?.(null);
+
+      if (condition !== null) {
+        setSelectedListId?.(null);
+      }
     },
     [setVisitedOnly, setWantToVisitOnly, setSovereignOnly, setSelectedListId],
   );
