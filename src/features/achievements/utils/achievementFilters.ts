@@ -90,10 +90,14 @@ export function getAchievementCountries(
           : [v as unknown]
       ).map(String);
 
-      // For other selectors, apply qualifier search and intersect results
       const thisQualIso = new Set<string>();
+
+      // For each value of the selector, apply the qualifier search and collect matching countries
       for (const val of vals) {
-        const search = `${k}:${val}`;
+        const normalizedValue =
+          val.includes(" ") && !/^".*"$/.test(val) ? `"${val}"` : val;
+
+        const search = `${k}:${normalizedValue}`;
         const matched = applyQualifierSearch(
           byQualifier,
           search,
