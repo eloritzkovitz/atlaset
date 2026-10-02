@@ -56,6 +56,15 @@ describe("trips utils", () => {
   });
 
   describe("getAutoTripStatus", () => {
+    it("returns completed if trip is explicitly marked as completed", () => {
+      const completedTrip: Trip = {
+        ...baseTrip,
+        status: "completed",
+        startDate: "2026-01-01",
+      };
+      expect(getAutoTripStatus(completedTrip)).toBe("completed");
+    });
+
     it("returns cancelled if trip is explicitly marked as cancelled", () => {
       const cancelledTrip: Trip = {
         ...baseTrip,
