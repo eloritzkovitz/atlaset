@@ -1,8 +1,8 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@components";
 import { CountryFlagGrid } from "@features/countries";
-import { useMemo } from "react";
 
 interface ProfileTravelSummaryCardProps {
   username: string;
@@ -15,8 +15,8 @@ export function ProfileTravelSummaryCard({
   visitedCountryCodes,
   wantToVisitCountryCodes,
 }: ProfileTravelSummaryCardProps) {
-  const { t } = useTranslation("user");
   const navigate = useNavigate();
+  const { t } = useTranslation("user");
 
   // Randomly select up to 10 countries to display as a preview
   const previewCountryCodes = useMemo(

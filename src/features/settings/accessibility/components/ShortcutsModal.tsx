@@ -4,6 +4,7 @@ import { Modal, ModalHeader, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { categoryColumns, keyCommands } from "@constants/keyCommands";
 import { useUI } from "@app/contexts/UIContext";
+import { useScreenSize } from "@hooks";
 import type { KeyCommand } from "@types";
 import { canonicalKey, isRestrictedSingleKey } from "@utils";
 import { ShortcutRow } from "./ShortcutRow";
@@ -13,6 +14,7 @@ import { useAccessibility } from "../hooks/useAccessibility";
 /** Renders a modal for displaying keyboard shortcuts. */
 export function ShortcutsModal() {
   const { singleKeyShortcutsEnabled } = useAccessibility();
+  const { isMobile } = useScreenSize();
   const { showShortcuts, closeShortcuts } = useUI();
   const { t } = useTranslation("common");
 
@@ -27,6 +29,8 @@ export function ShortcutsModal() {
       {} as Record<string, KeyCommand[]>,
     );
   }, []);
+
+  if (isMobile) return null;
 
   return (
     <Modal

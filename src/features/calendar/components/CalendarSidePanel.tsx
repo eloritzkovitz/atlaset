@@ -9,6 +9,7 @@ interface CalendarSidePanelProps {
   setDate: (date: Date) => void;
   filters: TripEventFilters;
   onToggleType: (type: TripEventTypeKey) => void;
+  className?: string;
 }
 
 export const CalendarSidePanel: React.FC<CalendarSidePanelProps> = ({
@@ -16,8 +17,9 @@ export const CalendarSidePanel: React.FC<CalendarSidePanelProps> = ({
   setDate,
   filters,
   onToggleType,
+  className = "",
 }) => (
-  <div className="flex flex-col items-center mt-13 me-2">
+  <div className={`flex flex-col items-center mt-13 me-2 ${className}`}>
     <DatePicker
       selected={date}
       onChange={(d: Date | null) => {

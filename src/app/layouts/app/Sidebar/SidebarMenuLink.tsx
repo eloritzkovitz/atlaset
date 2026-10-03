@@ -1,6 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import { MenuButton } from "@components";
-import { useTranslation } from "react-i18next";
 
 interface SidebarMenuLinkProps {
   to: string;

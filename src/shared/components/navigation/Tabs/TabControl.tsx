@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { useDragScroll } from "@hooks";
 import { TabButton } from "./TabButton";
 
 export type TabControlItem<T extends string> = {
@@ -19,17 +21,26 @@ export function TabControl<T extends string>({
   onChange,
   className = "",
 }: TabControlProps<T>) {
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const { dragClassName } = useDragScroll(tabsRef, [tabs]);
+
   return (
-    <div className={`flex gap-2 ${className}`}>
-      {tabs.map((tab) => (
-        <TabButton
-          key={tab.value}
-          active={activeTab === tab.value}
-          onClick={() => onChange(tab.value)}
-        >
-          {tab.label}
-        </TabButton>
-      ))}
+    <div
+      ref={tabsRef}
+      className={`max-w-full overflow-x-auto whitespace-nowrap scrollbar-hide ${dragClassName} ${className}`}
+      style={{ WebkitOverflowScrolling: "touch" }}
+    >
+      <div className="flex w-max gap-2">
+        {tabs.map((tab) => (
+          <TabButton
+            key={tab.value}
+            active={activeTab === tab.value}
+            onClick={() => onChange(tab.value)}
+          >
+            {tab.label}
+          </TabButton>
+        ))}
+      </div>
     </div>
   );
 }

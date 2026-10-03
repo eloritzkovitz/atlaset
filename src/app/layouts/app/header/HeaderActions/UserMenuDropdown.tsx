@@ -1,7 +1,8 @@
-import { DropdownMenu } from "@components";
-import { useAuth, useAuthHandlers } from "@features/user/auth";
+import { useTranslation } from "react-i18next";
+import { ActionButton, ResponsiveOverlay } from "@components";
+import { ICONS } from "@constants/icons";
 import { useLanguage } from "@features/settings/account";
-import { useScreenSize } from "@hooks";
+import { useAuth, useAuthHandlers } from "@features/user/auth";
 import { UserMenuContent } from "./UserMenuContent";
 
 interface UserMenuDropdownProps {
@@ -20,32 +21,29 @@ export function UserMenuDropdown({
   const { user } = useAuth();
   const { handleLogout } = useAuthHandlers();
   const { isRtl } = useLanguage();
-  const { isMobile } = useScreenSize();
-
-  const isMenuVisible = isOpen || closing;
-
-  const className = isMobile
-    ? "fixed inset-x-0 bottom-0 z-50 w-full max-w-full rounded-t-2xl p-4 bg-surface shadow-lg"
-    : "z-50 p-2 w-70";
-
-  const style = isMobile
-    ? {
-        top: "unset",
-        bottom: 16,
-      }
-    : undefined;
+  const { t } = useTranslation("common");
 
   return (
-    <DropdownMenu
-      isOpen={isMenuVisible}
+    <ResponsiveOverlay
+      isOpen={isOpen}
+      closing={closing}
       onClose={onClose}
       triggerRef={triggerRef}
-      floating={!isMobile}
-      placement={isRtl ? "bottom-start" : "bottom-end"}
-      className={className}
-      style={style}
+      desktopPlacement={isRtl ? "bottom-start" : "bottom-end"}
+      desktopClassName="z-50 w-70 p-2"
+      mobileHeader={
+        <div className="flex justify-end">
+          <ActionButton
+            onClick={onClose}
+            ariaLabel={t("actions.close")}
+            title={t("actions.close")}
+            icon={<ICONS.close className="text-2xl" />}
+            rounded
+          />
+        </div>
+      }
     >
       <UserMenuContent user={user} onLogout={handleLogout} onClose={onClose} />
-    </DropdownMenu>
+    </ResponsiveOverlay>
   );
 }

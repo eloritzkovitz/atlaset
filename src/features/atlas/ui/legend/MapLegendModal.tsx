@@ -17,7 +17,9 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
       isOpen={open}
       onClose={onClose}
       position="custom"
-      className="!bg-bg/50 !shadow-none fixed top-16 end-4 min-w-[200px] z-50 select-none group"
+      className="!bg-bg/50 !shadow-none !pointer-events-auto fixed top-16 end-4 min-w-[200px] z-50 select-none group"
+      backdropZIndex={40}
+      containerZIndex={40}
       disableClose
     >
       <ModalHeader
@@ -26,6 +28,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
         showSeparator={false}
         showCloseButton={true}
         closeButtonClassName="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        onClose={onClose}
       />
       <div className="flex flex-col gap-4">
         {items.map((item, idx) => (

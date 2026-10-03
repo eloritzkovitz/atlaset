@@ -1,6 +1,6 @@
-import { Panel } from "@components";
+import { useRef } from "react";
+import { DialogHeader, ResponsiveOverlay } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAccessibility } from "@features/settings/accessibility";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";
 
@@ -10,22 +10,26 @@ interface SearchPanelProps {
 }
 
 export function SearchPanel({ open, onClose }: SearchPanelProps) {
-  const { animationsEnabled } = useAccessibility();
   const search = useSearchController();
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Panel
-      show={open}
-      onHide={onClose}
-      position="right"
-      title={
-        <>
-          <ICONS.search className="me-2" /> Search
-        </>
+    <ResponsiveOverlay
+      isOpen={open}
+      onClose={onClose}
+      triggerRef={triggerRef}
+      mobileHeader={
+        <DialogHeader
+          title={
+            <>
+              <ICONS.search className="me-2" /> Search
+            </>
+          }
+          onClose={onClose}
+          showSeparator={false}
+        />
       }
-      className="!z-[10050]"
-      showSeparator={false}
-      animationsEnabled={animationsEnabled}
+      mobileClassName="!z-[10050]"
     >
       <SearchContent
         searchTerm={search.searchTerm}
@@ -34,8 +38,7 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
         recentSearches={search.recentSearches}
         removeRecentSearch={search.removeRecentSearch}
         clearAllRecentSearches={search.clearAllRecentSearches}
-        containerClassName="!z-[10051]"
       />
-    </Panel>
+    </ResponsiveOverlay>
   );
 }

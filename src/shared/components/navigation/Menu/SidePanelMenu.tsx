@@ -8,6 +8,7 @@ import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useDisclosure, useScreenSize } from "@hooks";
 import { MenuButton } from "./MenuButton";
 import { ActionButton } from "../../inputs/Button/ActionButton";
+import { DialogHeader } from "../../overlay/DialogHeader/DialogHeader";
 import { Panel } from "../../overlay/Panel/Panel";
 import { DrawerPanel } from "../../overlay/Drawer/DrawerPanel";
 
@@ -70,17 +71,8 @@ export function SidePanelMenu({
 
   const toggleTop = `calc(${topOffset} + 0.875rem)`;
 
-  const panelContent = (
-    <Panel
-      title={title}
-      width={width}
-      className={isMobile ? "!start-0" : undefined}
-      onHide={isMobile || isLaptop ? handleClose : undefined}
-      animationsEnabled={animationsEnabled}
-      topOffset={topOffset}
-      showSidebar={showSidebar}
-      showHeader={showHeader}
-    >
+  const menuContent = (
+    <>
       <ul className="flex flex-col gap-2 p-1 -mx-2">
         {menuItems.map((item) => (
           <li key={item.key}>
@@ -104,6 +96,21 @@ export function SidePanelMenu({
       </ul>
 
       {children}
+    </>
+  );
+
+  const panelContent = (
+    <Panel
+      title={title}
+      width={width}
+      className={isMobile ? "!start-0" : undefined}
+      onHide={isMobile || isLaptop ? handleClose : undefined}
+      animationsEnabled={animationsEnabled}
+      topOffset={topOffset}
+      showSidebar={showSidebar}
+      showHeader={showHeader}
+    >
+      {menuContent}
     </Panel>
   );
 
@@ -111,7 +118,7 @@ export function SidePanelMenu({
   if (isMobile || isLaptop) {
     return (
       <>
-        {collapsed && (
+        {isLaptop && collapsed && (
           <ActionButton
             type="button"
             icon={<SidebarIcon className="text-3xl text-muted" />}
@@ -127,8 +134,24 @@ export function SidePanelMenu({
           open={isOpen}
           onClose={handleClose}
           width={width + (showSidebar ? DEFAULT_SIDEBAR_WIDTH : 0)}
+          position="start"
         >
-          {panelContent}
+          {isMobile ? (
+            <>
+              {showHeader && (
+                <DialogHeader
+                  title={title}
+                  onClose={handleClose}
+                  showSeparator
+                />
+              )}
+              <div className="flex h-[calc(100%-5rem)] min-h-0 flex-col overflow-y-auto px-4 pb-20">
+                {menuContent}
+              </div>
+            </>
+          ) : (
+            panelContent
+          )}
         </DrawerPanel>
       </>
     );

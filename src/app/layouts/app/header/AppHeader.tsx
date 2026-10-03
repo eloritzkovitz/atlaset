@@ -17,8 +17,9 @@ export function AppHeader({ show }: AppHeaderProps) {
 
   return (
     <header
-      className={`absolute z-30 flex w-auto items-center end-6
+      className={`absolute z-30 flex w-auto items-center
         transition-transform duration-300
+        ${isMobile ? "end-4 " : "end-6 "}
         ${
           !uiVisible || !show
             ? "top-0 -translate-y-[calc(100%+1rem)] opacity-0 pointer-events-none"

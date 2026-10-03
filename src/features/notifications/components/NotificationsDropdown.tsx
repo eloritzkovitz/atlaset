@@ -1,6 +1,6 @@
-import { DropdownMenu } from "@components";
+import { useTranslation } from "react-i18next";
+import { DialogHeader, ResponsiveOverlay } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useScreenSize } from "@hooks";
 import { NotificationsContent } from "./NotificationsContent";
 import { useNotifications } from "../hooks/useNotifications";
 
@@ -16,31 +16,26 @@ export function NotificationsDropdown({
   triggerRef,
 }: NotificationsDropdownProps) {
   const { user } = useAuth();
-  const { isMobile } = useScreenSize();
   const { notifications, loading } = useNotifications(user?.uid, { limit: 3 });
+  const { t } = useTranslation("common");
 
   if (!user) return null;
 
-  const className = isMobile
-    ? "fixed inset-x-0 bottom-0 z-50 w-full max-w-full rounded-t-2xl p-4 bg-surface shadow-lg"
-    : "z-50 p-2 w-[350px] h-[380px]";
-
-  const style: React.CSSProperties | undefined = isMobile
-    ? {
-        top: "unset",
-        bottom: 16,
-      }
-    : undefined;
-
   return (
-    <DropdownMenu
+    <ResponsiveOverlay
       isOpen={isOpen}
       onClose={onClose}
       triggerRef={triggerRef}
-      className={className}
-      style={style}
+      desktopClassName="z-50 h-[380px] w-[350px] p-2"
+      mobileHeader={
+        <DialogHeader
+          title={t("notifications:title", "Notifications")}
+          onClose={onClose}
+          showSeparator={false}
+        />
+      }
     >
       <NotificationsContent notifications={notifications} loading={loading} />
-    </DropdownMenu>
+    </ResponsiveOverlay>
   );
 }

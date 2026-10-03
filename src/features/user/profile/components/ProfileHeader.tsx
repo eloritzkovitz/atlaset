@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 import { FaPen, FaListUl } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { ActionButton, Card } from "@components";
+import { useScreenSize } from "@hooks";
+import { FriendStats } from "./FriendStats";
 import type { UserProfile } from "../types";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { UserAvatar } from "../../core/components/UserAvatar";
@@ -9,7 +11,7 @@ import { FriendshipButton } from "../../friends/components/FriendshipButton";
 import { useFriendshipStatus } from "../../friends/hooks/useFriendshipStatus";
 import { friendService } from "../../friends/services/friendService";
 
-interface ProfileHeaderProps {
+export interface ProfileHeaderProps {
   profile: UserProfile;
   canEdit?: boolean;
   onEdit?: () => void;
@@ -29,16 +31,14 @@ export function ProfileHeader({
   onMutualCountClick,
 }: ProfileHeaderProps) {
   const { user: currentUser } = useAuth();
+  const { isMobile } = useScreenSize();
   const { t } = useTranslation("user");
-
-  // Friendship status logic
   const {
     status: friendStatus,
     loading,
     refresh,
   } = useFriendshipStatus(currentUser?.uid, profile.uid);
 
-  // Handle adding friend
   const handleAddFriend = async () => {
     if (!currentUser?.uid) return;
     try {
@@ -49,7 +49,6 @@ export function ProfileHeader({
     }
   };
 
-  // Handle unfriending
   const handleUnfriend = async () => {
     if (!currentUser?.uid) return;
     try {
@@ -60,6 +59,68 @@ export function ProfileHeader({
     }
   };
 
+  if (isMobile) {
+    return (
+      <Card className="p-4">
+        <div className="flex flex-col items-center gap-4">
+          <UserAvatar user={profile} size={80} />
+
+          <div className="w-full min-w-0 text-center">
+            <h2 className="truncate text-2xl font-bold">
+              {profile.displayName}
+            </h2>
+            <div className="mt-1 truncate text-base text-gray-500">
+              @{profile.username}
+            </div>
+            <div className="mt-3 flex min-h-6 items-center justify-center gap-2">
+              <FriendStats
+                canEdit={canEdit}
+                friendCount={friendCount}
+                mutualFriendCount={mutualFriendCount}
+                onFriendCountClick={onFriendCountClick}
+                onMutualCountClick={onMutualCountClick}
+              />
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col gap-2">
+            {canEdit && (
+              <ActionButton
+                variant="primary"
+                className="!w-full !rounded-xl"
+                onClick={onEdit}
+                icon={<FaPen className="text-lg" />}
+              >
+                {t("profile.header.editProfile")}
+              </ActionButton>
+            )}
+
+            {!canEdit && currentUser && currentUser.uid !== profile.uid && (
+              <FriendshipButton
+                friendStatus={friendStatus}
+                loading={loading}
+                onAddFriend={handleAddFriend}
+                onUnfriend={handleUnfriend}
+              />
+            )}
+
+            {canEdit && (
+              <Link to="/activity" className="w-full">
+                <ActionButton
+                  variant="secondary"
+                  className="!w-full !rounded-xl"
+                  icon={<FaListUl className="text-lg" />}
+                >
+                  {t("profile.header.activityLog")}
+                </ActionButton>
+              </Link>
+            )}
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <div className="flex flex-col sm:flex-row items-center mb-6 gap-4 sm:gap-0">
@@ -67,15 +128,10 @@ export function ProfileHeader({
         <div className="flex-1 sm:ms-6 w-full">
           <div className="flex flex-row items-center w-full gap-3">
             <div className="flex-1 min-w-0">
-              <h1
-                className={
-                  "text-2xl sm:text-3xl font-bold w-full truncate text-start"
-                }
-              >
+              <h1 className="text-2xl sm:text-3xl font-bold w-full truncate text-start">
                 {profile.displayName}
               </h1>
             </div>
-            {/* Edit Button: only show if canEdit is true */}
             {canEdit && (
               <ActionButton
                 variant="primary"
@@ -86,7 +142,6 @@ export function ProfileHeader({
                 {t("profile.header.editProfile")}
               </ActionButton>
             )}
-            {/* Friend Button: only show if not me */}
             {!canEdit && currentUser && currentUser.uid !== profile.uid && (
               <FriendshipButton
                 friendStatus={friendStatus}
@@ -96,50 +151,20 @@ export function ProfileHeader({
               />
             )}
           </div>
-          <div className={"text-start text-gray-500 text-base mt-1"}>
+          <div className="text-start text-gray-500 text-base mt-1">
             @{profile.username}
           </div>
 
           <div className="flex items-center gap-2 mt-1">
-            {typeof friendCount === "number" ? (
-              <div className="flex items-center gap-2 text-base font-semibold text-muted">
-                {/* Total Friends */}
-                <button
-                  type="button"
-                  className="hover:underline focus:outline-none"
-                  onClick={onFriendCountClick}
-                  disabled={!onFriendCountClick}
-                  aria-label={t("profile.header.showFriendsList")}
-                >
-                  {t("friends.counts.friend", { count: friendCount })}
-                </button>
-
-                {/* Mutual Friends */}
-                {!canEdit &&
-                  typeof mutualFriendCount === "number" &&
-                  mutualFriendCount > 0 && (
-                    <>
-                      <span className="text-muted">•</span>
-                      <button
-                        type="button"
-                        onClick={onMutualCountClick}
-                        className="text-sm text-muted/80 hover:underline hover:text-foreground transition-colors"
-                      >
-                        {t("friends.counts.mutualFriend", {
-                          count: mutualFriendCount,
-                        })}
-                      </button>
-                    </>
-                  )}
-              </div>
-            ) : (
-              <span className="text-base text-muted">
-                {t("friends.status.loading")}
-              </span>
-            )}
+            <FriendStats
+              canEdit={canEdit}
+              friendCount={friendCount}
+              mutualFriendCount={mutualFriendCount}
+              onFriendCountClick={onFriendCountClick}
+              onMutualCountClick={onMutualCountClick}
+            />
           </div>
 
-          {/* Activity Log Button */}
           {canEdit && (
             <div className="flex flex-col items-end -mt-12">
               <Link to="/activity">

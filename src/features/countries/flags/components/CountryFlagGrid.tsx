@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Tooltip } from "@components";
+import { useScreenSize } from "@hooks";
 import { CountryFlag } from "./CountryFlag";
 import type { FlagSize } from "../types";
 import { getCountrySortName } from "../../browse/utils/countrySort";
@@ -24,6 +25,7 @@ export function CountryFlagGrid({
   onCountryClick,
 }: CountryFlagGridProps) {
   const { countryByIsoCode } = useCountryData();
+  const { isMobile } = useScreenSize();
 
   const [activeTarget, setActiveTarget] = useState<{
     id: string;
@@ -41,7 +43,7 @@ export function CountryFlagGrid({
 
   const defaultGridClass =
     size === "64"
-      ? "grid grid-cols-2 grid-cols-10 gap-6"
+      ? `grid ${isMobile ? "grid-cols-4" : "grid-cols-10"} gap-6`
       : "grid w-full gap-2 justify-center justify-items-center items-center mb-2";
 
   const defaultGridStyle = {

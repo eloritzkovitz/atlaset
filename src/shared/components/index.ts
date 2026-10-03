@@ -99,6 +99,8 @@ export { Modal } from "./overlay/Modal/Modal";
 export { ModalActions } from "./overlay/Modal/ModalActions";
 export { ModalHeader } from "./overlay/Modal/ModalHeader";
 export { OverlayPortal } from "./overlay/OverlayPortal/OverlayPortal";
+export { ResponsiveOverlay } from "./overlay/ResponsiveOverlay/ResponsiveOverlay";
+export { Sheet } from "./overlay/Sheet/Sheet";
 export { Panel, type PanelProps } from "./overlay/Panel/Panel";
 export { Tooltip } from "./overlay/Tooltip/Tooltip";
 export { UIHintContainer } from "./overlay/UiHint/UiHintContainer";

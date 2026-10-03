@@ -2,6 +2,7 @@ import React, { type ReactNode } from "react";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useDismiss, usePanelAnimation, useScreenSize } from "@hooks";
 import { DialogHeader } from "../DialogHeader/DialogHeader";
+import { Sheet } from "../Sheet/Sheet";
 import "./Panel.css";
 
 export interface PanelProps {
@@ -48,7 +49,7 @@ export function Panel({
 }: PanelProps) {
   const { isMobile } = useScreenSize();
 
-  useDismiss({ show, onHide, escEnabled });
+  useDismiss({ show: show && !isMobile, onHide, escEnabled });
 
   const panelAnimationClass = usePanelAnimation({
     show,
@@ -57,6 +58,42 @@ export function Panel({
     animationsEnabled,
     position,
   });
+
+  const panelHeader = showHeader ? (
+    <DialogHeader
+      title={title}
+      showSeparator={showSeparator}
+      onClose={onHide}
+      showCloseButton={showCloseButton}
+    >
+      {headerActions}
+    </DialogHeader>
+  ) : null;
+
+  const panelContent = (
+    <div
+      className={`flex-1 min-h-0 px-4 ${isMobile ? "pb-20" : showPadding ? "pb-8" : ""}${
+        scrollable ? " overflow-y-auto" : ""
+      }`}
+    >
+      {children}
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Sheet
+        open={show}
+        onClose={onHide ?? (() => {})}
+        className={`h-screen max-h-screen rounded-none ${className}`}
+        style={style}
+        disableClose={!onHide || !escEnabled}
+      >
+        {panelHeader}
+        {panelContent}
+      </Sheet>
+    );
+  }
 
   return (
     <div
@@ -76,24 +113,8 @@ export function Panel({
             }
       }
     >
-      {showHeader && (
-        <DialogHeader
-          title={title}
-          showSeparator={showSeparator}
-          onClose={onHide}
-          showCloseButton={showCloseButton}
-        >
-          {headerActions}
-        </DialogHeader>
-      )}
-
-      <div
-        className={`flex-1 min-h-0 px-4 ${isMobile ? "pb-20" : showPadding ? "pb-8" : ""}${
-          scrollable ? " overflow-y-auto" : ""
-        }`}
-      >
-        {children}
-      </div>
+      {panelHeader}
+      {panelContent}
     </div>
   );
 }

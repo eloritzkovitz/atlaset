@@ -32,6 +32,8 @@ interface AppCalendarProps {
   date?: Date;
   onViewChange?: (view: CalendarView) => void;
   onDateChange?: (date: Date) => void;
+  className?: string;
+  height?: number | string;
 }
 
 export function AppCalendar({
@@ -42,6 +44,8 @@ export function AppCalendar({
   date,
   onViewChange,
   onDateChange,
+  className = "",
+  height = 800,
 }: AppCalendarProps) {
   const { homeCountry } = useHomeCountry();
 
@@ -101,7 +105,10 @@ export function AppCalendar({
   );
 
   return (
-    <div style={{ height: 800 }}>
+    <div
+      className={`min-h-0 flex-1 ${className}`}
+      style={{ height }}
+    >
       <Calendar<TripEvent>
         localizer={localizer}
         events={events}

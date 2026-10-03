@@ -6,6 +6,7 @@ import {
   ActionsToolbar,
   DirectionalIcon,
   Separator,
+  Sheet,
 } from "@components";
 import { useUI } from "@app/contexts/UIContext";
 import { useLanguage } from "@features/settings/account";
@@ -62,12 +63,13 @@ export function MapToolbar({
 
   const isVertical = orientation === "vertical";
 
-  // Mobile Layout: Floating FAB + Popover
+  // Mobile Layout: Floating FAB + sheet
   if (isMobile) {
     return (
       <>
         <button
-          className="fixed bottom-20 end-4 z-50 bg-action rounded-full p-4 shadow-lg"
+          type="button"
+          className="fixed bottom-20 end-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-action shadow-lg transition-transform duration-300"
           onClick={() => setMenuOpen((open) => !open)}
           aria-label={
             menuOpen
@@ -76,18 +78,17 @@ export function MapToolbar({
           }
         >
           <FaChevronUp
-            className={`text-2xl transition-transform ${
-              menuOpen ? "rotate-180" : ""
-            }`}
+            className={`transition-transform ${menuOpen ? "rotate-180" : ""}`}
           />
         </button>
 
-        {menuOpen && (
-          <div className="fixed end-4 z-[10020] mb-2 bottom-36">
-            <div
-              className="bg-action rounded-2xl p-4 w-52 shadow-xl flex flex-col gap-2"
-              onClick={(e) => e.stopPropagation()}
-            >
+        <Sheet
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          className="max-h-[70dvh] bg-action"
+        >
+          <div className="p-4">
+            <div className="flex flex-col gap-2">
               <MapToolbarActions
                 actions={actions}
                 isDesktop={false}
@@ -95,7 +96,7 @@ export function MapToolbar({
               />
             </div>
           </div>
-        )}
+        </Sheet>
       </>
     );
   }

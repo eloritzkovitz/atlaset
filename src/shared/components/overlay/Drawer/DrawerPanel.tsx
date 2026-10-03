@@ -1,12 +1,15 @@
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { useSwipeNavigation } from "@hooks";
 import { Backdrop } from "../Backdrop/Backdrop";
+import { OverlayPortal } from "../OverlayPortal/OverlayPortal";
 
 interface DrawerPanelProps {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
   width?: number | string;
+  position?: "start" | "end";
 }
 
 export function DrawerPanel({
@@ -14,8 +17,11 @@ export function DrawerPanel({
   onClose,
   children,
   width = 256,
+  position = "end",
 }: DrawerPanelProps) {
   const isRTL = document.documentElement.dir === "rtl";
+  const opensFromStart = position === "start";
+  const [isVisible, setIsVisible] = useState(false);
 
   const { handleTouchStart, handleTouchEnd } = useSwipeNavigation(
     () => {},
@@ -23,34 +29,51 @@ export function DrawerPanel({
     false,
   );
 
+  // Handle visibility state for animation
+  useEffect(() => {
+    if (!open) {
+      setIsVisible(false);
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => setIsVisible(true));
+    return () => cancelAnimationFrame(frame);
+  }, [open]);
+
   return (
-    <>
-      {open && <Backdrop className="z-40" onClick={onClose} />}
+    <OverlayPortal>
+      {open && <Backdrop className="z-[10009]" onClick={onClose} />}
 
       <div
         className={`
-          fixed top-0 h-full z-50 bg-surface shadow-lg
+          fixed top-0 h-full z-[10010] bg-surface shadow-lg
           overflow-hidden
-          transition-transform duration-300
+          transition-transform duration-200
           ${
-            open
+            isVisible
               ? "translate-x-0"
-              : isRTL
-                ? "translate-x-full"
-                : "-translate-x-full"
+              : opensFromStart
+                ? isRTL
+                  ? "translate-x-full"
+                  : "-translate-x-full"
+                : isRTL
+                  ? "-translate-x-full"
+                  : "translate-x-full"
           }
-          md:rounded-e-2xl
+          ${opensFromStart ? "md:rounded-e-2xl" : "md:rounded-s-2xl"}
         `}
         style={{
           width,
-          insetInlineStart: 0,
-          pointerEvents: open ? "auto" : "none",
+          ...(opensFromStart
+            ? { insetInlineStart: 0 }
+            : { insetInlineEnd: 0 }),
+          pointerEvents: isVisible ? "auto" : "none",
         }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         <div className="h-full w-full">{children}</div>
       </div>
-    </>
+    </OverlayPortal>
   );
 }

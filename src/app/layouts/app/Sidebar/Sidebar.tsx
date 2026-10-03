@@ -102,7 +102,7 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile bottom navigation bar */}
-      <nav className="fixed bottom-0 start-0 end-0 z-[10000] bg-sidebar border-t border-gray-700 flex justify-around items-center h-16 md:hidden">
+      <nav className="fixed bottom-0 start-0 end-0 z-[10000] bg-sidebar flex justify-around items-center h-16 md:hidden">
         {PRIMARY_LINKS.map((link) => (
           <SidebarMenuLink key={link.to} {...link} expanded={false} />
         ))}
