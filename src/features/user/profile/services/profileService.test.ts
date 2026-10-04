@@ -207,6 +207,7 @@ describe("profileService", () => {
             id: "sharedRef1",
             ownerUid: "otherUser",
             tripId: "shared1",
+            overrides: { countryCodes: ["CA"] },
           },
         ] as any);
 
@@ -226,7 +227,7 @@ describe("profileService", () => {
       expect(fs.updateDoc).toHaveBeenCalledWith(
         expect.any(Object),
         expect.objectContaining({
-          visitedCountryCodes: expect.arrayContaining(["US", "MX", "CA"]),
+          visitedCountryCodes: ["US", "MX", "CA"],
           wantToVisitCountryCodes: ["JP"],
         }),
       );

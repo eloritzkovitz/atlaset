@@ -5,6 +5,7 @@ import { computeVisitedCountriesFromTrips } from "@features/visits/utils/visits"
 import { db, getDocData, getDocsData, getPaths } from "@lib/firebase";
 import { geoService } from "@lib/geo";
 import type { UserProfile } from "../types";
+import type { SharedTrip } from "@features/trips/sharing/types";
 
 // Normalizes a username by converting to lowercase and removing special characters
 const normalizeUsername = (username: string) =>
@@ -170,14 +171,24 @@ export const profileService = {
    */
   async updateVisitedCountryCodes(uid: string) {
     const ownedTrips = await getDocsData(getPaths.sub(uid, "trips"));
-    const sharedRefs = await getDocsData(getPaths.sub(uid, "sharedTrips"));
+    const sharedRefs = await getDocsData<SharedTrip>(
+      getPaths.sub(uid, "sharedTrips"),
+    );
 
     // Fetch shared trips data
     const sharedTrips = await Promise.all(
-      sharedRefs.map(
-        async (ref) =>
-          await getDocData(getPaths.subDoc(ref.ownerUid, "trips", ref.tripId)),
-      ),
+      sharedRefs.map(async (ref) => {
+        const trip = await getDocData<Trip>(
+          getPaths.subDoc(ref.ownerUid, "trips", ref.tripId),
+        );
+
+        return trip
+          ? {
+              ...trip,
+              ...ref.overrides,
+            }
+          : null;
+      }),
     );
 
     // Merge owned and shared trips
@@ -190,8 +201,9 @@ export const profileService = {
     const homeCountry = profile?.homeCountry;
     const visited = computeVisitedCountriesFromTrips(allTrips, homeCountry);
     const visitedSet = new Set(visited);
-    const wantToVisitCountryCodes = (profile?.wantToVisitCountryCodes ?? [])
-      .filter((code) => !visitedSet.has(code));
+    const wantToVisitCountryCodes = (
+      profile?.wantToVisitCountryCodes ?? []
+    ).filter((code) => !visitedSet.has(code));
 
     // Update the user's profile
     await updateDoc(getPaths.user(uid), {
