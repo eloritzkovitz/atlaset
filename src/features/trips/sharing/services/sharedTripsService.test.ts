@@ -102,6 +102,7 @@ describe("sharedTripsService", () => {
         type: "shared",
         permission: "viewer",
       },
+      { merge: true },
     );
   });
 
@@ -122,6 +123,7 @@ describe("sharedTripsService", () => {
         type: "participant",
         permission: "editor",
       },
+      { merge: true },
     );
   });
 

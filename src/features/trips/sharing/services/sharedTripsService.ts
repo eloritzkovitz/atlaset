@@ -41,7 +41,7 @@ export const sharedTripsService = {
       ...(overrides && { overrides }),
     };
 
-    await setDoc(sharedRefDoc, sharedTrip);
+    await setDoc(sharedRefDoc, sharedTrip, { merge: true });
   },
 
   /** Removes a reference for a recipient. */
