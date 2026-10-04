@@ -40,6 +40,13 @@ export function useCountryTracking() {
     return Array.from(new Set([...manualVisitedCodes, ...tripVisitedCodes]));
   }, [user, manualVisitedCodes, tripVisitedCodes]);
 
+  // A country cannot remain on the want-to-visit list once it is visited
+  const effectiveWantToVisitCountryCodes = useMemo(() => {
+    if (!user) return [];
+    const visited = new Set(visitedCountryCodes);
+    return wantToVisitCountryCodes.filter((code) => !visited.has(code));
+  }, [user, wantToVisitCountryCodes, visitedCountryCodes]);
+
   // Recompute future visit countries using the unified visited list
   const futureCountryCodes = useMemo(() => {
     if (!user) return [];
@@ -126,7 +133,7 @@ export function useCountryTracking() {
   const isFutureVisitCountry = (isoCode: string) =>
     futureCountryCodes.includes(isoCode);
   const isWantToVisitCountry = (isoCode: string) =>
-    wantToVisitCountryCodes.includes(isoCode);
+    effectiveWantToVisitCountryCodes.includes(isoCode);
   const isTripBased = (isoCode: string) => tripVisitedCodes.includes(isoCode);
 
   /** Manually adds a country code to the visited list. */
@@ -193,7 +200,7 @@ export function useCountryTracking() {
   return {
     visitedCountryCodes,
     futureCountryCodes,
-    wantToVisitCountryCodes,
+    wantToVisitCountryCodes: effectiveWantToVisitCountryCodes,
     isVisitedCountry,
     isFutureVisitCountry,
     isWantToVisitCountry,

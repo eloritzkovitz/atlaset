@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-04
+
+- **[chore]** **Visits:** Added automatic visited countries recaltulation on day change
+- **[bugfix]** **Visits:** Updating visited countries will now correctly remove them from the want to visit list
+
 ## 2026-09-25
 
 - **[feature]** **Countries:** Improved country search with new features, such as boolean expressions, quoted terms and more

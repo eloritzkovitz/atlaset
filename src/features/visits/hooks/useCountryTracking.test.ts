@@ -110,7 +110,7 @@ describe("useCountryTracking", () => {
     act(() => {
       trackingCallback({
         manualVisitedCountryCodes: ["MX"],
-        wantToVisitCountryCodes: ["JP"],
+        wantToVisitCountryCodes: ["JP", "FR"],
       });
     });
 

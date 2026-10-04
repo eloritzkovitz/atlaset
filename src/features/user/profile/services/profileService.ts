@@ -186,10 +186,17 @@ export const profileService = {
       ...sharedTrips.filter((t): t is Trip => t !== null),
     ];
 
-    const homeCountry = (await this.getProfile(uid))?.homeCountry;
+    const profile = await this.getProfile(uid);
+    const homeCountry = profile?.homeCountry;
     const visited = computeVisitedCountriesFromTrips(allTrips, homeCountry);
+    const visitedSet = new Set(visited);
+    const wantToVisitCountryCodes = (profile?.wantToVisitCountryCodes ?? [])
+      .filter((code) => !visitedSet.has(code));
 
     // Update the user's profile
-    await updateDoc(getPaths.user(uid), { visitedCountryCodes: visited });
+    await updateDoc(getPaths.user(uid), {
+      visitedCountryCodes: visited,
+      wantToVisitCountryCodes,
+    });
   },
 };

@@ -218,6 +218,7 @@ describe("profileService", () => {
         } as any)
         .mockResolvedValueOnce({
           homeCountry: "US",
+          wantToVisitCountryCodes: ["CA", "JP"],
         } as any);
 
       await profileService.updateVisitedCountryCodes("u1");
@@ -226,6 +227,7 @@ describe("profileService", () => {
         expect.any(Object),
         expect.objectContaining({
           visitedCountryCodes: expect.arrayContaining(["US", "MX", "CA"]),
+          wantToVisitCountryCodes: ["JP"],
         }),
       );
     });
