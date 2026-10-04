@@ -3,7 +3,7 @@
  */
 
 import { canonicalKey, extractUniqueSorted } from "@utils";
-import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
+import { SPECIAL_ENTITIES } from "../constants/specialEntities";
 import type {
   Country,
   CountryTerritoriesGroup,
@@ -45,8 +45,8 @@ export function getCountryByIsoCode(
  * @returns The name of the country if found, otherwise returns the ISO code.
  */
 export function getCountryName(isoCode: string, countries: Country[]): string {
-  if (SPECIAL_COUNTRIES[isoCode]?.name) {
-    return SPECIAL_COUNTRIES[isoCode].name;
+  if (SPECIAL_ENTITIES[isoCode]?.name) {
+    return SPECIAL_ENTITIES[isoCode].name;
   }
   const country = countries.find((c) => c.isoCode === isoCode);
   return country?.name ?? isoCode;

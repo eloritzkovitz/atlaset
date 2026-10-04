@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { EmptyListMessage, LoadingSpinner, SectionHeader } from "@components";
-import { CountryWithFlag, SPECIAL_COUNTRIES } from "@features/countries";
+import { CountryWithFlag, SUBDIVISIONS } from "@features/countries";
 import { useLanguage } from "@features/settings/account";
 import type { Location } from "@lib/locations";
 import { TripLocationItem } from "./TripLocationItem";
@@ -98,9 +98,7 @@ export function TripLocationsList({
                   const admin1IsoCode =
                     `${countryCode}-${admin1.code}`.toUpperCase();
 
-                  const hasFlag = Boolean(
-                    SPECIAL_COUNTRIES[admin1IsoCode]?.flag,
-                  );
+                  const hasFlag = Boolean(SUBDIVISIONS[admin1IsoCode]?.flag);
 
                   return (
                     <div key={admin1Code}>

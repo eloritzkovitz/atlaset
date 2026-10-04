@@ -3,7 +3,7 @@
  */
 
 import { FLAG_OVERRIDES } from "../constants/flagOverrides";
-import { SPECIAL_COUNTRIES } from "../../core/constants/specialCountries";
+import { SPECIAL_ENTITIES } from "../../core/constants/specialEntities";
 import type { Country, Flag } from "../../types";
 
 /**
@@ -23,7 +23,7 @@ export function getCountriesWithOwnFlag(countries: Country[]): Country[] {
  * @returns The resolved ISO code for the flag, considering special cases and overrides.
  */
 export function resolveFlagIsoCode(flag: Flag): string {
-  const special = SPECIAL_COUNTRIES[flag.isoCode];
+  const special = SPECIAL_ENTITIES[flag.isoCode];
   const isOverridden = FLAG_OVERRIDES.includes(flag.isoCode);
 
   return (

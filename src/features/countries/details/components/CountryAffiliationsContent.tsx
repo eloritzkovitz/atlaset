@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
-import { SPECIAL_COUNTRIES } from "../../core/constants/specialCountries";
+import { ORGANIZATIONS } from "../../core/constants/specialEntities";
 import { CountryWithFlag } from "../../flags/components/CountryWithFlag";
 import type { Country } from "../../types";
 
@@ -82,7 +82,7 @@ export function CountryAffiliationsContent({
                 <div className="flex flex-col text-lg">
                   {section.data.map((item, idx) => {
                     const iso = String(item || "").toUpperCase();
-                    const special = SPECIAL_COUNTRIES[iso];
+                    const special = ORGANIZATIONS[iso];
                     const displayName =
                       (special && special.name) || item.replace(/[_-]/g, " ");
 

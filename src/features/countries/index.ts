@@ -2,7 +2,11 @@
 export { RegionIcon } from "./core/components/RegionIcon";
 export { useCountryData } from "./core/hooks/useCountryData";
 export { useGetCountryFactsQuery } from "./core/api/countryFactsApi";
-export { SPECIAL_COUNTRIES } from "./core/constants/specialCountries";
+export {
+  SPECIAL_COUNTRIES,
+  SPECIAL_ENTITIES,
+  SUBDIVISIONS,
+} from "./core/constants/specialEntities";
 export * from "./core/types/country";
 export * from "./core/utils/countryData";
 

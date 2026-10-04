@@ -26,8 +26,8 @@ import type {
 vi.mock("../constants/flagOverrides", () => ({
   FLAG_OVERRIDES: ["YY"],
 }));
-vi.mock("../constants/specialCountries", () => ({
-  SPECIAL_COUNTRIES: {
+vi.mock("../constants/specialEntities", () => ({
+  SPECIAL_ENTITIES: {
     "GB-ENG": { name: "England" },
   },
 }));
@@ -67,7 +67,7 @@ describe("countryData utils", () => {
 
   describe("getCountryName", () => {
     it.each([
-      ["SPECIAL_COUNTRIES", "GB-ENG", "England"],
+      ["SPECIAL_ENTITIES", "GB-ENG", "England"],
       ["found country", "FR", "France"],
       ["missing country (fallback to ISO)", "ZZ", "ZZ"],
     ])("returns correct name for %s", (_, iso, expected) => {

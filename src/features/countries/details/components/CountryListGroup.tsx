@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage } from "@components";
 import { CountryListRow } from "../../browse/components/CountryListRow";
 import { getCountrySortName } from "../../browse/utils/countrySort";
-import { SPECIAL_COUNTRIES } from "../../core/constants/specialCountries";
+import { SPECIAL_ENTITIES } from "../../core/constants/specialEntities";
 import { useCountryData } from "../../core/hooks/useCountryData";
 import { getCountryResourceBundle } from "../../core/utils/countryLocalization";
 import { type Country } from "../../types";
@@ -34,7 +34,7 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
 
       if (found) return found;
 
-      const special = SPECIAL_COUNTRIES[iso];
+      const special = SPECIAL_ENTITIES[iso];
 
       if (special) {
         const bundle = getCountryResourceBundle(i18n.language, i18n);

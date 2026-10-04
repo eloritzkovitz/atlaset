@@ -1,16 +1,20 @@
-/** Represents special countries or territories that have no entries. */
-export type SpecialCountry = {
+/** Represents a geographic or organizational entity not included in country data. */
+export type SpecialEntity = {
   name: string;
   flag?: string;
   sovereign?: string;
 };
 
-export const SPECIAL_COUNTRIES: Record<string, SpecialCountry> = {
+export const ORGANIZATIONS: Record<string, SpecialEntity> = {
+  EU: { name: "European Union" },
+  UN: { name: "United Nations" },
+};
+
+export const SUBDIVISIONS: Record<string, SpecialEntity> = {
   "BQ-BO": { name: "Bonaire", flag: "BQBO", sovereign: "BQ" },
   "BQ-SA": { name: "Saba", flag: "BQSA", sovereign: "BQ" },
   "BQ-SE": { name: "Sint Eustatius", flag: "BQSE", sovereign: "BQ" },
   CQ: { name: "Sark" },
-  EU: { name: "European Union" },
   "GB-ENG": { name: "England", flag: "GBENG", sovereign: "GB" },
   "GB-NIR": { name: "Northern Ireland", flag: "GBNIR", sovereign: "GB" },
   "GB-SCT": { name: "Scotland", flag: "GBSCT", sovereign: "GB" },
@@ -27,8 +31,15 @@ export const SPECIAL_COUNTRIES: Record<string, SpecialCountry> = {
   "UM-76": { name: "Navassa Island", sovereign: "UM" },
   "UM-95": { name: "Palmyra Atoll", sovereign: "UM" },
   "UM-79": { name: "Wake Island", sovereign: "UM" },
-  UN: { name: "United Nations" },
+};
+
+export const SPECIAL_COUNTRIES: Record<string, SpecialEntity> = {
   XA: { name: "Abkhazia" },
   XO: { name: "South Ossetia" },
   XC: { name: "Northern Cyprus" },
+};
+
+export const SPECIAL_ENTITIES: Record<string, SpecialEntity> = {
+  ...SUBDIVISIONS,
+  ...SPECIAL_COUNTRIES,
 };
