@@ -21,7 +21,7 @@ import type { MapMode } from "../types";
  * @returns Array of layer items based on the current active toggles.
  */
 export function useActiveLayerItems(mode: MapMode = "view") {
-  const { filteredCountries, visitedOnly, wantToVisitOnly } =
+  const { filteredCountries, search, visitedOnly, wantToVisitOnly } =
     useCountryFilters();
   const { selectedListId, countryLists } = useCountryLists();
   const effectiveLayers = useEffectiveLayers();
@@ -42,6 +42,7 @@ export function useActiveLayerItems(mode: MapMode = "view") {
       selectedListId,
       countryLists,
       filteredCountries,
+      search,
     }),
     [
       visitedOnly,
@@ -49,6 +50,7 @@ export function useActiveLayerItems(mode: MapMode = "view") {
       selectedListId,
       countryLists,
       filteredCountries,
+      search,
     ],
   );
   const trackingLayerItems = useTrackingLayerItems(trackingLayerFilters);

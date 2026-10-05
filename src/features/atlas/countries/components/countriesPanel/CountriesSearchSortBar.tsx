@@ -131,6 +131,7 @@ export function CountriesSearchSortBar({
 
     if (value === "all") {
       setCondition(null);
+      setSelectedListId?.(null);
       setSearch("");
       return;
     }

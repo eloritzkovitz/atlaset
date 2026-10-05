@@ -16,6 +16,7 @@ interface UseTrackingLayerItemsFilters {
   selectedListId?: string | null;
   countryLists?: CountryList[];
   filteredCountries?: Country[];
+  search?: string;
 }
 
 /**
@@ -86,6 +87,17 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
 
     // Default case: combine all tracking layers
     const items: LayerItem[] = [];
+
+    if (filters?.search?.trim()) {
+      items.push(
+        ...mapCodesToLayer(
+          (filters?.filteredCountries ?? []).map((country) => country.isoCode),
+          theme.HIGHLIGHTED_COUNTRY_COLOR,
+          `${TRACKING_LAYER_ID}-search`,
+        ),
+      );
+    }
+
     const visitedSet = new Set(
       (visitedCountryCodes || []).map((c) => c.toUpperCase()),
     );
@@ -158,6 +170,7 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
     filters?.selectedListId,
     filters?.countryLists,
     filters?.filteredCountries,
+    filters?.search,
     visitedCountryCodes,
     futureCountryCodes,
     wantToVisitCountryCodes,
