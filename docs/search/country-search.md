@@ -53,11 +53,29 @@ Country qualifiers filter countries based on their geographic, demographic, poli
 
 Additional qualifiers include:
 
+- [Geoghraphic type qualifier](#geographic-type-qualifier)
 - [Transcontinental qualifier](#transcontinental-qualifier)
 - [Government and structure qualifiers](#government-and-structure-qualifiers)
 - [Timezone qualifier](#timezone-qualifier)
 - [Sovereign and sovereignty qualifiers](#sovereign-and-sovereignty-qualifiers)
 - [Tracking qualifiers](#tracking-qualifiers)
+
+### Geographic type qualifier
+
+The `geotype` qualifier will filter countries by their geographic type. Currently supported values include:
+
+- `continental`
+- `island`
+
+For example:
+
+```bash
+geotype:island
+```
+
+This example will return all island countries.
+
+Note that the `landlocked` qualifier is independent of `geotype`. For example, using `landlocked:false` will return all countries that have coastlines, including island countries.
 
 ### Transcontinental qualifier
 

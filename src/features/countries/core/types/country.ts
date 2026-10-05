@@ -13,7 +13,9 @@ export type Country = {
   /** The subregion where the country is located. */
   subregion?: string;
   /** Transcontinental information for the country. */
-  transcontinental?: TranscontinentalInfo;  
+  transcontinental?: TranscontinentalInfo;
+  /** The country's broad physical geography. */
+  geographicType?: GeographicType;
   /** Whether the country has no coastline. */
   landlocked?: boolean;
   /** The capital city of the country. */
@@ -47,6 +49,9 @@ export type Country = {
   /** The organizations the country is a member of. */
   memberOf?: string[];
 };
+
+/** Represents the broad physical geography of a country. */
+export type GeographicType = "continental" | "island";
 
 /** Represents an entry for a transcontinental country. */
 export type TranscontinentalInfo = {

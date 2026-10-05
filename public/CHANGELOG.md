@@ -2,7 +2,7 @@
 
 ## 2026-10-04
 
-- **[chore]** **Countries:** Replaced the `geoType` field with a boolean `landlocked` field
+- **[chore]** **Countries:** Added new `landlocked` field and updated the `geotype` qualifier to filter continental or island countries
 
 ## 2026-10-04
 
