@@ -52,9 +52,9 @@ export function CountryInfoTable({
   country,
   currencies,
 }: CountryInfoTableProps) {
+  const { languages, subregionsByRegion } = useCountryData();
   const { t } = useTranslation("atlas");
   const { t: tCountries } = useTranslation("countries");
-  const { languages, subregionsByRegion } = useCountryData();
 
   const normalizeKey = (raw?: string) => canonicalKey(String(raw ?? ""));
 
@@ -71,6 +71,7 @@ export function CountryInfoTable({
     const primary = tCountries(`regions.${country.region}`, {
       defaultValue: country.region,
     });
+
     if (trans?.additionalRegion) {
       const additional = tCountries(`regions.${trans.additionalRegionKey}`, {
         defaultValue: trans.additionalRegion,
@@ -79,14 +80,17 @@ export function CountryInfoTable({
     }
     return primary;
   }, [country.region, trans, tCountries]);
+
   const subregionDisplay = useMemo(() => {
     if (!country.subregion) return "—";
+
     const primary = tCountries(
       `subregions.${country.region}.${normalizeKey(country.subregion)}`,
       {
         defaultValue: country.subregion,
       },
     );
+
     if (trans?.additionalSubregion) {
       const additional = tCountries(
         `subregions.${trans.additionalSubregionRegion ?? country.region}.${trans.additionalSubregionKey}`,

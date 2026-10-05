@@ -59,12 +59,25 @@ describe("countryFilters utils", () => {
     });
 
     it("filters by landlocked status", () => {
-      expect(
-        filterCountries(countries, { selectedLandlocked: true }),
-      ).toEqual([]);
+      const landlockedCountry = {
+        ...countries[0],
+        isoCode: "NP",
+        name: "Nepal",
+        landlocked: true,
+      };
+
+      const countriesWithLandlocked = [...countries, landlockedCountry];
 
       expect(
-        filterCountries(countries, { selectedLandlocked: false }),
+        filterCountries(countriesWithLandlocked, {
+          selectedLandlocked: true,
+        }),
+      ).toEqual([landlockedCountry]);
+
+      expect(
+        filterCountries(countriesWithLandlocked, {
+          selectedLandlocked: false,
+        }),
       ).toEqual(countries);
     });
 

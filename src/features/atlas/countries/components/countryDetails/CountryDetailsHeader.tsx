@@ -28,7 +28,7 @@ export function CountryDetailsHeader({
   return (
     <ModalHeader
       title={
-        <span className="flex items-center gap-2 break-words max-w-[16vw]">
+        <span className="flex items-center gap-2 break-words max-w-[20vw]">
           <CountryWithFlag country={country} className="font-bold text-lg" />
           <span className="text-muted text-sm">({country.isoCode})</span>
           <VisitedStatusIndicator
