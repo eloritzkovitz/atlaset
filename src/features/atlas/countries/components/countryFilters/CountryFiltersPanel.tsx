@@ -1,6 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ActionButton, Panel, Separator } from "@components";
+import {
+  ActionButton,
+  DialogHeader,
+  DrawerPanel,
+  Panel,
+  Separator,
+} from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useEffectiveLayers } from "@features/atlas/layers";
@@ -87,71 +93,87 @@ export function CountryFiltersPanel({
   const { isMobile } = useScreenSize();
   const { isRtl } = useLanguage();
 
+  const title = (
+    <>
+      <ICONS.filters />
+      {t("countries.filters.title")}
+    </>
+  );
+  const resetButton = (
+    <ActionButton
+      onClick={resetFilters}
+      ariaLabel={t("common:actions.resetFilters")}
+      title={t("common:actions.resetFilters")}
+      icon={<ICONS.reset />}
+      rounded
+    />
+  );
+  const filterContent = (
+    <div className="mt-4">
+      <CoreFilters
+        expanded={showCoreFilters}
+        onToggle={() => setShowCoreFilters((v) => !v)}
+        subregionOptions={subregionOptions}
+        sovereigntyOptions={sovereigntyOptions}
+        allRegions={allRegions}
+        subregionToRegion={subregionToRegion}
+      />
+      {!timelineMode && !visitedOnly && hasVisibleLayers && (
+        <>
+          <Separator className="my-4" />
+          <LayerFilters
+            layers={visibleLayers}
+            expanded={showLayerFilters}
+            onToggle={() => setShowLayerFilters((v) => !v)}
+          />
+        </>
+      )}
+      {timelineMode && (
+        <>
+          <Separator className="my-4" />
+          <TimelineFilters
+            expanded={showTimelineFilters}
+            onToggle={() => setShowTimelineFilters((v) => !v)}
+            minVisitCount={minVisitCount}
+            setMinVisitCount={setMinVisitCount}
+            maxVisitCount={maxVisitCount}
+            setMaxVisitCount={setMaxVisitCount}
+          />
+        </>
+      )}
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <DrawerPanel open={show} onClose={onHide} width="100%">
+        <div className="flex h-full flex-col">
+          <DialogHeader title={title} onClose={onHide}>
+            {resetButton}
+          </DialogHeader>
+          <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-20">
+            {filterContent}
+          </div>
+        </div>
+      </DrawerPanel>
+    );
+  }
+
   return (
     <Panel
-      title={
-        <>
-          <ICONS.filters />
-          {t("countries.filters.title")}
-        </>
-      }
+      title={title}
       width={DEFAULT_PANEL_WIDTH}
       show={show}
       onHide={onHide}
-      headerActions={
-        <>
-          <ActionButton
-            onClick={resetFilters}
-            ariaLabel={t("common:actions.resetFilters")}
-            title={t("common:actions.resetFilters")}
-            icon={<ICONS.reset />}
-            rounded
-          />
-        </>
-      }
+      headerActions={resetButton}
       animationsEnabled={animationsEnabled}
-      className={isMobile ? "panel-mobile-fullscreen" : ""}
       style={
-        !isMobile
-          ? isRtl
-            ? { right: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
-            : { left: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
-          : undefined
+        isRtl
+          ? { right: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
+          : { left: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
       }
     >
-      <div className="mt-4">
-        <CoreFilters
-          expanded={showCoreFilters}
-          onToggle={() => setShowCoreFilters((v) => !v)}
-          subregionOptions={subregionOptions}
-          sovereigntyOptions={sovereigntyOptions}
-          allRegions={allRegions}
-          subregionToRegion={subregionToRegion}
-        />
-        {!timelineMode && !visitedOnly && hasVisibleLayers && (
-          <>
-            <Separator className="my-4" />
-            <LayerFilters
-              layers={visibleLayers}
-              expanded={showLayerFilters}
-              onToggle={() => setShowLayerFilters((v) => !v)}
-            />
-          </>
-        )}
-        {timelineMode && (
-          <>
-            <Separator className="my-4" />
-            <TimelineFilters
-              expanded={showTimelineFilters}
-              onToggle={() => setShowTimelineFilters((v) => !v)}
-              minVisitCount={minVisitCount}
-              setMinVisitCount={setMinVisitCount}
-              maxVisitCount={maxVisitCount}
-              setMaxVisitCount={setMaxVisitCount}
-            />
-          </>
-        )}
-      </div>
+      {filterContent}
     </Panel>
   );
 }

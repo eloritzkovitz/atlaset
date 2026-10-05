@@ -2,7 +2,12 @@ import { useRef } from "react";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { useClickOutside, useMenuPosition, useModalAnimation } from "@hooks";
+import {
+  useClickOutside,
+  useMenuPosition,
+  useModalAnimation,
+  useScreenSize,
+} from "@hooks";
 import type { Option, OptionGroup, SortDirection, SortValue } from "@types";
 import { getDirectionOptions } from "./directionOptions";
 import { ActionButton } from "../Button/ActionButton";
@@ -10,6 +15,8 @@ import { OptionItem } from "../DropdownSelectInput/OptionItem";
 import { SectionHeader } from "../../display/SectionHeader";
 import { Separator } from "../../layout/Separator";
 import { Menu } from "../../navigation/Menu/Menu";
+import { DialogHeader } from "../../overlay/DialogHeader/DialogHeader";
+import { DrawerPanel } from "../../overlay/Drawer/DrawerPanel";
 
 export interface SortSelectProps<K extends string> {
   value: SortValue<K>;
@@ -25,6 +32,7 @@ export function SortSelect<K extends string>({
   showLabel = false,
 }: SortSelectProps<K>) {
   const { isOpen, closing, setIsOpen, closeModal } = useModalAnimation(true);
+  const { isMobile } = useScreenSize();
   const { t } = useTranslation("common");
 
   const btnRef = useRef<HTMLDivElement>(null);
@@ -56,7 +64,7 @@ export function SortSelect<K extends string>({
   );
 
   const menuStyle = useMenuPosition(
-    isOpen,
+    isOpen && !isMobile,
     btnRef,
     menuRef,
     35,
@@ -65,8 +73,9 @@ export function SortSelect<K extends string>({
     false,
   );
 
-  useClickOutside([btnRef, menuRef], closeModal, isOpen);
+  useClickOutside([btnRef, menuRef], closeModal, isOpen && !isMobile);
 
+  // Renders a group of options with a section header
   const renderOptionGroup = <V extends string>(
     group: OptionGroup<V>,
     selected: V,
@@ -111,6 +120,26 @@ export function SortSelect<K extends string>({
     </>
   );
 
+  // Renders the options for both sort key and direction
+  const renderOptions = () => (
+    <>
+      <div className="-mt-2">
+        {renderOptionGroup(normalizedKeyGroup, sortKey, (newKey) =>
+          onChange(`${newKey}-${sortDirection}` as SortValue<K>),
+        )}
+      </div>
+
+      <Separator className="mt-2" />
+
+      {renderOptionGroup(
+        dirGroup,
+        sortDirection,
+        (newDir) => onChange(`${sortKey}-${newDir}` as SortValue<K>),
+        true,
+      )}
+    </>
+  );
+
   return (
     <div className="relative ms-2 flex items-center">
       <div ref={btnRef}>
@@ -144,24 +173,23 @@ export function SortSelect<K extends string>({
         </span>
       )}
 
-      {(isOpen || closing) && (
-        <Menu open={isOpen} style={menuStyle} containerRef={menuRef}>
-          <div className="-mt-2">
-            {renderOptionGroup(normalizedKeyGroup, sortKey, (newKey) =>
-              onChange(`${newKey}-${sortDirection}` as SortValue<K>),
-            )}
-          </div>
-
-          <Separator className="mt-2" />
-
-          {renderOptionGroup(
-            dirGroup,
-            sortDirection,
-            (newDir) => onChange(`${sortKey}-${newDir}` as SortValue<K>),
-            true,
-          )}
-        </Menu>
-      )}
+      {(isOpen || closing) &&
+        (isMobile ? (
+          <DrawerPanel open={isOpen} onClose={closeModal} width="100%">
+            <div className="flex h-full flex-col p-4">
+              <DialogHeader
+                title={t("common:sort.title", "Sort")}
+                onClose={closeModal}
+                showSeparator={false}
+              />
+              {renderOptions()}
+            </div>
+          </DrawerPanel>
+        ) : (
+          <Menu open={isOpen} style={menuStyle} containerRef={menuRef}>
+            {renderOptions()}
+          </Menu>
+        ))}
     </div>
   );
 }

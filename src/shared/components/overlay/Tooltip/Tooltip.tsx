@@ -3,11 +3,13 @@ import {
   useState,
   useRef,
   useLayoutEffect,
+  useEffect,
   cloneElement,
   isValidElement,
   useCallback,
 } from "react";
 import { createPortal } from "react-dom";
+import { useInputCapabilities } from "@hooks";
 import type { CommandId, Point } from "@types";
 import { formatShortcut } from "@utils";
 
@@ -32,6 +34,14 @@ export function Tooltip({
   shortcut = null,
   target = null,
 }: TooltipProps) {
+  const {
+    canHover,
+    isTouchDevice,
+    isTouchInteraction,
+    handlePointerDown,
+    handleKeyDown,
+  } = useInputCapabilities();
+
   const [visible, setVisible] = useState(false);
   const [style, setStyle] = useState<React.CSSProperties>({});
   const [coords, setCoords] = useState<Point>({ x: 0, y: 0 });
@@ -41,6 +51,15 @@ export function Tooltip({
   const tooltipRef = useRef<HTMLSpanElement>(null);
 
   const activeAnchor = target || anchorRef.current;
+
+  // Hide tooltip on touch devices
+  useEffect(() => {
+    if (isTouchDevice) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setVisible(false);
+      setStyle({});
+    }
+  }, [isTouchDevice]);
 
   const show = useCallback(
     (e?: React.MouseEvent) => {
@@ -124,14 +143,28 @@ export function Tooltip({
         handler as ReactEventHandler<E> | undefined;
 
       return {
+        onPointerDown: (e: React.PointerEvent<HTMLElement>) => {
+          handlePointerDown(e.pointerType);
+          asReactHandler<React.PointerEvent<HTMLElement>>(
+            childProps.onPointerDown,
+          )?.(e);
+        },
+        onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
+          handleKeyDown();
+          asReactHandler<React.KeyboardEvent<HTMLElement>>(
+            childProps.onKeyDown,
+          )?.(e);
+        },
         onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-          show(e);
+          if (canHover && !isTouchDevice) show(e);
           asReactHandler<React.MouseEvent<HTMLElement>>(
             childProps.onMouseEnter,
           )?.(e);
         },
         onMouseMove: (e: React.MouseEvent<HTMLElement>) => {
-          if (position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
+          if (canHover && !isTouchDevice && position === "cursor") {
+            setCoords({ x: e.clientX, y: e.clientY });
+          }
           asReactHandler<React.MouseEvent<HTMLElement>>(
             childProps.onMouseMove,
           )?.(e);
@@ -143,6 +176,12 @@ export function Tooltip({
           )?.(e);
         },
         onFocus: (e: React.FocusEvent<HTMLElement>) => {
+          if (isTouchDevice || (!canHover && isTouchInteraction())) {
+            asReactHandler<React.FocusEvent<HTMLElement>>(childProps.onFocus)?.(
+              e,
+            );
+            return;
+          }
           if (position === "cursor" && anchorRef.current) {
             const r = anchorRef.current.getBoundingClientRect();
             setCoords({ x: r.left + r.width / 2, y: r.bottom });
@@ -160,7 +199,16 @@ export function Tooltip({
           typeof childProps.tabIndex === "number" ? childProps.tabIndex : 0,
       };
     },
-    [position, show, hide],
+    [
+      canHover,
+      handleKeyDown,
+      handlePointerDown,
+      isTouchDevice,
+      isTouchInteraction,
+      position,
+      show,
+      hide,
+    ],
   );
 
   // Render the tooltip content in a portal to avoid clipping issues and ensure it appears above other elements
@@ -195,7 +243,11 @@ export function Tooltip({
     );
 
   // If there are no children, only render the tooltip if overrideCoords is provided
-  if (!children) return overrideCoords || target ? renderPortalContent() : null;
+  if (!children) {
+    return !isTouchDevice && (overrideCoords || target)
+      ? renderPortalContent()
+      : null;
+  }
 
   const c = children as React.ReactElement;
   const isCloneable =
@@ -223,7 +275,7 @@ export function Tooltip({
   return (
     <>
       {trigger}
-      {visible && renderPortalContent()}
+      {visible && !isTouchDevice && renderPortalContent()}
     </>
   );
 }
