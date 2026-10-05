@@ -2,7 +2,6 @@ import type { VisitedStatus } from "@features/visits/types";
 import type { Operator } from "@types";
 import type {
   Country,
-  GeoType,
   SovereigntyStatus,
   TranscontinentalMode,
   TranscontinentalScope,
@@ -49,7 +48,7 @@ export type CountryFilterOptions = {
   search?: string;
   selectedRegion?: string;
   selectedSubregion?: string;
-  selectedGeoType?: GeoType | "";
+  selectedLandlocked?: boolean | "";
   selectedSovereignty?: SovereigntyStatus | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];

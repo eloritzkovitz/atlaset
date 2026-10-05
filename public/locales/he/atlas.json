@@ -111,7 +111,7 @@
         "title": "מסננים בסיסיים",
         "region": "יבשת",
         "subregion": "אזור",
-        "geoType": "סוג גאוגרפי",
+        "coastline": "מוצא לים",       
         "sovereignty": "ריבונות",
         "visitStatus": "מצב ביקור",
         "visited": "ביקרתי",

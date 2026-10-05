@@ -15,7 +15,7 @@ export const mockCountries: Country[] = [
     timezones: ["Europe/Paris"],
     callingCode: "+33",
     sovereigntyStatus: "sovereign" as SovereigntyStatus,
-    geoType: "Coastal",
+    landlocked: false,
     unMember: true,
     territories: {
       dependencies: { codes: ["CP"] },
@@ -37,7 +37,7 @@ export const mockCountries: Country[] = [
     callingCode: "+590",
     sovereigntyStatus: "dependency" as SovereigntyStatus,
     sovereignState: "FR",
-    geoType: "Island",
+    landlocked: false,
     unMember: false,
   },
   {
@@ -53,7 +53,7 @@ export const mockCountries: Country[] = [
     timezones: ["Europe/Berlin"],
     callingCode: "+49",
     sovereigntyStatus: "sovereign" as SovereigntyStatus,
-    geoType: "Landlocked",
+    landlocked: false,
     unMember: true,
   },
   {
@@ -67,7 +67,7 @@ export const mockCountries: Country[] = [
     timezones: ["America/Toronto"],
     callingCode: "+1",
     sovereigntyStatus: "sovereign" as SovereigntyStatus,
-    geoType: "Coastal",
+    landlocked: false,
     unMember: true,
   },
   {
@@ -86,7 +86,7 @@ export const mockCountries: Country[] = [
     timezones: ["America/New_York"],
     callingCode: "+1",
     sovereigntyStatus: "sovereign" as SovereigntyStatus,
-    geoType: "Coastal",
+    landlocked: false,
     altNames: ["USA", "US", "United States of America"],
     unMember: true,
     territories: {
@@ -105,7 +105,7 @@ export const mockCountries: Country[] = [
     timezones: ["Asia/Tokyo"],
     callingCode: "+81",
     sovereigntyStatus: "sovereign" as SovereigntyStatus,
-    geoType: "Island",
+    landlocked: false,
     unMember: true,
   },
 ];

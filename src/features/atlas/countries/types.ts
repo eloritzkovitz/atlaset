@@ -10,6 +10,6 @@ export type CountryList = {
 export type CountryFilterKey =
   | "region"
   | "subregion"
-  | "geoType"
+  | "landlocked"
   | "sovereignty"
   | "visited";

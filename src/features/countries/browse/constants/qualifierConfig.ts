@@ -14,7 +14,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   region: { key: "region", label: "Region", type: "string" },
   subregion: { key: "subregion", label: "Subregion", type: "string" },
   tc: { key: "tc", label: "Transcontinental", type: "string" },
-  geotype: { key: "geoType", label: "Geographic type", type: "string" },
+  landlocked: { key: "landlocked", label: "Landlocked", type: "boolean" },
   capital: { key: "capital", label: "Capital", type: "string" },
   language: { key: "languages", label: "Language", type: "string" },
   government: { key: "government", label: "Government type", type: "string" },

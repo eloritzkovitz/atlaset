@@ -1,4 +1,4 @@
-import type { GeoType, SovereigntyStatus } from "@features/countries/types";
+import type { SovereigntyStatus } from "@features/countries/types";
 import type { FilterConfig, FilterOption } from "@types";
 import {
   capitalize,
@@ -13,8 +13,8 @@ interface CoreFilterProps {
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
-  selectedGeoType: GeoType | "";
-  setSelectedGeoType: (geoType: GeoType | "") => void;
+  selectedLandlocked: boolean | "";
+  setSelectedLandlocked: (landlocked: boolean | "") => void;
   selectedSovereignty: SovereigntyStatus | "";
   setSelectedSovereignty: (sovereignty: SovereigntyStatus | "") => void;
   selectedVisited: string;
@@ -32,8 +32,6 @@ const allOption: FilterOption = {
   value: "all",
   label: "common:components.filter.all",
 };
-
-const ALL_GEO_TYPES: readonly GeoType[] = ["Coastal", "Landlocked", "Island"];
 
 const SOVEREIGNTY_ORDER: readonly SovereigntyStatus[] = [
   "sovereign",
@@ -68,12 +66,25 @@ export const coreFiltersConfig: CoreFilterConfig<string, CoreFilterProps>[] = [
     (props, val) => props.setSelectedSubregion(val === "all" ? "" : val),
   ),
   createSelectFilter(
-    "geoType",
-    "atlas:countries.filters.core.geoType",
-    () => [allOption, ...mapOptions([...ALL_GEO_TYPES], capitalize)],
-    (props) => (props.selectedGeoType === "" ? "all" : props.selectedGeoType),
+    "landlocked",
+    "atlas:countries.filters.core.coastline",
+    () => [
+      allOption,
+      {
+        value: "false",
+        label: "countries:landlocked.false",
+      },
+      {
+        value: "true",
+        label: "countries:landlocked.true",
+      },
+    ],
+    (props) =>
+      props.selectedLandlocked === "" || props.selectedLandlocked === undefined
+        ? "all"
+        : String(props.selectedLandlocked),
     (props, val) =>
-      props.setSelectedGeoType(val === "all" ? "" : (val as GeoType)),
+      props.setSelectedLandlocked(val === "all" ? "" : val === "true"),
   ),
   createSelectFilter(
     "sovereignty",

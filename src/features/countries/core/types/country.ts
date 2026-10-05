@@ -13,9 +13,9 @@ export type Country = {
   /** The subregion where the country is located. */
   subregion?: string;
   /** Transcontinental information for the country. */
-  transcontinental?: TranscontinentalInfo;
-  /** The geographic type of the country. */
-  geoType?: GeoType;
+  transcontinental?: TranscontinentalInfo;  
+  /** Whether the country has no coastline. */
+  landlocked?: boolean;
   /** The capital city of the country. */
   capital?: string;
   /** The languages spoken in the country. */
@@ -35,7 +35,7 @@ export type Country = {
   /** The international calling code for the country. */
   callingCode: string;
   /** The road traffic direction for the country. */
-  drivingSide?: "Left" | "Right" | undefined;
+  drivingSide?: "left" | "right" | undefined;
   /** The sovereignty status of the country. */
   sovereigntyStatus?: SovereigntyStatus;
   /** The sovereign state of the country. */
@@ -81,9 +81,6 @@ export type SovereigntyStatus =
   | "unknown";
 
 export type NonSovereignStatus = Exclude<SovereigntyStatus, "sovereign">;
-
-/** Geographic types for countries. */
-export type GeoType = "Coastal" | "Landlocked" | "Island";
 
 /** Represents a group of territories for a country. */
 export type CountryTerritoriesGroup = {

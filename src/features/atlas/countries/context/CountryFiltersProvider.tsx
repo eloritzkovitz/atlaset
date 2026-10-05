@@ -26,7 +26,6 @@ import {
 } from "@features/countries/browse/utils/visitFilters";
 import type {
   CountryFilterOptions,
-  GeoType,
   SovereigntyStatus,
 } from "@features/countries/types";
 import { useTrips } from "@features/trips";
@@ -63,7 +62,7 @@ export function CountryFiltersProvider({
   const [geoFilters, setGeoFilters] = useState({
     region: "",
     subregion: "",
-    geoType: "" as GeoType | "",
+    landlocked: "" as boolean | "",
   });
   const [sovereignState, setSovereignState] = useState({
     value: "" as SovereigntyStatus | "",
@@ -86,8 +85,8 @@ export function CountryFiltersProvider({
     setGeoFilters((p) => ({ ...p, region }));
   const setSelectedSubregion = (subregion: string) =>
     setGeoFilters((p) => ({ ...p, subregion }));
-  const setSelectedGeoType = (geoType: GeoType | "") =>
-    setGeoFilters((p) => ({ ...p, geoType }));
+  const setSelectedLandlocked = (landlocked: boolean | "") =>
+    setGeoFilters((p) => ({ ...p, landlocked }));
 
   const setMinVisitCount = (value: React.SetStateAction<number>) =>
     setVisitRange((p) => ({
@@ -155,7 +154,7 @@ export function CountryFiltersProvider({
       search: debouncedSearch,
       selectedRegion: geoFilters.region,
       selectedSubregion: geoFilters.subregion,
-      selectedGeoType: geoFilters.geoType,
+      selectedLandlocked: geoFilters.landlocked,
       selectedSovereignty: sovereignState.value,
     }),
     [debouncedSearch, geoFilters, sovereignState.value],
@@ -333,7 +332,7 @@ export function CountryFiltersProvider({
 
   // Reset filters
   const resetFilters = useCallback(() => {
-    setGeoFilters({ region: "", subregion: "", geoType: "" });
+    setGeoFilters({ region: "", subregion: "", landlocked: "" });
     setSovereignState({ value: "", only: false });
     setVisitedState({ value: "any", wantToVisitOnly: false });
     setLayerSelections(getDefaultLayerSelections(layers));
@@ -353,10 +352,10 @@ export function CountryFiltersProvider({
       ...counts,
       selectedRegion: geoFilters.region,
       selectedSubregion: geoFilters.subregion,
-      selectedGeoType: geoFilters.geoType,
+      selectedLandlocked: geoFilters.landlocked,
       setSelectedRegion,
       setSelectedSubregion,
-      setSelectedGeoType,
+      setSelectedLandlocked,
       selectedSovereignty: sovereignState.value,
       sovereignOnly,
       setSelectedSovereignty,

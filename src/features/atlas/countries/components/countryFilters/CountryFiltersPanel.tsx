@@ -6,7 +6,7 @@ import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useEffectiveLayers } from "@features/atlas/layers";
 import { useTimeline } from "@features/atlas/timeline";
 import type { Country } from "@features/countries/types";
-import { getAllGeoTypes, getAllSovereigntyStatuses } from "@features/countries";
+import { getAllSovereigntyStatuses } from "@features/countries";
 import { useAccessibility } from "@features/settings/accessibility";
 import { useLanguage } from "@features/settings/account";
 import { useKeyHandler, useScreenSize } from "@hooks";
@@ -71,7 +71,6 @@ export function CountryFiltersPanel({
   );
 
   // All sovereignty statuses from country data
-  const geoTypeOptions = getAllGeoTypes(countries);
   const sovereigntyOptions = getAllSovereigntyStatuses(countries);
 
   // Key handler for resetting filters with "R" key
@@ -125,7 +124,6 @@ export function CountryFiltersPanel({
           expanded={showCoreFilters}
           onToggle={() => setShowCoreFilters((v) => !v)}
           subregionOptions={subregionOptions}
-          geoTypeOptions={geoTypeOptions}
           sovereigntyOptions={sovereigntyOptions}
           allRegions={allRegions}
           subregionToRegion={subregionToRegion}

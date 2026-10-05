@@ -13,13 +13,11 @@ import {
   getTranscontinentalInfo,
   getCountryTerritoryRelations,
   getTerritoryCodesByType,
-  getAllGeoTypes,
   groupCountryIsoCodes,
 } from "./countryData";
 import type {
   Country,
   CountryTerritories,
-  GeoType,
   SovereigntyStatus,
 } from "../../types";
 
@@ -160,14 +158,6 @@ describe("countryData utils", () => {
   });
 
   describe("metadata getters", () => {
-    it("getAllGeoTypes returns unique, sorted geoTypes", () => {
-      const testSet = [
-        { geoType: "Country" as GeoType },
-        { geoType: undefined },
-      ] as Country[];
-      expect(getAllGeoTypes(testSet)).toEqual(["Country"]);
-    });
-
     it("getAllSovereigntyStatuses returns unique, sorted statuses", () => {
       const testSet = [
         { sovereigntyStatus: "sovereign" as SovereigntyStatus },

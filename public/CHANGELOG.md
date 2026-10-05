@@ -2,6 +2,10 @@
 
 ## 2026-10-04
 
+- **[chore]** **Countries:** Replaced the `geoType` field with a boolean `landlocked` field
+
+## 2026-10-04
+
 - **[chore]** **Visits:** Added automatic visited countries recaltulation on day change
 - **[bugfix]** **Visits:** Updating visited countries will now correctly remove them from the want to visit list
 

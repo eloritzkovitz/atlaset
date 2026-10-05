@@ -58,18 +58,14 @@ describe("countryFilters utils", () => {
       ).toEqual([countries[1]]);
     });
 
-    it("filters by geo type", () => {
+    it("filters by landlocked status", () => {
       expect(
-        filterCountries(countries, {
-          selectedGeoType: "Island",
-        }),
-      ).toEqual([countries[1], countries[5]]);
+        filterCountries(countries, { selectedLandlocked: true }),
+      ).toEqual([]);
 
       expect(
-        filterCountries(countries, {
-          selectedGeoType: "Landlocked",
-        }),
-      ).toEqual([countries[2]]);
+        filterCountries(countries, { selectedLandlocked: false }),
+      ).toEqual(countries);
     });
 
     it("filters by layer countries", () => {

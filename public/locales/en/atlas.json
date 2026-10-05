@@ -111,7 +111,7 @@
         "title": "Core Filters",
         "region": "Region",
         "subregion": "Subregion",
-        "geoType": "Geographic Type",
+        "coastline": "Coastline",
         "sovereignty": "Sovereignty",
         "visitStatus": "Visit Status",
         "visited": "Visited",

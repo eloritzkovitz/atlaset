@@ -7,7 +7,6 @@ import { SPECIAL_ENTITIES } from "../constants/specialEntities";
 import type {
   Country,
   CountryTerritoriesGroup,
-  GeoType,
   SovereigntyStatus,
 } from "../../types";
 
@@ -136,18 +135,6 @@ export function getSubregionsForRegion(
   return extractUniqueSorted(
     countries.filter((c) => c.region === selectedRegion),
     (c) => c.subregion,
-  );
-}
-
-/**
- * Returns all unique geo types from the countries list.
- * @param countries - Array of country objects with geoType property.
- * @returns Sorted array of unique geo type strings.
- */
-export function getAllGeoTypes(countries: { geoType?: GeoType }[]): GeoType[] {
-  return extractUniqueSorted(
-    countries,
-    (c) => c.geoType as GeoType | undefined,
   );
 }
 

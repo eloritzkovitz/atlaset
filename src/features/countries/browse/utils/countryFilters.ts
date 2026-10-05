@@ -26,7 +26,7 @@ export function filterCountries(
     search = "",
     selectedRegion,
     selectedSubregion,
-    selectedGeoType,
+    selectedLandlocked,
     selectedSovereignty,
     layerCountries,
     tcOption,
@@ -66,8 +66,13 @@ export function filterCountries(
       return false;
     }
 
-    if (selectedGeoType && country.geoType !== selectedGeoType) {
-      return false;
+    if (selectedLandlocked !== undefined && selectedLandlocked !== "") {
+      if (selectedLandlocked === true && !country.landlocked) {
+        return false;
+      }
+      if (selectedLandlocked === false && country.landlocked) {
+        return false;
+      }
     }
 
     if (

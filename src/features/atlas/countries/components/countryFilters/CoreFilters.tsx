@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
-import type { GeoType, SovereigntyStatus } from "@features/countries/types";
+import type { SovereigntyStatus } from "@features/countries/types";
 import type { VisitedStatus } from "@features/visits/types";
 import type { FilterOption } from "@types";
 import { canonicalKey } from "@utils";
@@ -14,7 +14,6 @@ interface CoreFiltersProps {
   expanded: boolean;
   onToggle: () => void;
   subregionOptions: string[];
-  geoTypeOptions: GeoType[];
   sovereigntyOptions: string[];
   allRegions: string[];
   subregionToRegion: Map<string, string>;
@@ -24,7 +23,6 @@ export function CoreFilters({
   expanded,
   onToggle,
   subregionOptions,
-  geoTypeOptions,
   sovereigntyOptions,
   allRegions,
   subregionToRegion,
@@ -34,8 +32,8 @@ export function CoreFilters({
     setSelectedRegion,
     selectedSubregion,
     setSelectedSubregion,
-    selectedGeoType,
-    setSelectedGeoType,
+    selectedLandlocked,
+    setSelectedLandlocked,
     selectedSovereignty,
     setSelectedSovereignty,
     selectedVisited,
@@ -50,7 +48,7 @@ export function CoreFilters({
   const values = {
     region: selectedRegion,
     subregion: selectedSubregion,
-    geoType: selectedGeoType,
+    landlocked: selectedLandlocked,
     sovereignty: selectedSovereignty,
     visited: selectedVisited,
   };
@@ -62,8 +60,8 @@ export function CoreFilters({
         return allRegions;
       case "subregion":
         return subregionOptions;
-      case "geoType":
-        return geoTypeOptions;
+      case "landlocked":
+        return undefined;
       case "sovereignty":
         return sovereigntyOptions;
       case "visited":
@@ -83,8 +81,8 @@ export function CoreFilters({
       case "subregion":
         setSelectedSubregion(value);
         break;
-      case "geoType":
-        setSelectedGeoType(value as GeoType | "");
+      case "landlocked":
+        setSelectedLandlocked(value === "all" ? "" : value === "true");
         break;
       case "sovereignty":
         setSelectedSovereignty(value as SovereigntyStatus | "");

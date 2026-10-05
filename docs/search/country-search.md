@@ -40,6 +40,7 @@ Country qualifiers filter countries based on their geographic, demographic, poli
 | `iso3code`    | string              |             `iso3code:gbr` | Matches ISO 3166-1 alpha-3 code                                  |
 | `region`      | string              |              `region:asia` | Matches countries in a given region (continent)                  |
 | `subregion`   | string              | `subregion:southeast_asia` | Matches countries in a given subregion                           |
+| `landlocked`  | boolean             |          `landlocked:true` | Matches landlocked countries                                     |
 | `capital`     | string              |            `capital:paris` | Matches capital name                                             |
 | `language`    | string              |         `language:spanish` | Matches language. Supports both ISO 639 code or name             |
 | `area`        | number (comparison) |               `area:~2000` | Matches area (in km²). Supports plain or comma-separated numbers |
@@ -52,28 +53,11 @@ Country qualifiers filter countries based on their geographic, demographic, poli
 
 Additional qualifiers include:
 
-- [Geographic type qualifier](#geographic-type-qualifier)
 - [Transcontinental qualifier](#transcontinental-qualifier)
 - [Government and structure qualifiers](#government-and-structure-qualifiers)
 - [Timezone qualifier](#timezone-qualifier)
 - [Sovereign and sovereignty qualifiers](#sovereign-and-sovereignty-qualifiers)
 - [Tracking qualifiers](#tracking-qualifiers)
-
-### Geographic type qualifier
-
-The `geotype` qualifier will filter countries by their geographic type. Currently supported values include:
-
-- `coastal`
-- `island`
-- `landlocked`
-
-For example:
-
-```bash
-geotype:landlocked
-```
-
-This example will return all landlocked countries.
 
 ### Transcontinental qualifier
 

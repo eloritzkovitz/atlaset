@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Country, GeoType, SovereigntyStatus } from "@features/countries";
+import type { Country, SovereigntyStatus } from "@features/countries";
 import type { VisitedStatus } from "@features/visits/types";
 
 export interface CountryFiltersContextType {
@@ -17,10 +17,10 @@ export interface CountryFiltersContextType {
   wantToVisitCount: number;
   selectedRegion: string;
   selectedSubregion: string;
-  selectedGeoType: GeoType | "";
+  selectedLandlocked: boolean | "";
   setSelectedRegion: (region: string) => void;
   setSelectedSubregion: (subregion: string) => void;
-  setSelectedGeoType: (type: GeoType | "") => void;
+  setSelectedLandlocked: (landlocked: boolean | "") => void;
   selectedSovereignty: SovereigntyStatus | "";
   sovereignOnly: boolean;
   setSelectedSovereignty: (status: SovereigntyStatus | "") => void;
