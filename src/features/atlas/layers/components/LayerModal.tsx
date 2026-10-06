@@ -8,6 +8,7 @@ import {
   ModalActions,
   ModalHeader,
   SelectInput,
+  type OverlayProps,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@features/atlas/countries/context/CountryListsContext";
@@ -19,13 +20,11 @@ import type { Layer } from "../types";
 type FilterLabelKey = "all" | "only" | "exclude";
 const filterLabelKeys: FilterLabelKey[] = ["all", "only", "exclude"];
 
-interface LayerModalProps {
-  isOpen: boolean;
+interface LayerModalProps extends OverlayProps {
   isEditing: boolean;
   layer: Layer | null;
   onChange: (layer: Layer) => void;
   onSave: (layer: Layer) => void;
-  onClose: () => void;
 }
 
 export function LayerModal({

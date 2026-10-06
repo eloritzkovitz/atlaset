@@ -10,11 +10,9 @@ import {
 } from "@floating-ui/react";
 import { useClickOutside } from "@hooks";
 import { Menu } from "./Menu";
+import type { OverlayProps, TriggerProps } from "../../overlay/types";
 
-export interface DropdownMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-  triggerRef: React.RefObject<HTMLElement | null>;
+export interface DropdownMenuProps extends OverlayProps, TriggerProps {
   children: React.ReactNode;
   enabled?: boolean;
   floating?: boolean;

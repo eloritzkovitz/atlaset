@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ModalSelect, QualifierSearch } from "@components";
+import { ModalSelect, QualifierSearch, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
 import { filterBySearch, parseSearchQuery } from "@utils";
@@ -11,12 +11,10 @@ import { buildSearchString } from "../utils/countrySearch";
 import { CountryWithFlag } from "../../flags/components/CountryWithFlag";
 import type { Country } from "../../types";
 
-interface CountrySelectModalProps {
-  isOpen: boolean;
+interface CountrySelectModalProps extends OverlayProps {
   selected: string[];
   options: Country[];
   onChange: (newCountries: string[]) => void;
-  onClose: () => void;
   multiple?: boolean;
   disabled?: boolean;
   isCountryDisabled?: (code: string) => boolean;

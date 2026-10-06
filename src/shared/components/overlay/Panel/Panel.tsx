@@ -83,7 +83,7 @@ export function Panel({
   if (isMobile) {
     return (
       <Sheet
-        open={show}
+        isOpen={show}
         onClose={onHide ?? (() => {})}
         className={`h-screen max-h-screen rounded-none ${className}`}
         style={style}

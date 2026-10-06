@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ModalSelect } from "@components";
+import { ModalSelect, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import type { Location } from "@lib/locations";
 import { useLocationSearch } from "../../../locations/hooks/useLocationSearch";
 
-interface DestinationSelectModalProps {
-  isOpen: boolean;
+interface DestinationSelectModalProps extends OverlayProps {
   selected: number[];
   countryCodes: string[];
   onChange: (locationIds: number[]) => void;
-  onClose: () => void;
 }
 
 /** Renders the destination selection modal for a trip. */

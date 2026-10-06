@@ -11,6 +11,7 @@ import {
   getCountryIsoCode,
   getCountryName,
   useCountryData,
+  type CountryInteractionProps,
 } from "@features/countries";
 import { useTooltipTarget } from "@hooks";
 import { isNumericString } from "@utils";
@@ -25,13 +26,9 @@ import { resolveCountryStyle } from "../utils/style";
 const SMALL_COUNTRY_AREA_THRESHOLD = 10000;
 const CIRCLE_RADIUS = 4;
 
-interface LayersContainerProps {
+interface LayersContainerProps extends CountryInteractionProps {
   geographyData: GeoData;
-  selectedIsoCode?: string | null;
-  hoveredIsoCode?: string | null;
   highlightedIsoCodes?: string[];
-  onCountryClick?: (countryIsoCode: string, e?: React.MouseEvent) => void;
-  onCountryHover?: (isoCode: string | null) => void;
   isAddingMarker?: boolean;
 }
 
@@ -40,8 +37,8 @@ export function LayersContainer({
   selectedIsoCode,
   hoveredIsoCode,
   highlightedIsoCodes = [],
-  onCountryClick,
-  onCountryHover,
+  onSelect,
+  onHover,
   isAddingMarker,
 }: LayersContainerProps) {
   const { countries, integralRegionsLookup, sovereignLookup, countryAreaMap } =
@@ -150,14 +147,14 @@ export function LayersContainer({
             const sharedProps = {
               onMouseEnter: (e: React.MouseEvent<SVGPathElement>) => {
                 tooltipHandlers.onMouseEnter(e);
-                onCountryHover?.(isoA2);
+                onHover?.(isoA2);
               },
               onMouseMove: tooltipHandlers.onMouseMove,
               onMouseLeave: () => {
                 clearTarget();
-                onCountryHover?.(null);
+                onHover?.(null);
               },
-              onClick: (e?: React.MouseEvent) => onCountryClick?.(isoA2, e),
+              onClick: (e?: React.MouseEvent) => onSelect?.(isoA2, e),
             };
 
             baseLayers.push(

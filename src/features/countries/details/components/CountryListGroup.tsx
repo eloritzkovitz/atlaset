@@ -6,15 +6,14 @@ import { getCountrySortName } from "../../browse/utils/countrySort";
 import { SPECIAL_ENTITIES } from "../../core/constants/specialEntities";
 import { useCountryData } from "../../core/hooks/useCountryData";
 import { getCountryResourceBundle } from "../../core/utils/countryLocalization";
-import { type Country } from "../../types";
+import type { Country, CountryNavigationProps } from "../../types";
 
-interface CountryListGroupProps {
+interface CountryListGroupProps extends CountryNavigationProps {
   label: React.ReactNode;
   isoCodes: string[];
   visited?: (iso: string) => boolean;
   expanded: boolean;
   onToggle: () => void;
-  onSelectCountry?: (isoCode: string) => void;
 }
 
 export const CountryListGroup: React.FC<CountryListGroupProps> = ({

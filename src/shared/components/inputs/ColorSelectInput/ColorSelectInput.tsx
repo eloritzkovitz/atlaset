@@ -1,16 +1,15 @@
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
+import type { OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import { ColorPickerModal } from "./ColorPickerModal";
 import { ActionButton } from "../Button/ActionButton";
 
-interface ColorSelectInputProps {
+interface ColorSelectInputProps extends OverlayProps {
   label?: string;
   value: string;
   onChange: (color: string) => void;
-  isOpen: boolean;
   onOpen: () => void;
-  onClose: () => void;
   disabled?: boolean;
   modalRef?: React.RefObject<HTMLDivElement | null>;
   className?: string;

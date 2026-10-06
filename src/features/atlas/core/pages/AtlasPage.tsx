@@ -78,10 +78,10 @@ export default function AtlasPage() {
             <MapUiContainer isAddingMarker={isAddingMarker} isEmbed={isEmbed} />
           )}
           <WorldMap
-            onCountryClick={handleCountryClick}
-            onCountryHover={handleCountryHover}
             selectedIsoCode={selectedIsoCode}
             hoveredIsoCode={hoveredIsoCode}
+            onSelect={handleCountryClick}
+            onHover={handleCountryHover}
             onReady={handleMapReady}
             svgRef={svgRef}
             isAddingMarker={isAddingMarker}

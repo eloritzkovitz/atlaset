@@ -1,13 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { Modal, ModalHeader } from "@components";
+import { Modal, ModalHeader, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import type { Marker } from "../../types";
 
-interface MarkerDetailsModalProps {
-  isOpen: boolean;
+interface MarkerDetailsModalProps extends OverlayProps {
   marker: Marker | null;
   position: { top: number; left: number } | null;
-  onClose: () => void;
 }
 
 export function MarkerDetailsModal({

@@ -14,14 +14,12 @@ import {
 } from "@hooks";
 import { ModalHeader } from "./ModalHeader";
 import { OverlayPortal } from "../OverlayPortal/OverlayPortal";
+import type { AnimatedOverlayProps } from "../types";
 import "./Modal.css";
 
-interface ModalProps {
-  isOpen: boolean;
-  closing?: boolean;
+interface ModalProps extends AnimatedOverlayProps {
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  onClose: () => void;
   children: ReactNode;
   floatingChildren?: ReactElement;
   disableScroll?: boolean;
@@ -92,11 +90,11 @@ export function Modal({
       modalStyle: {},
     };
 
+  const canClose = !disableClose && !dragging;
+
   // Handle outside click to close modal
   const handleOutsideClose = () => {
-    if (!disableClose && !dragging) {
-      onClose();
-    }
+    if (canClose) onClose();
   };
 
   // Close modal on outside click
@@ -142,9 +140,7 @@ export function Modal({
           onClick={
             !disableScroll
               ? () => {
-                  if (!disableClose && !dragging) {
-                    onClose();
-                  }
+                  if (canClose) onClose();
                 }
               : undefined
           }

@@ -131,7 +131,7 @@ export function SidePanelMenu({
         )}
 
         <DrawerPanel
-          open={isOpen}
+          isOpen={isOpen}
           onClose={handleClose}
           width={width + (showSidebar ? DEFAULT_SIDEBAR_WIDTH : 0)}
           position="start"

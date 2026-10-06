@@ -6,6 +6,7 @@ import {
   Modal,
   ModalActions,
   ModalHeader,
+  type OverlayProps,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import {
@@ -16,12 +17,10 @@ import {
 import { useDisclosure } from "@hooks";
 import type { Marker } from "../../types";
 
-interface MarkerModalProps {
+interface MarkerModalProps extends OverlayProps {
   marker: Marker | null;
   onChange: (marker: Marker) => void;
   onSave: () => void;
-  onClose: () => void;
-  isOpen: boolean;
   isEditing: boolean;
 }
 

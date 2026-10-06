@@ -8,6 +8,7 @@ export {
   SUBDIVISIONS,
 } from "./core/constants/specialEntities";
 export * from "./core/types/country";
+export * from "./core/types/interaction";
 export * from "./core/utils/countryData";
 
 // Browse

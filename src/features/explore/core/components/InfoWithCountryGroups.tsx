@@ -102,7 +102,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
           countryCodes={isoCodes}
           size="64"
           isHighlighted={visited}
-          onCountryClick={(iso) =>
+          onSelectCountry={(iso) =>
             handleCountrySelect(iso, navigationCountryIsoCodes)
           }
         />

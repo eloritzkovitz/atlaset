@@ -83,7 +83,7 @@ export function MapToolbar({
         </button>
 
         <Sheet
-          open={menuOpen}
+          isOpen={menuOpen}
           onClose={() => setMenuOpen(false)}
           className="max-h-[70dvh] bg-action"
         >

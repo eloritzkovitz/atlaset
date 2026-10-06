@@ -1,12 +1,11 @@
 import { CountryInfoTable } from "./CountryInfoTable";
 import { SovereigntyBadge } from "./SovereigntyBadge";
 import { CountryFlag } from "../../flags/components/CountryFlag";
-import type { Country, Currency } from "../../types";
+import type { Country, CountryNavigationProps, Currency } from "../../types";
 
-interface CountryDetailsContentProps {
+interface CountryDetailsContentProps extends CountryNavigationProps {
   country: Country;
   currencies: Currency[];
-  onSelectCountry?: (isoCode: string) => void;
 }
 
 export function CountryDetailsContent({

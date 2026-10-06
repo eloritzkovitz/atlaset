@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ModalSelect } from "@components";
+import { ModalSelect, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import { CategoryIcon } from "../../../core/components/CategoryIcon";
 import type { TripCategory } from "../../../core/types";
@@ -9,12 +9,10 @@ interface CategoryOption {
   label: string;
 }
 
-interface CategorySelectModalProps {
-  isOpen: boolean;
+interface CategorySelectModalProps extends OverlayProps {
   selected: TripCategory[];
   options: CategoryOption[];
   onChange: (newCategories: TripCategory[]) => void;
-  onClose: () => void;
 }
 
 export function CategorySelectModal({

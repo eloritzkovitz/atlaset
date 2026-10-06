@@ -4,19 +4,19 @@ import {
   useHighlightYearlyCountries,
   useTimeline,
 } from "@features/atlas/timeline";
-import { CountryDisplayPanel, type Country } from "@features/countries";
+import {
+  CountryDisplayPanel,
+  type Country,
+  type CountryInteractionProps,
+} from "@features/countries";
 import { useTrips } from "@features/trips/core/context/TripsContext";
 import { useVisitStats } from "@features/visits";
 import { useListNavigation } from "@hooks";
 import { CountryActions } from "./CountryActions";
 import { CountryVisitBadge } from "./CountryVisitBadge";
 
-interface CountryListViewProps {
+interface CountryListViewProps extends CountryInteractionProps {
   countries: Country[];
-  selectedIsoCode: string | null;
-  hoveredIsoCode: string | null;
-  onSelect: (isoCode: string | null) => void;
-  onHover: (isoCode: string | null) => void;
   onCountryInfo?: (country: Country) => void;
 }
 

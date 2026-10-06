@@ -1,20 +1,18 @@
 import { useMemo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
-import { ActionButton, Chip, FormField } from "@components";
+import { ActionButton, Chip, FormField, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import { useHomeCountry } from "@features/user/profile";
 import { CountrySelectModal } from "./CountrySelectModal";
 import type { Country } from "../../types";
 
-interface CountrySelectFieldProps {
+interface CountrySelectFieldProps extends OverlayProps {
   label?: string;
   countryCodes: string[];
   countries: Country[];
   onChange: (codes: string[]) => void;
-  isOpen: boolean;
   onOpen: () => void;
-  onClose: () => void;
   required?: boolean;
   disabled?: boolean;
   isTripBasedCountry?: (code: string) => boolean;

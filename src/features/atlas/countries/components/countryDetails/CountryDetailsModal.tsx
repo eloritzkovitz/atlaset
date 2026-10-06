@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useUI } from "@app/contexts/UIContext";
-import { Modal, Sheet } from "@components";
+import { Modal, Sheet, type OverlayProps } from "@components";
 import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry";
 import { useCalendarNavigation } from "@features/calendar";
 import {
@@ -13,10 +13,8 @@ import { useCountryTracking } from "@features/visits";
 import { useKeyHandler, useScreenSize } from "@hooks";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";
 
-interface CountryDetailsModalProps {
+interface CountryDetailsModalProps extends OverlayProps {
   country: Country | null;
-  isOpen: boolean;
-  onClose: () => void;
 }
 
 export function CountryDetailsModal({
@@ -88,7 +86,7 @@ export function CountryDetailsModal({
   if (isMobile) {
     return (
       <Sheet
-        open={isOpen}
+        isOpen={isOpen}
         onClose={onClose}
         disableClose={showCalendar}
         className="h-[92dvh]"

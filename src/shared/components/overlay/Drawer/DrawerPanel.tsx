@@ -3,17 +3,16 @@ import { useEffect, useState } from "react";
 import { useSwipeNavigation } from "@hooks";
 import { Backdrop } from "../Backdrop/Backdrop";
 import { OverlayPortal } from "../OverlayPortal/OverlayPortal";
+import type { OverlayProps } from "../types";
 
-interface DrawerPanelProps {
-  open: boolean;
-  onClose: () => void;
+interface DrawerPanelProps extends OverlayProps {
   children: ReactNode;
   width?: number | string;
   position?: "start" | "end";
 }
 
 export function DrawerPanel({
-  open,
+  isOpen,
   onClose,
   children,
   width = 256,
@@ -31,18 +30,18 @@ export function DrawerPanel({
 
   // Handle visibility state for animation
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       setIsVisible(false);
       return;
     }
 
     const frame = requestAnimationFrame(() => setIsVisible(true));
     return () => cancelAnimationFrame(frame);
-  }, [open]);
+  }, [isOpen]);
 
   return (
     <OverlayPortal>
-      {open && <Backdrop className="z-[10009]" onClick={onClose} />}
+      {isOpen && <Backdrop className="z-[10009]" onClick={onClose} />}
 
       <div
         className={`
@@ -64,9 +63,7 @@ export function DrawerPanel({
         `}
         style={{
           width,
-          ...(opensFromStart
-            ? { insetInlineStart: 0 }
-            : { insetInlineEnd: 0 }),
+          ...(opensFromStart ? { insetInlineStart: 0 } : { insetInlineEnd: 0 }),
           pointerEvents: isVisible ? "auto" : "none",
         }}
         onTouchStart={handleTouchStart}

@@ -5,13 +5,7 @@ import { ORGANIZATIONS } from "../../core/constants/specialEntities";
 import { CountryWithFlag } from "../../flags/components/CountryWithFlag";
 import type { Country } from "../../types";
 
-interface CountryAffiliationsContentProps {
-  country: Country;
-}
-
-export function CountryAffiliationsContent({
-  country,
-}: CountryAffiliationsContentProps) {
+export function CountryAffiliationsContent({ country }: { country: Country }) {
   const { t } = useTranslation("atlas");
 
   const sections = useMemo(() => {

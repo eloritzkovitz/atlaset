@@ -146,7 +146,7 @@ export function CountryFiltersPanel({
 
   if (isMobile) {
     return (
-      <DrawerPanel open={show} onClose={onHide} width="100%">
+      <DrawerPanel isOpen={show} onClose={onHide} width="100%">
         <div className="flex h-full flex-col">
           <DialogHeader title={title} onClose={onHide}>
             {resetButton}

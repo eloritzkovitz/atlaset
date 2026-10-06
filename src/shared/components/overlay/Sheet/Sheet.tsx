@@ -2,10 +2,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useBodyScrollLock, useDismiss } from "@hooks";
 import { Backdrop } from "../Backdrop/Backdrop";
 import { OverlayPortal } from "../OverlayPortal/OverlayPortal";
+import type { OverlayProps } from "../types";
 
-interface SheetProps {
-  open: boolean;
-  onClose: () => void;
+interface SheetProps extends OverlayProps {
   children: ReactNode;
   disableClose?: boolean;
   className?: string;
@@ -13,18 +12,18 @@ interface SheetProps {
 }
 
 export function Sheet({
-  open,
+  isOpen,
   onClose,
   children,
   disableClose = false,
   className = "",
   style,
 }: SheetProps) {
-  const [mounted, setMounted] = useState(open);
+  const [mounted, setMounted] = useState(isOpen);
   const [visible, setVisible] = useState(false);
 
   useDismiss({
-    show: open,
+    show: isOpen,
     onHide: onClose,
     isModal: true,
     escEnabled: !disableClose,
@@ -42,13 +41,13 @@ export function Sheet({
     setMounted(true);
     const frame = requestAnimationFrame(() => setVisible(true));
     return () => cancelAnimationFrame(frame);
-  }, [open]);
+  }, [isOpen]);
 
   if (!mounted) return null;
 
   return (
     <OverlayPortal>
-      {open && !disableClose && (
+      {isOpen && !disableClose && (
         <Backdrop className="z-[10000]" onClick={onClose} />
       )}
       <div

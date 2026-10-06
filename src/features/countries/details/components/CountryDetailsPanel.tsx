@@ -10,9 +10,9 @@ import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
 import type { CountryDetailsTab } from "../types";
 import { getCountryTerritoryRelations } from "../../core/utils/countryData";
-import type { Country, Currency } from "../../types";
+import type { Country, CountryNavigationProps, Currency } from "../../types";
 
-interface CountryDetailsPanelProps {
+interface CountryDetailsPanelProps extends CountryNavigationProps {
   country: Country;
   currencies: Currency[];
   categorizedVisits: CategorizedVisits;
@@ -21,7 +21,6 @@ interface CountryDetailsPanelProps {
   resetTabOnClose?: boolean;
   isOpen?: boolean;
   onTabChange?: (tab: CountryDetailsTab) => void;
-  onSelectCountry?: (isoCode: string) => void;
   onTripClick?: (tripId: string) => void;
   className?: string;
 }

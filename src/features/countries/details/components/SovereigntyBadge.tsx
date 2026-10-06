@@ -2,12 +2,15 @@ import { useTranslation } from "react-i18next";
 import { useCountryData } from "../../core/hooks/useCountryData";
 import { getCountryName } from "../../core/utils/countryData";
 import { CountryWithFlag } from "../../flags/components/CountryWithFlag";
-import type { NonSovereignStatus, SovereigntyStatus } from "../../types";
+import type {
+  CountryNavigationProps,
+  NonSovereignStatus,
+  SovereigntyStatus,
+} from "../../types";
 
-interface SovereigntyBadgeProps {
+interface SovereigntyBadgeProps extends CountryNavigationProps {
   type?: SovereigntyStatus;
   sovereignState?: string;
-  onSelectCountry?: (isoCode: string) => void;
 }
 
 // Map sovereignty types to badge colors

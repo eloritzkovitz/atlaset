@@ -1,20 +1,18 @@
 import { useTranslation } from "react-i18next";
-import { DialogHeader, ResponsiveOverlay } from "@components";
+import {
+  DialogHeader,
+  ResponsiveOverlay,
+  type TriggeredOverlayProps,
+} from "@components";
 import { useAuth } from "@features/user/auth";
 import { NotificationsContent } from "./NotificationsContent";
 import { useNotifications } from "../hooks/useNotifications";
-
-interface NotificationsDropdownProps {
-  isOpen: boolean;
-  onClose: () => void;
-  triggerRef: React.RefObject<HTMLElement | null>;
-}
 
 export function NotificationsDropdown({
   isOpen,
   onClose,
   triggerRef,
-}: NotificationsDropdownProps) {
+}: TriggeredOverlayProps) {
   const { user } = useAuth();
   const { notifications, loading } = useNotifications(user?.uid, { limit: 3 });
   const { t } = useTranslation("common");

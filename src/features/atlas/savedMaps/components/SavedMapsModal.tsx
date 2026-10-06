@@ -1,16 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FormField, Modal, ModalActions, ModalHeader } from "@components";
+import {
+  FormField,
+  Modal,
+  ModalActions,
+  ModalHeader,
+  type OverlayProps,
+} from "@components";
 import { ICONS } from "@constants/icons";
 import { useMapView } from "@features/atlas/map";
 import type { SavedMap } from "../types";
 
-interface SavedMapsModalProps {
-  isOpen: boolean;
+interface SavedMapsModalProps extends OverlayProps {
   savedMap: SavedMap | null;
   onChange: (map: SavedMap) => void;
   onSave: () => void;
-  onClose: () => void;
   isEditing: boolean;
 }
 

@@ -2,12 +2,8 @@ import { Card } from "@components";
 import { ICONS } from "@constants/icons";
 import type { CountryFact } from "../../types";
 
-interface CountryFactsContentProps {
-  facts: CountryFact[];
-}
-
 /** Displays interesting facts about a country. */
-export function CountryFactsContent({ facts }: CountryFactsContentProps) {
+export function CountryFactsContent({ facts }: { facts: CountryFact[] }) {
   if (!facts.length) {
     return null;
   }

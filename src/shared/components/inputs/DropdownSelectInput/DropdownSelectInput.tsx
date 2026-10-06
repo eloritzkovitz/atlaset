@@ -35,7 +35,7 @@ export function DropdownSelectInput<T = string>({
   disabled = false,
   renderOption,
 }: DropdownSelectInputProps<T>) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const flatOptions = useMemo(() => flattenOptions(options), [options]);
@@ -78,7 +78,7 @@ export function DropdownSelectInput<T = string>({
 
   // Toggle the dropdown open or closed
   const toggleDropdown = () => {
-    if (open) {
+    if (isOpen) {
       close();
     } else {
       openDropdown();
@@ -92,7 +92,7 @@ export function DropdownSelectInput<T = string>({
 
   // Manage keyboard navigation for the dropdown
   const { activeIndex, setActiveIndex } = useDropdownNavigation({
-    open,
+    isOpen,
     itemCount: flatOptions.length,
     selectedIndex,
     onSelect: selectOption,
@@ -111,8 +111,8 @@ export function DropdownSelectInput<T = string>({
         type="button"
         as="button"
         aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-controls={open ? `${id}-listbox` : undefined}
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? `${id}-listbox` : undefined}
         className="w-full flex items-center text-left disabled:opacity-50 px-2 hover:bg-surface-hover/50"
         onClick={toggleDropdown}
         disabled={disabled || flatOptions.length === 0}
@@ -134,7 +134,7 @@ export function DropdownSelectInput<T = string>({
       </InputBox>
 
       <DropdownMenu
-        isOpen={open}
+        isOpen={isOpen}
         onClose={close}
         triggerRef={btnRef}
         placement="bottom-end"

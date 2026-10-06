@@ -104,3 +104,4 @@ export { Sheet } from "./overlay/Sheet/Sheet";
 export { Panel, type PanelProps } from "./overlay/Panel/Panel";
 export { Tooltip } from "./overlay/Tooltip/Tooltip";
 export { UIHintContainer } from "./overlay/UiHint/UiHintContainer";
+export * from "./overlay/types";

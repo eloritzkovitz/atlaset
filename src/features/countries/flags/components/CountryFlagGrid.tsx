@@ -5,15 +5,14 @@ import { CountryFlag } from "./CountryFlag";
 import type { FlagSize } from "../types";
 import { getCountrySortName } from "../../browse/utils/countrySort";
 import { useCountryData } from "../../core/hooks/useCountryData";
-import type { Country } from "../../types";
+import type { Country, CountryNavigationProps } from "../../types";
 import "./CountryFlagGrid.css";
 
-interface CountryFlagGridProps {
+interface CountryFlagGridProps extends CountryNavigationProps {
   countryCodes: string[];
   size?: FlagSize;
   gridClassName?: string;
   isHighlighted?: (isoCode: string) => boolean;
-  onCountryClick?: (isoCode: string) => void;
 }
 
 /** Renders a grid of country flags. */
@@ -22,7 +21,7 @@ export function CountryFlagGrid({
   size = "32",
   gridClassName,
   isHighlighted,
-  onCountryClick,
+  onSelectCountry,
 }: CountryFlagGridProps) {
   const { countryByIsoCode } = useCountryData();
   const { isMobile } = useScreenSize();
@@ -58,7 +57,7 @@ export function CountryFlagGrid({
     >
       {sortedCountries.map((country) => {
         const active = isHighlighted ? isHighlighted(country.isoCode) : true;
-        const Component = onCountryClick ? "button" : "span";
+        const Component = onSelectCountry ? "button" : "span";
         const isHovered = activeTarget?.id === country.isoCode;
 
         return (
@@ -67,10 +66,10 @@ export function CountryFlagGrid({
             className="flex items-center justify-center"
           >
             <Component
-              type={onCountryClick ? "button" : undefined}
+              type={onSelectCountry ? "button" : undefined}
               onClick={
-                onCountryClick
-                  ? () => onCountryClick(country.isoCode)
+                onSelectCountry
+                  ? () => onSelectCountry(country.isoCode)
                   : undefined
               }
               onMouseEnter={(e) =>
@@ -81,7 +80,7 @@ export function CountryFlagGrid({
               className={`flex justify-center items-center transition-all duration-200 ${
                 active ? "" : "flag-grayscale-hover"
               } ${size === "64" ? "w-18 h-12" : "w-9 h-7"} ${
-                onCountryClick
+                onSelectCountry
                   ? "cursor-pointer hover:scale-110 active:scale-95"
                   : "cursor-default"
               }`}

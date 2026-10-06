@@ -1,20 +1,24 @@
 import { useTranslation } from "react-i18next";
-import { FormField, Modal, ModalActions, ModalHeader } from "@components";
+import {
+  FormField,
+  Modal,
+  ModalActions,
+  ModalHeader,
+  type OverlayProps,
+} from "@components";
 import { ICONS } from "@constants/icons";
 import { CountrySelectField, useCountryData } from "@features/countries";
 import { useCountryTracking } from "@features/visits";
 import type { CountryList } from "../../types";
 import { useDisclosure } from "@hooks";
 
-interface CountryListModalProps {
-  isOpen: boolean;
+interface CountryListModalProps extends OverlayProps {
   isEditing: boolean;
   isTrackingList?: boolean;
   list: CountryList | null;
   onChange: (list: CountryList) => void;
   onSave: (list: CountryList) => void;
   onDelete?: (list: CountryList) => void;
-  onClose: () => void;
 }
 
 export function CountryListModal({

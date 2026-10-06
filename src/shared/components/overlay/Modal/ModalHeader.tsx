@@ -1,17 +1,9 @@
-import { type ReactNode } from "react";
-import { DialogHeader } from "../DialogHeader/DialogHeader";
+import {
+  DialogHeader,
+  type DialogHeaderProps,
+} from "../DialogHeader/DialogHeader";
 
-interface ModalHeaderProps {
-  title: ReactNode;
-  onClose?: () => void;
-  showCloseButton?: boolean;
-  children?: ReactNode;
-  className?: string;
-  showSeparator?: boolean;
-  closeButtonClassName?: string;
-}
-
-export function ModalHeader(props: ModalHeaderProps) {
+export function ModalHeader(props: DialogHeaderProps) {
   return (
     <DialogHeader
       showCloseButton={props.showCloseButton ?? true}

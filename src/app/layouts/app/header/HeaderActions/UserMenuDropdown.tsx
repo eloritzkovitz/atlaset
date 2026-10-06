@@ -1,23 +1,20 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton, ResponsiveOverlay } from "@components";
+import {
+  ActionButton,
+  ResponsiveOverlay,
+  type AnimatedTriggeredOverlayProps,
+} from "@components";
 import { ICONS } from "@constants/icons";
 import { useLanguage } from "@features/settings/account";
 import { useAuth, useAuthHandlers } from "@features/user/auth";
 import { UserMenuContent } from "./UserMenuContent";
-
-interface UserMenuDropdownProps {
-  triggerRef: React.RefObject<HTMLElement | null>;
-  isOpen: boolean;
-  onClose: () => void;
-  closing?: boolean;
-}
 
 export function UserMenuDropdown({
   triggerRef,
   isOpen,
   onClose,
   closing = false,
-}: UserMenuDropdownProps) {
+}: AnimatedTriggeredOverlayProps) {
   const { user } = useAuth();
   const { handleLogout } = useAuthHandlers();
   const { isRtl } = useLanguage();

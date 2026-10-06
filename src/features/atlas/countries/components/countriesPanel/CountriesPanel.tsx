@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
-import {
-  sortCountries,
-  useCountryData,
-  type Country,
-} from "@features/countries";
+import { sortCountries, useCountryData } from "@features/countries";
+import type {
+  Country,
+  CountryInteractionProps,
+} from "@features/countries/types";
 import { useAccessibility } from "@features/settings/accessibility";
 import { useTrips } from "@features/trips/core/context/TripsContext";
 import { buildVisitContext } from "@features/visits/utils/visits";
@@ -18,12 +18,8 @@ import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
 import { useCountryFilters } from "../../context/CountryFiltersContext";
 import { useCountryLists } from "../../context/CountryListsContext";
 
-interface CountriesPanelProps {
-  selectedIsoCode: string | null;
-  hoveredIsoCode: string | null;
+interface CountriesPanelProps extends CountryInteractionProps {
   selectedCountry: Country | null;
-  onSelect: (iso: string | null) => void;
-  onHover: (iso: string | null) => void;
   onCountryInfo?: (country: Country) => void;
 }
 

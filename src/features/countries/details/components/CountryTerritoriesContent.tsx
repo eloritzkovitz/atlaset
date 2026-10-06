@@ -4,11 +4,10 @@ import { capitalizeWords } from "@utils";
 import { CountryListGroup } from "./CountryListGroup";
 import { useCountryData } from "../../core/hooks/useCountryData";
 import { getCountryTerritoryRelations } from "../../core/utils/countryData";
-import type { Country } from "../../types";
+import type { Country, CountryNavigationProps } from "../../types";
 
-interface CountryTerritoriesContentProps {
+interface CountryTerritoriesContentProps extends CountryNavigationProps {
   country: Country;
-  onSelectCountry?: (isoCode: string) => void;
 }
 
 export function CountryTerritoriesContent({

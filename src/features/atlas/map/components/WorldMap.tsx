@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { useMapSettings } from "@features/atlas/settings";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
+import type { CountryInteractionProps } from "@features/countries/types";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { LayersContainer } from "./LayersContainer";
 import { MapSvgContainer } from "./MapSvgContainer";
@@ -12,25 +13,21 @@ import { useMapView } from "../context/MapViewContext";
 import { useMapDimensions } from "../hooks/useMapDimensions";
 import { MapProvider } from "../providers/MapProvider";
 
-export interface WorldMapProps {
-  onCountryClick: (countryIsoCode: string | null) => void;
-  onCountryHover: (isoCode: string | null) => void;
-  selectedIsoCode: string | null;
-  hoveredIsoCode: string | null;
+export interface WorldMapProps extends CountryInteractionProps {
+  isAddingMarker: boolean;
   onReady?: () => void;
   svgRef?: React.Ref<SVGSVGElement>;
-  isAddingMarker: boolean;
 }
 
 /** Renders a world map with interactive features. */
 export function WorldMap({
-  onCountryClick,
-  onCountryHover,
   selectedIsoCode,
   hoveredIsoCode,
+  onSelect,
+  onHover,
+  isAddingMarker,
   onReady,
   svgRef,
-  isAddingMarker,
 }: WorldMapProps) {
   const { data: geoData } = useGetGeoDataQuery();
   const { containerRef, mapWidth, mapHeight } = useMapDimensions();
@@ -38,7 +35,7 @@ export function WorldMap({
   const { colorMode, zoom, center, handleMoveEnd } = useMapView();
 
   // Handle country clicks, either for adding a marker or for normal interaction
-  const { handleCountryClick } = useMarkerCreation({ onCountryClick });
+  const { handleCountryClick } = useMarkerCreation({ onSelect });
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =
@@ -108,8 +105,8 @@ export function WorldMap({
                 highlightedIsoCodes={
                   highlightDirection === "asc" ? highlightedIsoCodes : []
                 }
-                onCountryClick={handleCountryClick}
-                onCountryHover={onCountryHover}
+                onSelect={handleCountryClick}
+                onHover={onHover}
                 isAddingMarker={isAddingMarker}
               />
               <MarkersContainer zoom={zoom} />

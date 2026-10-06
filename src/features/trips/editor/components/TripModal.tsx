@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, ModalActions, ModalHeader, TabControl } from "@components";
+import {
+  Modal,
+  ModalActions,
+  ModalHeader,
+  TabControl,
+  type OverlayProps,
+} from "@components";
 import { ICONS } from "@constants/icons";
 import {
   CountrySelectModal,
@@ -28,15 +34,13 @@ import "./TripModal.css";
 
 export type TripModalMode = "add" | "edit" | "custom";
 
-interface TripModalProps {
-  isOpen: boolean;
+interface TripModalProps extends OverlayProps {
   trip: Trip | null;
   mode: TripModalMode;
   overrides?: TripOverrides;
   onChange: (trip: Trip) => void;
   onSave: (trip: Trip, shares: TripShares) => Promise<void>;
   onSaveOverrides?: (overrides: TripOverrides) => Promise<void>;
-  onClose: () => void;
 }
 
 /** Renders the add/edit/customize trip modal. */

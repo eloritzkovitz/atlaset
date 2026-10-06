@@ -89,7 +89,7 @@ export function DocsPanelMenu({
   // Mobile: drawer
   if (isMobile) {
     return (
-      <DrawerPanel open={!!open} onClose={onClose!} width={256}>
+      <DrawerPanel isOpen={!!open} onClose={onClose!} width={256}>
         {panelContent}
       </DrawerPanel>
     );

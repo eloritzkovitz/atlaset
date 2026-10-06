@@ -1,13 +1,10 @@
 import type { ReactNode } from "react";
 import { useScreenSize } from "@hooks";
 import { DrawerPanel } from "../Drawer/DrawerPanel";
+import type { AnimatedTriggeredOverlayProps } from "../types";
 import { DropdownMenu } from "../../navigation/Menu/DropdownMenu";
 
-interface ResponsiveOverlayProps {
-  isOpen: boolean;
-  closing?: boolean;
-  onClose: () => void;
-  triggerRef: React.RefObject<HTMLElement | null>;
+interface ResponsiveOverlayProps extends AnimatedTriggeredOverlayProps {
   children: ReactNode;
   mobileHeader?: ReactNode;
   mobileWidth?: number | string;
@@ -35,7 +32,7 @@ export function ResponsiveOverlay({
     if (!isOpen && !closing) return null;
 
     return (
-      <DrawerPanel open={isOpen} onClose={onClose} width={mobileWidth}>
+      <DrawerPanel isOpen={isOpen} onClose={onClose} width={mobileWidth}>
         <div className={`flex h-full flex-col p-4 ${mobileClassName}`}>
           {mobileHeader}
           {children}

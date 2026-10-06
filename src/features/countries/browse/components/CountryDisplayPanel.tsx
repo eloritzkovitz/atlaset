@@ -2,17 +2,13 @@ import React from "react";
 import { EmptyListMessage } from "@components";
 import type { ViewMode } from "@types";
 import { CountryItem } from "./CountryItem";
-import type { Country } from "../../types";
+import type { Country, CountryInteractionProps } from "../../types";
 
-interface CountryDisplayPanelProps {
+interface CountryDisplayPanelProps extends Partial<CountryInteractionProps> {
   countries: Country[];
   visitedCountryCodes?: string[];
   showAllAsVisited?: boolean;
   view?: ViewMode;
-  selectedIsoCode?: string | null;
-  hoveredIsoCode?: string | null;
-  onSelect?: (isoCode: string | null) => void;
-  onHover?: (isoCode: string | null) => void;
   onCountryInfo?: (country: Country) => void;
   onContextMenu?: (event: React.MouseEvent, country: Country) => void;
   renderBadge?: (country: Country) => React.ReactNode;

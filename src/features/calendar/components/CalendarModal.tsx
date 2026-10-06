@@ -141,7 +141,7 @@ export default function CalendarModal() {
     return (
       <>
         <Sheet
-          open
+          isOpen
           onClose={closeCalendar}
           className="h-screen max-h-screen overflow-hidden"
         >

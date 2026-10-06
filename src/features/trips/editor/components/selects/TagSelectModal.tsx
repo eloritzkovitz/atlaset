@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ModalSelect } from "@components";
+import { ModalSelect, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import type { TripTag } from "../../../core/types";
 
@@ -8,12 +8,10 @@ interface TagOption {
   label: string;
 }
 
-interface TagSelectModalProps {
-  isOpen: boolean;
+interface TagSelectModalProps extends OverlayProps {
   selected: TripTag[];
   options: TagOption[];
   onChange: (newTags: TripTag[]) => void;
-  onClose: () => void;
 }
 
 export function TagSelectModal({

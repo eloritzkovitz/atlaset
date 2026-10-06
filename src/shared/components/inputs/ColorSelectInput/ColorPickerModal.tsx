@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import { useTranslation } from "react-i18next";
-import { ModalHeader } from "@components";
+import { ModalHeader, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import { hexToRgba } from "@utils";
 import { ActionButton } from "../Button/ActionButton";
@@ -10,11 +10,9 @@ import { Modal } from "../../overlay/Modal/Modal";
 import { Tooltip } from "../../overlay/Tooltip/Tooltip";
 import "./ColorPickerModal.css";
 
-interface ColorPickerModalProps {
-  isOpen: boolean;
+interface ColorPickerModalProps extends OverlayProps {
   color: string;
   onChange: (color: string) => void;
-  onClose: () => void;
   containerRef?: React.Ref<HTMLDivElement>;
 }
 

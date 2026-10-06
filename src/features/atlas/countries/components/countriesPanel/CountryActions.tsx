@@ -1,6 +1,12 @@
 import { forwardRef, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { DirectionalIcon, Menu, MenuButton, Separator } from "@components";
+import {
+  DirectionalIcon,
+  Menu,
+  MenuButton,
+  Separator,
+  type TriggerProps,
+} from "@components";
 import { ICONS } from "@constants/icons";
 import type { Country } from "@features/countries/types";
 import {
@@ -13,9 +19,8 @@ import { CountryListsMenu } from "./CountryListsMenu";
 import { useCountryLists } from "../../context/CountryListsContext";
 import { useCountryActions } from "../../hooks/useCountryActions";
 
-interface CountryActionsProps {
+interface CountryActionsProps extends TriggerProps {
   country: Country | null;
-  triggerRef: React.RefObject<HTMLElement | null>;
   onCountryInfo?: (country: Country) => void;
 }
 

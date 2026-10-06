@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
-import type { Country, SovereigntyStatus } from "@features/countries";
-import type { VisitedStatus } from "@features/visits/types";
+import type { Country } from "@features/countries";
+import type { CountryCoreFilterState } from "../types";
 
-export interface CountryFiltersContextType {
+export interface CountryFiltersContextType extends CountryCoreFilterState {
   search: string;
   setSearch: (value: string) => void;
   debouncedSearch: string;
@@ -15,18 +15,8 @@ export interface CountryFiltersContextType {
   sovereignCount: number;
   visitedCount: number;
   wantToVisitCount: number;
-  selectedRegion: string;
-  selectedSubregion: string;
-  selectedLandlocked: boolean | "";
-  setSelectedRegion: (region: string) => void;
-  setSelectedSubregion: (subregion: string) => void;
-  setSelectedLandlocked: (landlocked: boolean | "") => void;
-  selectedSovereignty: SovereigntyStatus | "";
   sovereignOnly: boolean;
-  setSelectedSovereignty: (status: SovereigntyStatus | "") => void;
   setSovereignOnly: (only: boolean) => void;
-  selectedVisited: VisitedStatus;
-  setSelectedVisited: (status: VisitedStatus) => void;
   visitedOnly: boolean;
   setVisitedOnly: (only: boolean) => void;
   wantToVisitOnly: boolean;

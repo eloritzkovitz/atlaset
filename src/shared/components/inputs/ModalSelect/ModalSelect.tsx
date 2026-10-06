@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ActionButton,
-  Checkbox,
-  EmptyListMessage,
-  Modal,
-  ModalHeader,
-  SearchInput,
-} from "@components";
 import { filterBySearch } from "@utils";
+import { ActionButton } from "../Button/ActionButton";
+import { Checkbox } from "../Checkbox/Checkbox";
+import { SearchInput } from "../SearchInput/SearchInput";
+import { EmptyListMessage } from "../../feedback/EmptyListMessage";
+import { Modal } from "../../overlay/Modal/Modal";
+import { ModalHeader } from "../../overlay/Modal/ModalHeader";
+import type { OverlayProps } from "../../overlay/types";
 
-interface ModalSelectProps<T> {
-  isOpen: boolean;
-  onClose: () => void;
+interface ModalSelectProps<T> extends OverlayProps {
   disabled?: boolean;
   title: React.ReactNode;
   items: T[];

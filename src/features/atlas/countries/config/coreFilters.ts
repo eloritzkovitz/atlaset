@@ -1,4 +1,5 @@
 import type { SovereigntyStatus } from "@features/countries/types";
+import type { VisitedStatus } from "@features/visits/types";
 import type { FilterConfig, FilterOption } from "@types";
 import {
   capitalize,
@@ -6,20 +7,7 @@ import {
   createSelectFilter,
   mapOptions,
 } from "@utils";
-import type { CountryFilterKey } from "../types";
-
-interface CoreFilterProps {
-  selectedRegion: string;
-  setSelectedRegion: (region: string) => void;
-  selectedSubregion: string;
-  setSelectedSubregion: (subregion: string) => void;
-  selectedLandlocked: boolean | "";
-  setSelectedLandlocked: (landlocked: boolean | "") => void;
-  selectedSovereignty: SovereigntyStatus | "";
-  setSelectedSovereignty: (sovereignty: SovereigntyStatus | "") => void;
-  selectedVisited: string;
-  setSelectedVisited: (visited: string) => void;
-}
+import type { CountryCoreFilterState, CountryFilterKey } from "../types";
 
 /** Configuration for country filters. */
 type CoreFilterConfig<T = string, P = unknown> = FilterConfig<
@@ -43,7 +31,10 @@ const SOVEREIGNTY_ORDER: readonly SovereigntyStatus[] = [
   "unrecognized",
 ];
 
-export const coreFiltersConfig: CoreFilterConfig<string, CoreFilterProps>[] = [
+export const coreFiltersConfig: CoreFilterConfig<
+  string,
+  CountryCoreFilterState
+>[] = [
   createSelectFilter(
     "region",
     "atlas:countries.filters.core.region",
@@ -114,7 +105,7 @@ export const coreFiltersConfig: CoreFilterConfig<string, CoreFilterProps>[] = [
     ],
     getValue: (props) => props.selectedVisited || "any",
     setValue: (props, val) => {
-      props.setSelectedVisited(val);
+      props.setSelectedVisited(val as VisitedStatus);
     },
   },
 ];

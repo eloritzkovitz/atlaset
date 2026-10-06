@@ -7,17 +7,15 @@ import { useEventListener } from "@hooks";
 import { useMarkers } from "../context/MarkersContext";
 
 interface UseMarkerCreationProps {
-  onCountryClick?: (isoCode: string | null) => void;
+  onSelect?: (isoCode: string | null) => void;
 }
 
 /**
  * Manages marker creation state and interactions with the map.
- * @param onCountryClick - Optional callback for handling country clicks when not adding a marker.
+ * @param onSelect - Optional callback for handling country selection when not adding a marker.
  * @returns An object containing marker creation state and handlers.
  */
-export function useMarkerCreation({
-  onCountryClick,
-}: UseMarkerCreationProps = {}) {
+export function useMarkerCreation({ onSelect }: UseMarkerCreationProps = {}) {
   const { countries } = useCountryData();
   const { isEdit } = useMapView();
 
@@ -50,11 +48,11 @@ export function useMarkerCreation({
             getCountryName(isoCode, countries),
           );
         }
-      } else if (isoCode && onCountryClick) {
-        onCountryClick(isoCode);
+      } else if (isoCode && onSelect) {
+        onSelect(isoCode);
       }
     },
-    [isAddingMarker, handleCountryClickForMarker, countries, onCountryClick],
+    [isAddingMarker, handleCountryClickForMarker, countries, onSelect],
   );
 
   return {

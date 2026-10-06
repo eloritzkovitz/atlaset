@@ -175,7 +175,7 @@ export function SortSelect<K extends string>({
 
       {(isOpen || closing) &&
         (isMobile ? (
-          <DrawerPanel open={isOpen} onClose={closeModal} width="100%">
+          <DrawerPanel isOpen={isOpen} onClose={closeModal} width="100%">
             <div className="flex h-full flex-col p-4">
               <DialogHeader
                 title={t("common:sort.title", "Sort")}

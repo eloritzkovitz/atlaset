@@ -4,7 +4,7 @@ import { ICONS } from "@constants/icons";
 import { ActionButton } from "../../inputs/Button/ActionButton";
 import { Separator } from "../../layout/Separator";
 
-interface DialogHeaderProps {
+export interface DialogHeaderProps {
   title: ReactNode;
   children?: ReactNode;
   className?: string;

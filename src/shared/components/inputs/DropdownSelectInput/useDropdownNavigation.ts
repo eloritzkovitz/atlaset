@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useKeyHandler } from "@hooks";
+import type { OverlayProps, TriggerProps } from "../../overlay/types";
 
-interface UseDropdownNavigationOptions {
-  open: boolean;
+interface UseDropdownNavigationOptions extends OverlayProps, TriggerProps {
   itemCount: number;
   selectedIndex: number;
   onSelect: (index: number) => void;
-  onClose: () => void;
-  triggerRef: React.RefObject<HTMLElement | null>;
   getItemId: (index: number) => string;
 }
 
@@ -15,7 +13,7 @@ interface UseDropdownNavigationOptions {
  * Manages keyboard navigation for a dropdown menu, including arrow key navigation, selection, and closing the menu.
  */
 export function useDropdownNavigation({
-  open,
+  isOpen,
   itemCount,
   selectedIndex,
   onSelect,
@@ -27,27 +25,27 @@ export function useDropdownNavigation({
 
   // Set the active index to the selected option when the dropdown opens
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       setActiveIndex(-1);
       return;
     }
 
     setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
-  }, [open, selectedIndex]);
+  }, [isOpen, selectedIndex]);
 
   // Scroll the active option into view when it changes
   useEffect(() => {
-    if (!open || activeIndex < 0) return;
+    if (!isOpen || activeIndex < 0) return;
 
     document
       .getElementById(getItemId(activeIndex))
       ?.scrollIntoView({ block: "nearest" });
-  }, [open, activeIndex, getItemId]);
+  }, [isOpen, activeIndex, getItemId]);
 
   // Handle keyboard navigation
   useKeyHandler(
     (event) => {
-      if (!open || !itemCount) return;
+      if (!isOpen || !itemCount) return;
 
       switch (event.key) {
         case "ArrowDown":
@@ -87,7 +85,7 @@ export function useDropdownNavigation({
       }
     },
     ["ArrowDown", "ArrowUp", "Home", "End", "Enter", "Escape"],
-    { enabled: open },
+    { enabled: isOpen },
   );
 
   return {
