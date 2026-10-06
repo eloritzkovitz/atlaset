@@ -296,7 +296,7 @@ export function TripModal({
 
       <CountrySelectModal
         isOpen={countryModal.isOpen}
-        selected={currentEditableTrip.countryCodes}
+        selectedIsoCodes={currentEditableTrip.countryCodes}
         options={countries}
         onClose={countryModal.close}
         onChange={(countryCodes) => {

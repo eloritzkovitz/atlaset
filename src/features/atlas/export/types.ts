@@ -1,5 +1,14 @@
+import type { RefObject } from "react";
 import type { Layer } from "../layers/types";
 import type { Marker } from "../markers/types";
+
+/** A reference to the SVG element of the map. */
+export type MapSvgRef = RefObject<SVGSVGElement | null>;
+
+/** Props for components that need a reference to the map's SVG element. */
+export interface MapSvgRefProps {
+  svgRef: MapSvgRef;
+}
 
 /** Image formats for export. */
 export type ImageFormat = "png" | "jpeg" | "webp";

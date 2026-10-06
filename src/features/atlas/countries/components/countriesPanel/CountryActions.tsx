@@ -8,7 +8,7 @@ import {
   type TriggerProps,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import type { Country } from "@features/countries/types";
+import type { Country, CountryInfoProps } from "@features/countries/types";
 import {
   useContextMenu,
   useFloatingHover,
@@ -19,9 +19,8 @@ import { CountryListsMenu } from "./CountryListsMenu";
 import { useCountryLists } from "../../context/CountryListsContext";
 import { useCountryActions } from "../../hooks/useCountryActions";
 
-interface CountryActionsProps extends TriggerProps {
+interface CountryActionsProps extends TriggerProps, CountryInfoProps {
   country: Country | null;
-  onCountryInfo?: (country: Country) => void;
 }
 
 export const CountryActions = forwardRef(function CountryActions(

@@ -119,7 +119,7 @@ export function CountryListModal({
             </FormField>
             <CountrySelectField
               key={list.id}
-              countryCodes={list.countryCodes}
+              selectedIsoCodes={list.countryCodes}
               countries={countries}
               onChange={(newCodes) => {
                 const updatedList = { ...list, countryCodes: newCodes };

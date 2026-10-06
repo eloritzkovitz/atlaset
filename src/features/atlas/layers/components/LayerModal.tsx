@@ -130,7 +130,7 @@ export function LayerModal({
               </FormField>
 
               <CountrySelectField
-                countryCodes={layer.countries}
+                selectedIsoCodes={layer.countries}
                 countries={countries}
                 onChange={(newCodes) =>
                   onChange({ ...layer, countries: newCodes })

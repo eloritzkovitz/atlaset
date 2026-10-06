@@ -1,19 +1,18 @@
 import { MenuButton } from "@components";
+import type { CountryBadgeProps } from "../types";
 import { CountryWithFlag } from "../../flags/components/CountryWithFlag";
-import type { Country } from "../../types";
+import type { Country, CountryContextMenuProps } from "../../types";
 
 export type CountryListRowTone = "visited" | "dimmed-colored" | "dimmed-gray";
 
-interface CountryListRowProps {
+interface CountryListRowProps
+  extends CountryContextMenuProps, CountryBadgeProps {
   country: Country;
   tone?: CountryListRowTone;
   className?: string;
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  onContextMenu?: (event: React.MouseEvent, country: Country) => void;
-  showBadges?: boolean;
-  renderBadge?: (country: Country) => React.ReactNode;
 }
 
 export function CountryListRow({

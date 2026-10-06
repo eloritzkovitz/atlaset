@@ -1,6 +1,7 @@
 import { useUiToggleHint } from "@features/atlas/core";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
 import { MapExportPanel } from "@features/atlas/export";
+import type { MapSvgRefProps } from "@features/atlas/export/types";
 import { LayerModal, LayersPanel, useLayers } from "@features/atlas/layers";
 import { useMapView } from "@features/atlas/map";
 import {
@@ -18,8 +19,7 @@ import {
 import { MapSettingsPanel } from "@features/atlas/settings";
 import type { Country } from "@features/countries/types";
 
-interface AtlasUiContainerProps {
-  svgRef: React.RefObject<SVGSVGElement | null>;
+interface AtlasUiContainerProps extends MapSvgRefProps {
   selectedIsoCode: string | null;
   setSelectedIsoCode: (iso: string | null) => void;
   hoveredIsoCode: string | null;

@@ -119,7 +119,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
 
           <CountrySelectField
             label={t("markers.form.country", "Country")}
-            countryCodes={currentCountryCodes}
+            selectedIsoCodes={currentCountryCodes}
             countries={countries}
             onChange={handleCountryChange}
             isOpen={countrySelect.isOpen}

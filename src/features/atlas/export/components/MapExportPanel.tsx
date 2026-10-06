@@ -19,16 +19,13 @@ import { useSharedMapInfo } from "../hooks/useSharedMapInfo";
 import type {
   ExportFormat,
   ImageExportOptions,
+  MapSvgRef,
   SvgExportOptions,
 } from "../types";
 import { encodeMapData } from "../utils/mapShare";
 import "./MapExportPanel.css";
 
-export interface MapExportPanelProps {
-  svgRef: React.RefObject<SVGSVGElement | null>;
-}
-
-export function MapExportPanel({ svgRef }: MapExportPanelProps) {
+export function MapExportPanel({ svgRef }: { svgRef: MapSvgRef }) {
   const { animationsEnabled } = useAccessibility();
   const { user } = useAuth();
   const { isReadonly } = useMapView();

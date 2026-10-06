@@ -5,23 +5,19 @@ import { ActionButton, Chip, FormField, type OverlayProps } from "@components";
 import { ICONS } from "@constants/icons";
 import { useHomeCountry } from "@features/user/profile";
 import { CountrySelectModal } from "./CountrySelectModal";
-import type { Country } from "../../types";
+import type { Country, CountrySelectionProps } from "../../types";
 
-interface CountrySelectFieldProps extends OverlayProps {
-  label?: string;
-  countryCodes: string[];
+interface CountrySelectFieldProps extends OverlayProps, CountrySelectionProps {
   countries: Country[];
-  onChange: (codes: string[]) => void;
+  label?: string;
   onOpen: () => void;
   required?: boolean;
-  disabled?: boolean;
-  isTripBasedCountry?: (code: string) => boolean;
-  isCountryDisabled?: (code: string) => boolean;
+  isTripBasedCountry?: (countryCode: string) => boolean;
 }
 
 export function CountrySelectField({
   label,
-  countryCodes,
+  selectedIsoCodes,
   countries,
   onChange,
   isOpen,
@@ -37,14 +33,14 @@ export function CountrySelectField({
   const labelText = label ?? t("countries.select.label");
 
   const selectedCountries = useMemo(() => {
-    if (!countryCodes.length || !countries.length) return [];
+    if (!selectedIsoCodes.length || !countries.length) return [];
 
-    const codeSet = new Set(countryCodes);
+    const codeSet = new Set(selectedIsoCodes);
 
     return countries
       .filter((country) => codeSet.has(country.isoCode))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [countryCodes, countries]);
+  }, [selectedIsoCodes, countries]);
 
   const handleModalChange = useCallback(
     (incomingCodes: string[]) => {
@@ -53,7 +49,7 @@ export function CountrySelectField({
         return;
       }
 
-      const lockedCodes = countryCodes.filter((code) =>
+      const lockedCodes = selectedIsoCodes.filter((code) =>
         isTripBasedCountry(code),
       );
 
@@ -63,14 +59,14 @@ export function CountrySelectField({
 
       onChange(mergedCodes);
     },
-    [countryCodes, isTripBasedCountry, onChange],
+    [selectedIsoCodes, isTripBasedCountry, onChange],
   );
 
   return (
     <>
       <FormField label={labelText} required={required} disabled={disabled}>
         <div className="flex items-center gap-2 flex-wrap">
-          {countryCodes.length === 0 ? (
+          {selectedIsoCodes.length === 0 ? (
             <span className="text-muted">
               {t("countries.select.noneSelected")}
             </span>
@@ -86,7 +82,9 @@ export function CountrySelectField({
                   onRemove={() =>
                     canRemove &&
                     onChange(
-                      countryCodes.filter((code) => code !== country.isoCode),
+                      selectedIsoCodes.filter(
+                        (code) => code !== country.isoCode,
+                      ),
                     )
                   }
                 >
@@ -120,7 +118,7 @@ export function CountrySelectField({
         createPortal(
           <CountrySelectModal
             isOpen={isOpen}
-            selected={countryCodes}
+            selectedIsoCodes={selectedIsoCodes}
             options={countries}
             onClose={onClose}
             onChange={handleModalChange}

@@ -6,6 +6,7 @@ import { useUI } from "@app/contexts/UIContext";
 import { sortCountries, useCountryData } from "@features/countries";
 import type {
   Country,
+  CountryInfoProps,
   CountryInteractionProps,
 } from "@features/countries/types";
 import { useAccessibility } from "@features/settings/accessibility";
@@ -18,9 +19,9 @@ import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
 import { useCountryFilters } from "../../context/CountryFiltersContext";
 import { useCountryLists } from "../../context/CountryListsContext";
 
-interface CountriesPanelProps extends CountryInteractionProps {
+interface CountriesPanelProps
+  extends CountryInteractionProps, CountryInfoProps {
   selectedCountry: Country | null;
-  onCountryInfo?: (country: Country) => void;
 }
 
 export function CountriesPanel({

@@ -17,17 +17,17 @@ import {
 import type {
   ExportFormat,
   ImageExportOptions,
+  MapSvgRefProps,
   SvgExportOptions,
 } from "../types";
 import { isImageFormat } from "../utils/format";
 import { exportMap } from "../utils/mapExport";
 
-interface DownloadMapSectionProps {
+interface DownloadMapSectionProps extends MapSvgRefProps {
   expanded: boolean;
-  setExpanded: (v: boolean) => void;
-  svgRef: React.RefObject<SVGSVGElement | null>;
+  setExpanded: (value: boolean) => void;
   format: ExportFormat;
-  setFormat: (f: ExportFormat) => void;
+  setFormat: (format: ExportFormat) => void;
   svgOptions: React.RefObject<SvgExportOptions>;
   imageOptions: React.RefObject<ImageExportOptions>;
 }

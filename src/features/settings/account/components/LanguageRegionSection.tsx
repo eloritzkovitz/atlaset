@@ -109,7 +109,7 @@ export function LanguageRegionSection() {
 
         <CountrySelectModal
           isOpen={countryModal.isOpen}
-          selected={[homeCountry]}
+          selectedIsoCodes={[homeCountry]}
           options={countries}
           onChange={(newCountries) => {
             if (newCountries.length > 0) {

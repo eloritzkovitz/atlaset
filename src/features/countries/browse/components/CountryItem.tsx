@@ -1,11 +1,13 @@
 import type { ViewMode } from "@types";
 import { CountryDisplay } from "./CountryDisplay";
 import { CountryListRow } from "./CountryListRow";
+import type { CountryBadgeProps } from "../types";
 import type { FlagRatio, FlagSize } from "../../flags/types";
-import type { Country } from "../../types";
+import type { Country, CountryContextMenuProps } from "../../types";
 
-interface CountryItemProps {
+interface CountryItemProps extends CountryContextMenuProps, CountryBadgeProps {
   country: Country;
+  view: ViewMode;
   visitedCountryCodes?: string[];
   showAllAsVisited?: boolean;
   selectedIsoCode?: string | null;
@@ -13,13 +15,9 @@ interface CountryItemProps {
   showFlags: boolean;
   flagRatio?: FlagRatio;
   flagSize?: FlagSize;
-  showBadges: boolean;
-  renderBadge?: (country: Country) => React.ReactNode;
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  onContextMenu?: (event: React.MouseEvent, country: Country) => void;
-  view: ViewMode;
 }
 
 export function CountryItem({

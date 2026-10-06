@@ -3,7 +3,7 @@ import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
 import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry";
 import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreation";
-import type { Country } from "@features/countries/types";
+import type { Country, CountryInfoProps } from "@features/countries/types";
 import { getCountriesRoute } from "@features/explore";
 import { useLanguage } from "@features/settings/account";
 import { useCountryTracking } from "@features/visits";
@@ -20,9 +20,8 @@ export interface CountryActionConfig {
   isVisited?: boolean;
 }
 
-interface UseCountryActionsProps {
+interface UseCountryActionsProps extends CountryInfoProps {
   country: Country | null;
-  onCountryInfo?: (country: Country) => void;
   onCloseMenu?: () => void;
 }
 

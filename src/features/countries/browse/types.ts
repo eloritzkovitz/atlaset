@@ -6,6 +6,7 @@ import type {
   TranscontinentalMode,
   TranscontinentalScope,
 } from "../types";
+import type { ReactNode } from "react";
 
 /** Represents a key for a country qualifier search. */
 export type CountryQualifierKey =
@@ -58,3 +59,17 @@ export type CountryFilterOptions = {
   };
   modifiers?: CountryModifiers;
 };
+
+/** Props for components that allow users to select countries. */
+export interface CountrySelectionProps {
+  selectedIsoCodes: string[];
+  onChange: (isoCodes: string[]) => void;
+  disabled?: boolean;
+  isCountryDisabled?: (isoCode: string) => boolean;
+}
+
+/** Props for components that display badges for each country. */
+export interface CountryBadgeProps {
+  showBadges?: boolean;
+  renderBadge?: (country: Country) => ReactNode;
+}

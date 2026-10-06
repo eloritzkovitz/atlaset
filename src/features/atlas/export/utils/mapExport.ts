@@ -2,6 +2,7 @@
  * Utility functions for exporting map SVGs and data.
  */
 
+import type { RefObject } from "react";
 import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
 import {
@@ -18,6 +19,7 @@ import type {
   ExportFormat,
   ImageExportOptions,
   ImageFormat,
+  MapSvgRef,
   SvgExportOptions,
 } from "../types";
 
@@ -152,10 +154,10 @@ export function exportMap({
   imageOptions,
   jsonData,
 }: {
-  svgRef: React.RefObject<SVGSVGElement | null>;
+  svgRef: MapSvgRef;
   format: ExportFormat;
-  svgOptions: React.RefObject<SvgExportOptions>;
-  imageOptions: React.RefObject<ImageExportOptions>;
+  svgOptions: RefObject<SvgExportOptions>;
+  imageOptions: RefObject<ImageExportOptions>;
   jsonData?: { layers: Layer[]; markers: Marker[] };
 }) {
   // Handle JSON export first

@@ -7,6 +7,7 @@ import {
 import {
   CountryDisplayPanel,
   type Country,
+  type CountryInfoProps,
   type CountryInteractionProps,
 } from "@features/countries";
 import { useTrips } from "@features/trips/core/context/TripsContext";
@@ -15,9 +16,9 @@ import { useListNavigation } from "@hooks";
 import { CountryActions } from "./CountryActions";
 import { CountryVisitBadge } from "./CountryVisitBadge";
 
-interface CountryListViewProps extends CountryInteractionProps {
+interface CountryListViewProps
+  extends CountryInteractionProps, CountryInfoProps {
   countries: Country[];
-  onCountryInfo?: (country: Country) => void;
 }
 
 export function CountryListView({

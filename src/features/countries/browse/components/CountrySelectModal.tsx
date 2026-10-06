@@ -9,20 +9,16 @@ import { SUPPORTED_QUALIFIERS } from "../constants/qualifierConfig";
 import { applyQualifierSearch } from "../utils/countrySearchExpression";
 import { buildSearchString } from "../utils/countrySearch";
 import { CountryWithFlag } from "../../flags/components/CountryWithFlag";
-import type { Country } from "../../types";
+import type { Country, CountrySelectionProps } from "../../types";
 
-interface CountrySelectModalProps extends OverlayProps {
-  selected: string[];
+interface CountrySelectModalProps extends OverlayProps, CountrySelectionProps {
   options: Country[];
-  onChange: (newCountries: string[]) => void;
   multiple?: boolean;
-  disabled?: boolean;
-  isCountryDisabled?: (code: string) => boolean;
 }
 
 export function CountrySelectModal({
   isOpen,
-  selected,
+  selectedIsoCodes,
   options,
   onChange,
   onClose,
@@ -74,7 +70,7 @@ export function CountrySelectModal({
         </>
       }
       items={filteredOptions}
-      selectedValues={selected}
+      selectedValues={selectedIsoCodes}
       searchValue={search}
       onSearchChange={setSearch}
       getItemValue={(country) => country.isoCode}

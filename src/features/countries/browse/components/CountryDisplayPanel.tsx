@@ -2,18 +2,25 @@ import React from "react";
 import { EmptyListMessage } from "@components";
 import type { ViewMode } from "@types";
 import { CountryItem } from "./CountryItem";
-import type { Country, CountryInteractionProps } from "../../types";
+import type { CountryBadgeProps } from "../types";
+import type {
+  Country,
+  CountryContextMenuProps,
+  CountryInfoProps,
+  CountryInteractionProps,
+} from "../../types";
 
-interface CountryDisplayPanelProps extends Partial<CountryInteractionProps> {
+interface CountryDisplayPanelProps
+  extends
+    Partial<CountryInteractionProps>,
+    Partial<CountryInfoProps>,
+    CountryContextMenuProps,
+    CountryBadgeProps {
   countries: Country[];
   visitedCountryCodes?: string[];
   showAllAsVisited?: boolean;
   view?: ViewMode;
-  onCountryInfo?: (country: Country) => void;
-  onContextMenu?: (event: React.MouseEvent, country: Country) => void;
-  renderBadge?: (country: Country) => React.ReactNode;
   showFlags?: boolean;
-  showBadges?: boolean;
   className?: string;
 }
 
