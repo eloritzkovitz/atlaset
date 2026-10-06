@@ -3,20 +3,16 @@ import {
   ActionButton,
   DirectionalIcon,
   HeaderNavigation,
-  type NavigationItem,
+  type HeaderNavigationProps,
 } from "@components";
 import { useScreenSize } from "@hooks";
 
-interface ExploreHeaderProps {
+interface ExploreHeaderProps extends HeaderNavigationProps {
   title: string;
   subtitle?: string;
   leading?: ReactNode;
   actions?: ReactNode;
   onBack?: () => void;
-  navigation?: {
-    previous?: NavigationItem;
-    next?: NavigationItem;
-  };
 }
 
 export function ExploreHeader({
@@ -25,17 +21,15 @@ export function ExploreHeader({
   leading,
   actions,
   onBack,
-  navigation,
+  previous,
+  next,
 }: ExploreHeaderProps) {
   const { isMobile } = useScreenSize();
 
   return (
     <div className="mb-4">
-      {navigation && (
-        <HeaderNavigation
-          previous={navigation.previous}
-          next={navigation.next}
-        />
+      {(previous || next) && (
+        <HeaderNavigation previous={previous} next={next} />
       )}
 
       <div className="flex items-center gap-4">

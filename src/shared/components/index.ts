@@ -74,7 +74,10 @@ export { Separator } from "./layout/Separator";
 export { ActionsToolbar } from "./navigation/Toolbar/ActionsToolbar";
 export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs/Breadcrumbs";
 export { DropdownMenu } from "./navigation/Menu/DropdownMenu";
-export { HeaderNavigation } from "./navigation/Header/HeaderNavigation";
+export {
+  HeaderNavigation,
+  type HeaderNavigationProps,
+} from "./navigation/Header/HeaderNavigation";
 export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
 export type { NavigationItem } from "./navigation/Header/NavigationButton";

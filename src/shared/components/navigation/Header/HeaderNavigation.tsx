@@ -1,7 +1,7 @@
 import { useScreenSize } from "@hooks";
 import { NavigationButton, type NavigationItem } from "./NavigationButton";
 
-interface HeaderNavigationProps {
+export interface HeaderNavigationProps {
   previous?: NavigationItem;
   next?: NavigationItem;
 }

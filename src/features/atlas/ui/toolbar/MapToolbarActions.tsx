@@ -1,10 +1,11 @@
 import { ActionButton, MenuButton, Separator } from "@components";
 import type { ToolbarActionItem } from "./useToolbarActions";
+import type { MapToolbarOrientation } from "../types";
 
 interface MapToolbarActionsProps {
   actions: ToolbarActionItem[];
   isDesktop: boolean;
-  orientation?: "horizontal" | "vertical";
+  orientation?: MapToolbarOrientation;
   children?: React.ReactNode;
 }
 

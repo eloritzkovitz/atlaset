@@ -8,16 +8,12 @@ import {
   getVisitColorsFromPalette,
 } from "../utils/mapColors";
 
-interface UseMapColorsOptions {
-  mode?: ColorMode;
-}
-
 /**
  * Returns map styles and colors based on the current color mode and user settings.
  * @param mode - The current operational color mode.
  * @returns An object containing country colors and visit color roles.
  */
-export function useMapTheme({ mode }: UseMapColorsOptions = {}) {
+export function useMapTheme({ mode }: { mode?: ColorMode } = {}) {
   const { colorPalettes } = useMapColors();
   const { baseColor, borderColor, borderWidth } = useMapSettings();
 

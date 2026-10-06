@@ -4,7 +4,7 @@ import {
   Card,
   HeaderNavigation,
   StarRatingInput,
-  type NavigationItem,
+  type HeaderNavigationProps,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCalendarNavigation } from "@features/calendar/hooks/useCalendarNavigation";
@@ -14,7 +14,7 @@ import { TripStatusChip } from "../../core/components/TripStatusChip";
 import type { Trip } from "../../core/types";
 import { ParticipantsList } from "../../sharing/components/ParticipantsList";
 
-interface TripHeaderProps {
+interface TripHeaderProps extends HeaderNavigationProps {
   trip: Trip;
   onEdit: () => void;
   onCustomize?: () => void;
@@ -22,10 +22,6 @@ interface TripHeaderProps {
   canEdit: boolean;
   canCustomize?: boolean;
   sharedWithMe?: boolean;
-  navigation?: {
-    previous?: NavigationItem;
-    next?: NavigationItem;
-  };
 }
 
 export function TripHeader({
@@ -36,7 +32,8 @@ export function TripHeader({
   canEdit,
   canCustomize,
   sharedWithMe,
-  navigation,
+  previous,
+  next,
 }: TripHeaderProps) {
   const { openTripInCalendar } = useCalendarNavigation();
   const { t } = useTranslation("trips");
@@ -51,10 +48,7 @@ export function TripHeader({
 
   return (
     <>
-      <HeaderNavigation
-        previous={navigation?.previous}
-        next={navigation?.next}
-      />
+      <HeaderNavigation previous={previous} next={next} />
 
       <Card className="p-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">

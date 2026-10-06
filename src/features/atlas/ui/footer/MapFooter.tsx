@@ -7,11 +7,7 @@ import { useCountryData } from "@features/countries";
 import { useCountryCoverage } from "@features/visits/hooks/useCountryCoverage";
 import { formatPercent } from "@utils";
 
-interface MapFooterProps {
-  zoom: number;
-}
-
-export function MapFooter({ zoom }: MapFooterProps) {
+export function MapFooter({ zoom }: { zoom: number }) {
   const { countries } = useCountryData();
   const { t } = useTranslation("atlas");
   const { uiVisible } = useUI();

@@ -14,11 +14,10 @@ import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
 import { useToolbarActions } from "./useToolbarActions";
+import type { MapToolbarOrientation, ZoomControlProps } from "../types";
 
-interface MapToolbarProps {
-  orientation: "horizontal" | "vertical";
-  zoom: number;
-  setZoom: React.Dispatch<React.SetStateAction<number>>;
+interface MapToolbarProps extends ZoomControlProps {
+  orientation: MapToolbarOrientation;
   isEmbed?: boolean;
   children?: React.ReactNode;
 }

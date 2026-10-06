@@ -95,20 +95,22 @@ export default function TripDetailsPage() {
             canEdit={canEdit}
             canCustomize={isParticipant}
             sharedWithMe={sharedTripIds.has(trip.id)}
-            navigation={{
-              previous: previousTrip
+            previous={
+              previousTrip
                 ? {
                     label: previousTrip.name,
                     onClick: () => navigate(`/trips/${previousTrip.id}`),
                   }
-                : undefined,
-              next: nextTrip
+                : undefined
+            }
+            next={
+              nextTrip
                 ? {
                     label: nextTrip.name,
                     onClick: () => navigate(`/trips/${nextTrip.id}`),
                   }
-                : undefined,
-            }}
+                : undefined
+            }
           />
 
           <TripDestinationsCard

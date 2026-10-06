@@ -9,11 +9,10 @@ import { ActionButton } from "@components";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { useAccessibility } from "@features/settings/accessibility";
 import { useKeyHandler } from "@hooks";
+import type { MapToolbarOrientation, ZoomControlProps } from "../types";
 
-interface MapControlsProps {
-  orientation?: "vertical" | "horizontal";
-  zoom: number;
-  setZoom: React.Dispatch<React.SetStateAction<number>>;
+interface MapControlsProps extends ZoomControlProps {
+  orientation?: MapToolbarOrientation;
   visible?: boolean;
 }
 

@@ -1,17 +1,20 @@
 import { useMemo } from "react";
+import {
+  useSharedMapInfo,
+  type SharedMapInfo,
+} from "@features/atlas/export/hooks/useSharedMapInfo";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import type { Marker } from "@features/atlas/markers/types";
 import { useSavedMaps } from "@features/atlas/savedMaps/context/SavedMapsContext";
-import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo";
+import type { SavedMap } from "@features/atlas/savedMaps/types";
 
 interface EffectiveMapDataOptions<T> {
   local: T;
   saved?: (
-    activeSavedMap: ReturnType<typeof useSavedMaps>["activeSavedMap"],
-    savedMapMarkers: ReturnType<typeof useSavedMaps>["markers"]["markers"],
+    activeSavedMap: SavedMap | null,
+    savedMapMarkers: Marker[],
   ) => T | undefined;
-  shared?: (
-    sharedMapInfo: ReturnType<typeof useSharedMapInfo>,
-  ) => T | undefined;
+  shared?: (sharedMapInfo: SharedMapInfo) => T | undefined;
 }
 
 /**

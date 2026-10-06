@@ -1,8 +1,4 @@
-interface TripGoogleMapProps {
-  url: string;
-}
-
-export function TripGoogleMap({ url }: TripGoogleMapProps) {
+export function TripGoogleMap({ url }: { url: string }) {
   return (
     <div className="overflow-hidden rounded-lg">
       <iframe

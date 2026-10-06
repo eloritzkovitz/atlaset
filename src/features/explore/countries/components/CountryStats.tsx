@@ -118,8 +118,8 @@ export function CountryStats({
           title={selectedCountry.name}
           subtitle={`(${selectedCountry.isoCode})`}
           onBack={onBack}
-          navigation={{
-            previous: previousCountry
+          previous={
+            previousCountry
               ? {
                   label: previousCountry.name,
                   icon: (
@@ -134,8 +134,10 @@ export function CountryStats({
                   ),
                   onClick: () => navigateToCountry(previousCountry.isoCode),
                 }
-              : undefined,
-            next: nextCountry
+              : undefined
+          }
+          next={
+            nextCountry
               ? {
                   label: nextCountry.name,
                   icon: (
@@ -150,8 +152,8 @@ export function CountryStats({
                   ),
                   onClick: () => navigateToCountry(nextCountry.isoCode),
                 }
-              : undefined,
-          }}
+              : undefined
+          }
           leading={
             <span className={isMobile ? "" : "mb-2"}>
               <CountryFlag
