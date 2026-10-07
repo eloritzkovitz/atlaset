@@ -72,6 +72,29 @@ export function useUserSessions(userId?: string): UserSessionsProps {
     }
   }, [userId, handleActivity]);
 
+  // Update session activity when the app becomes visible or regains focus
+  useEffect(() => {
+    if (!userId) return;
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        handleActivity();
+      }
+    };
+
+    const handleFocus = () => {
+      handleActivity();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [userId, handleActivity]);
+
   // Attach event listeners for user activity events
   useEventListener(ACTIVITY_EVENTS, handleActivity, window, { passive: true });
 

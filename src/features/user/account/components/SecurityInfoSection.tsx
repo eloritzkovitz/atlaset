@@ -5,7 +5,7 @@ import { capitalize, formatDate } from "@utils";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { SessionRow } from "./SessionRow";
 import { useUserSessions } from "../hooks/useUserSessions";
-import { isDevSession } from "../utils/session";
+import { isCurrentSession, isDevSession } from "../utils/session";
 
 /** Renders a section with user security information. */
 export function SecurityInfoSection() {
@@ -73,6 +73,7 @@ export function SecurityInfoSection() {
             <SessionRow
               key={session.id}
               session={session}
+              isCurrent={isCurrentSession(session.sessionId)}
               onTerminate={terminateSession}
             />
           ))

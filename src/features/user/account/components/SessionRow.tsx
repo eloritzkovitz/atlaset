@@ -8,11 +8,16 @@ import { isDevSession } from "../utils/session";
 
 interface SessionRowProps {
   session: UserSession;
+  isCurrent: boolean;
   onTerminate: (session: UserSession) => void;
 }
 
 /** Renders a row for a user session in the security settings. */
-export function SessionRow({ session, onTerminate }: SessionRowProps) {
+export function SessionRow({
+  session,
+  isCurrent,
+  onTerminate,
+}: SessionRowProps) {
   const { t } = useTranslation("settings");
 
   const readableDevice = parseUserAgent(session.userAgent || "");
@@ -37,8 +42,18 @@ export function SessionRow({ session, onTerminate }: SessionRowProps) {
               <span className="font-semibold">
                 {session.deviceName || readableDevice}
               </span>
+
+              {isCurrent && (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-muted" />
+                  <span className="text-muted text-sm font-medium">
+                    {t("security.currentSession")}
+                  </span>
+                </>
+              )}
+
               {isDevSession(session) && (
-                <span className="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                <span className="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
                   DEV
                 </span>
               )}

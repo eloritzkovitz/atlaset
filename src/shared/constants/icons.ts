@@ -73,7 +73,7 @@ import {
   FaMapLocationDot,
   FaMapPin,
   FaMedal,
-  FaMobile,
+  FaMobileScreen,
   FaMoon,
   FaPaintbrush,
   FaPalette,
@@ -228,7 +228,7 @@ export const ICONS = {
   device: {
     desktop: FaDesktop,
     laptop: FaLaptop,
-    mobile: FaMobile,
+    mobile: FaMobileScreen,
     tablet: FaTablet,
   },
 
