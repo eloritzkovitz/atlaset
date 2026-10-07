@@ -20,7 +20,7 @@ export function Sheet({
   style,
 }: SheetProps) {
   const [mounted, setMounted] = useState(isOpen);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(isOpen);
 
   useDismiss({
     show: isOpen,
@@ -28,18 +28,27 @@ export function Sheet({
     isModal: true,
     escEnabled: !disableClose,
   });
+
   useBodyScrollLock(mounted);
 
   // Handle mounting and unmounting of the sheet with animation
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       setVisible(false);
-      const timeout = window.setTimeout(() => setMounted(false), 200);
+
+      const timeout = window.setTimeout(() => {
+        setMounted(false);
+      }, 200);
+
       return () => window.clearTimeout(timeout);
     }
 
     setMounted(true);
-    const frame = requestAnimationFrame(() => setVisible(true));
+
+    const frame = requestAnimationFrame(() => {
+      setVisible(true);
+    });
+
     return () => cancelAnimationFrame(frame);
   }, [isOpen]);
 
@@ -50,6 +59,7 @@ export function Sheet({
       {isOpen && !disableClose && (
         <Backdrop className="z-[10000]" onClick={onClose} />
       )}
+
       <div
         role="dialog"
         aria-modal="true"
