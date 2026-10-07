@@ -138,10 +138,12 @@
     "loggedInDevices": "מכשירים מחוברים",
     "devicesLabel": "מכשירים",
     "devicesNone": "אין מכשירים פעילים",
-    "device": "מכשיר",
+    "device": "מכשיר",    
     "currentSession": "מכשיר זה",
     "activeNow": "פעיל עכשיו",
     "lastActive": "פעיל לאחרונה: {{date}}",
+    "ipAddress": "כתובת IP",
+    "location": "מיקום",
     "actions": {
       "endSession": "סיים את הההפעלה",
       "endSessionTitle": "סיים הפעלה זו"

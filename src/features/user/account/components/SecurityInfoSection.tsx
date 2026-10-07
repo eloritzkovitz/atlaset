@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EmptyListMessage } from "@components";
 import { useLastLogin } from "@features/activity";
 import { useAuth } from "@features/user/auth";
 import { capitalize, formatDate } from "@utils";
+import type { UserSession } from "../types";
+import { SessionCard } from "./SessionCard";
+import { SessionDetailsCard } from "./SessionDetailsCard";
 import { SecurityInfoRow } from "./SecurityInfoRow";
-import { SessionRow } from "./SessionRow";
 import { useUserSessions } from "../hooks/useUserSessions";
 import { isCurrentSession, isDevSession } from "../utils/session";
 
@@ -15,24 +19,43 @@ export function SecurityInfoSection() {
   const { t } = useTranslation("settings");
   const { sessions, terminateSession } = useUserSessions(user?.uid);
 
+  const [selectedSession, setSelectedSession] = useState<UserSession | null>(
+    null,
+  );
+
   // Filter out development sessions in production, but show all sessions in development
   const visibleSessions = sessions.filter((session) => {
     if (import.meta.env.PROD) {
       return !isDevSession(session);
     }
+
     return true;
   });
+
+  if (selectedSession) {
+    return (
+      <section className="mb-8">
+        <SessionDetailsCard
+          session={selectedSession}
+          onBack={() => setSelectedSession(null)}
+          onTerminate={terminateSession}
+        />
+      </section>
+    );
+  }
 
   return (
     <section className="mb-8">
       <h2 className="text-2xl font-bold mb-6 self-start">
         {t("security.title")}
       </h2>
+
       <ul className="space-y-4">
         <SecurityInfoRow
           label={t("security.email")}
           value={user?.email || t("security.noEmail")}
         />
+
         <SecurityInfoRow
           label={t("security.accountCreated")}
           value={
@@ -41,6 +64,7 @@ export function SecurityInfoSection() {
               : t("security.unknown")
           }
         />
+
         <SecurityInfoRow
           label={t("security.lastLogin")}
           value={
@@ -49,6 +73,7 @@ export function SecurityInfoSection() {
               : t("security.noLoginRecorded")
           }
         />
+
         <SecurityInfoRow
           label={t("security.lastLoginMethod")}
           value={
@@ -62,20 +87,19 @@ export function SecurityInfoSection() {
       <h2 className="text-2xl font-bold mb-6 mt-8 self-start">
         {t("security.loggedInDevices")}
       </h2>
+
       <ul className="space-y-4">
         {visibleSessions.length === 0 ? (
-          <SecurityInfoRow
-            label={t("security.devicesLabel")}
-            value={t("security.devicesNone")}
-          />
+          <EmptyListMessage message={t("security.noActiveSessions")} />
         ) : (
           visibleSessions.map((session) => (
-            <SessionRow
-              key={session.id}
-              session={session}
-              isCurrent={isCurrentSession(session.sessionId)}
-              onTerminate={terminateSession}
-            />
+            <li key={session.id}>
+              <SessionCard
+                session={session}
+                isCurrent={isCurrentSession(session.sessionId)}
+                onClick={setSelectedSession}
+              />
+            </li>
           ))
         )}
       </ul>

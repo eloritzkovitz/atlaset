@@ -142,6 +142,8 @@
     "currentSession": "This device",
     "activeNow": "Active now",
     "lastActive": "Last active: {{date}}",
+    "ipAddress": "IP address",
+    "location": "Location",
     "actions": {
       "endSession": "End Session",
       "endSessionTitle": "End this session"

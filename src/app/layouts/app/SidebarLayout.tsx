@@ -43,13 +43,11 @@ export function SidebarLayout({
         </>
       )}
       <div className="flex gap-0 md:gap-6 h-full">
-        <div className="flex-shrink-0 flex flex-col justify-start w-full md:w-auto md:h-full">
+        <div className="flex-shrink-0 flex flex-col justify-start md:w-auto md:h-full">
           {menuWithProps}
         </div>
         <main className={`items-center mx-auto ${contentClassName}`}>
-          <Container className="w-full">
-            {children ?? <Outlet />}
-          </Container>
+          <Container className="w-full">{children ?? <Outlet />}</Container>
         </main>
       </div>
     </div>
