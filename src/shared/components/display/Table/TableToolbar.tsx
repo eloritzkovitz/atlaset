@@ -39,7 +39,7 @@ export function TableToolbar<T>({
           ariaLabel={t("actions.resetSort", {
             defaultValue: "Reset sorting",
           })}
-          icon={<ICONS.refresh />}
+          icon={<ICONS.reset />}
           onClick={onResetSort}
           rounded
         />

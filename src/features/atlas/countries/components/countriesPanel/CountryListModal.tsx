@@ -82,7 +82,7 @@ export function CountryListModal({
           title={
             <>
               {isWantToVisitList ? (
-                <ICONS.favorite />
+                <ICONS.bookmark />
               ) : isVisitedList ? (
                 <ICONS.visits />
               ) : (

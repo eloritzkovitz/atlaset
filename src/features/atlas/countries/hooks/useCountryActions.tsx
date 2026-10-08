@@ -149,9 +149,7 @@ export function useCountryActions({
       ariaLabel: wantToVisitListed
         ? "Unmark as Want to Visit"
         : "Mark as Want to Visit",
-      icon: (
-        <ICONS.favorite className={!wantToVisitListed ? "text-muted" : ""} />
-      ),
+      icon: <ICONS.bookmark className={!wantToVisitListed ? "text-muted" : ""} />,
       disabled: visited,
       isVisited: visited,
       onClick: () => {

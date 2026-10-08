@@ -36,8 +36,8 @@ Repeating any of these actions will remove a country from the Visited list.
 You can also track countries you'd like to visit using the **Want to Visit** list.
 
 - In the **Countries** panel, double-click the **Want to Visit** list and edit the list.
-- In the **Countries** panel, right click on a country and then select <icon name="favorite"></icon> **Mark/Unmark 'Want to Visit'**.
-- In the **Country details** modal, click <icon name="favorite"></icon> **Mark/Unmark 'Want to Visit'** in the header actions.
+- In the **Countries** panel, right click on a country and then select <icon name="bookmark"></icon> **Mark/Unmark 'Want to Visit'**.
+- In the **Country details** modal, click <icon name="bookmark"></icon> **Mark/Unmark 'Want to Visit'** in the header actions.
 
 > <icon name="info"></icon> **Note**
 >
