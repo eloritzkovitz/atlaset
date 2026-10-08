@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { ItemCount } from "@components";
 import { useAutoScrollFocus } from "@hooks";
 
 export interface SegmentedToggleOption<T extends string> {
@@ -64,18 +65,17 @@ export function SegmentedToggle<T extends string>({
             onDoubleClick={() => onDoubleClick?.(opt.value)}
             disabled={disabled}
           >
-            <span className="inline-flex items-center gap-1.5">
+            <span className="inline-flex items-center">
               <span className="align-middle" dir="auto">
                 {opt.label}
               </span>
 
               {typeof opt.count === "number" && (
-                <span
-                  dir="ltr"
-                  className="text-xs text-muted align-middle font-normal tracking-wide [unicode-bidi:isolate]"
-                >
-                  {opt.count}
-                </span>
+                <ItemCount
+                  count={opt.count}
+                  parentheses={false}
+                  hideZero={false}
+                />
               )}
             </span>
           </button>

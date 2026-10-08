@@ -1,5 +1,6 @@
 import React, { type ReactNode } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
+import { ItemCount } from "../ItemCount";
 import { ActionButton } from "../../inputs/Button/ActionButton";
 
 interface CollapsibleHeaderProps {
@@ -46,11 +47,9 @@ export function CollapsibleHeader({
             <span className="text-lg">{icon}</span>
           </span>
 
-          <span className="inline-flex items-center gap-2">
+          <span className="inline-flex items-center">
             <span>{label}</span>
-            {count !== undefined && (
-              <span className="text-muted">({count})</span>
-            )}
+            {typeof count === "number" && <ItemCount count={count} className="!text-lg !font-bold" />}
           </span>
         </span>
 

@@ -5,6 +5,7 @@ export { Chip } from "./display/Chip/Chip";
 export { ChipList } from "./display/Chip/ChipList";
 export { CollapsibleHeader } from "./display/Collapsible/CollapsibleHeader";
 export { ColorDot } from "./display/ColorDot";
+export { ItemCount } from "./display/ItemCount";
 export { KeyCombo } from "./display/KeyCombo";
 export { getBaseMarkdownComponents } from "./display/Markdown/getBaseMarkdownComponents";
 export { MarkdownFileRenderer } from "./display/Markdown/MarkdownFileRenderer";

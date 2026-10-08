@@ -1,4 +1,4 @@
-import { PanelListItem } from "@components";
+import { ItemCount, PanelListItem } from "@components";
 import type { Layer } from "../types";
 
 interface LayerPanelItemProps {
@@ -48,6 +48,10 @@ export function LayerPanelItem({
       onDragStart={onDragStart}
       handleDragOver={handleDragOver}
       handleDragEnd={handleDragEnd}
-    />
+    >
+      {layer.countries.length > 0 && (
+        <ItemCount count={layer.countries.length} />
+      )}
+    </PanelListItem>
   );
 }

@@ -1,10 +1,10 @@
 import { useMemo, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
-import { ActionButton, Chip, FormField, type OverlayProps } from "@components";
-import { ICONS } from "@constants/icons";
+import { FieldHeader, ItemCount, type OverlayProps } from "@components";
 import { useHomeCountry } from "@features/user/profile";
 import { CountrySelectModal } from "./CountrySelectModal";
+import { SelectedCountryChip } from "./SelectedCountryChip";
 import type { Country, CountrySelectionProps } from "../../types";
 
 interface CountrySelectFieldProps extends OverlayProps, CountrySelectionProps {
@@ -30,6 +30,7 @@ export function CountrySelectField({
 }: CountrySelectFieldProps) {
   const { homeCountry } = useHomeCountry();
   const { t } = useTranslation("atlas");
+
   const labelText = label ?? t("countries.select.label");
 
   const selectedCountries = useMemo(() => {
@@ -53,66 +54,64 @@ export function CountrySelectField({
         isTripBasedCountry(code),
       );
 
-      const mergedCodes = Array.from(
-        new Set([...incomingCodes, ...lockedCodes]),
-      );
-
-      onChange(mergedCodes);
+      onChange(Array.from(new Set([...incomingCodes, ...lockedCodes])));
     },
     [selectedIsoCodes, isTripBasedCountry, onChange],
   );
 
   return (
     <>
-      <FormField label={labelText} required={required} disabled={disabled}>
-        <div className="flex items-center gap-2 flex-wrap">
-          {selectedIsoCodes.length === 0 ? (
-            <span className="text-muted">
-              {t("countries.select.noneSelected")}
-            </span>
-          ) : (
-            selectedCountries.map((country) => {
-              const isLockedVisit = !!isTripBasedCountry?.(country.isoCode);
-              const canRemove = !disabled && !isLockedVisit;
+      <div className="mb-4">
+        <FieldHeader
+          label={
+            <>
+              {labelText}
+              {selectedIsoCodes.length > 0 && (
+                <ItemCount count={selectedIsoCodes.length} />
+              )}
+            </>
+          }
+          onEdit={disabled ? undefined : onOpen}
+          editLabel={t("common:actions.edit")}
+          required={required}
+        />
 
-              return (
-                <Chip
-                  key={country.isoCode}
-                  removable={canRemove}
-                  onRemove={() =>
-                    canRemove &&
-                    onChange(
-                      selectedIsoCodes.filter(
-                        (code) => code !== country.isoCode,
-                      ),
-                    )
-                  }
-                >
-                  {country.name}
-                  {isLockedVisit ? (
-                    homeCountry === country.isoCode ? (
-                      <ICONS.home className="inline ms-1" />
-                    ) : (
-                      <ICONS.tripAbroad className="inline ms-1" />
-                    )
-                  ) : null}
-                </Chip>
-              );
-            })
-          )}
+        <div className="grid grid-cols-[120px_1fr] gap-2">
+          <div />
 
-          {!disabled && (
-            <ActionButton
-              type="button"
-              icon={<ICONS.editField />}
-              title={t("common:actions.edit")}
-              aria-label={t("common:actions.edit")}
-              onClick={onOpen}
-              rounded
-            />
-          )}
+          <div className="max-h-120 overflow-y-auto">
+            {selectedIsoCodes.length === 0 ? (
+              <span className="text-muted">
+                {t("countries.select.noneSelected")}
+              </span>
+            ) : (
+              <div className="flex flex-wrap items-center gap-2">
+                {selectedCountries.map((country) => {
+                  const isLockedVisit = !!isTripBasedCountry?.(country.isoCode);
+                  const canRemove = !disabled && !isLockedVisit;
+
+                  return (
+                    <SelectedCountryChip
+                      key={country.isoCode}
+                      country={country}
+                      homeCountry={homeCountry}
+                      isLockedVisit={isLockedVisit}
+                      canRemove={canRemove}
+                      onRemove={() =>
+                        onChange(
+                          selectedIsoCodes.filter(
+                            (code) => code !== country.isoCode,
+                          ),
+                        )
+                      }
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
-      </FormField>
+      </div>
 
       {isOpen &&
         createPortal(
