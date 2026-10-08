@@ -49,7 +49,7 @@ export function CollapsibleHeader({
 
           <span className="inline-flex items-center">
             <span>{label}</span>
-            {typeof count === "number" && <ItemCount count={count} className="!text-lg !font-bold" />}
+            {typeof count === "number" && <ItemCount count={count} className="!text-lg" />}
           </span>
         </span>
 

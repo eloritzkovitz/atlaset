@@ -75,6 +75,7 @@ export function SegmentedToggle<T extends string>({
                   count={opt.count}
                   parentheses={false}
                   hideZero={false}
+                  className="!font-normal"
                 />
               )}
             </span>
