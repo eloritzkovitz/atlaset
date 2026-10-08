@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 export type ConditionToggle = "sovereign" | "visited" | "wantToVisit";
 
@@ -20,7 +20,7 @@ export const CONDITIONS: Record<
   },
 };
 
-// Checks if the search string contains a condition prefix and returns the corresponding toggle if found.
+/** Checks if the search string contains a condition prefix and returns the corresponding toggle if found. */
 export function getSearchCondition(value: string): ConditionToggle | null {
   const normalized = value.trim().toLowerCase();
 
@@ -41,6 +41,7 @@ export function getSearchCondition(value: string): ConditionToggle | null {
 interface UseSearchConditionSyncOptions {
   search: string;
   timelineMode: boolean;
+  setSearch: (value: string) => void;
   setSovereignOnly?: (value: boolean) => void;
   setVisitedOnly?: (value: boolean) => void;
   setWantToVisitOnly?: (value: boolean) => void;
@@ -51,11 +52,14 @@ interface UseSearchConditionSyncOptions {
 export function useSearchCondition({
   search,
   timelineMode,
+  setSearch,
   setVisitedOnly,
   setWantToVisitOnly,
   setSovereignOnly,
   setSelectedListId,
 }: UseSearchConditionSyncOptions) {
+  const previousTimelineMode = useRef(timelineMode);
+
   const setCondition = useCallback(
     (condition: ConditionToggle | null) => {
       setVisitedOnly?.(condition === "visited");
@@ -69,16 +73,23 @@ export function useSearchCondition({
     [setVisitedOnly, setWantToVisitOnly, setSovereignOnly, setSelectedListId],
   );
 
-  // Update condition based on search changes, but only if not in timeline mode
   useEffect(() => {
-    if (timelineMode) {
-      return;
+    const enteredTimeline = timelineMode && !previousTimelineMode.current;
+    const leftTimeline = !timelineMode && previousTimelineMode.current;
+
+    if (enteredTimeline) {
+      setSearch(CONDITIONS.visited.search);
+      setCondition("visited");
+    } else if (leftTimeline) {
+      setSearch("");
+      setCondition(null);
+    } else if (!timelineMode) {
+      const condition = getSearchCondition(search);
+      setCondition(condition);
     }
 
-    const condition = getSearchCondition(search);
-
-    setCondition(condition);
-  }, [search, timelineMode, setCondition]);
+    previousTimelineMode.current = timelineMode;
+  }, [timelineMode, search, setSearch, setCondition]);
 
   return {
     conditions: CONDITIONS,

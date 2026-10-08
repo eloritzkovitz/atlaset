@@ -106,6 +106,7 @@ export function CountriesSearchSortBar({
   const { conditions, setCondition } = useSearchCondition({
     search,
     timelineMode,
+    setSearch,
     setVisitedOnly,
     setWantToVisitOnly,
     setSovereignOnly,

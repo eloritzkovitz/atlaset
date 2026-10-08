@@ -15,7 +15,7 @@ export function ItemCount({
   if (hideZero && count === 0) return null;
 
   return (
-    <span className={`ms-2 shrink-0 text-xs font-bold text-muted ${className}`}>
+    <span className={`ms-1.5 shrink-0 text-xs font-bold text-muted ${className}`}>
       {parentheses ? `(${count})` : count}
     </span>
   );
