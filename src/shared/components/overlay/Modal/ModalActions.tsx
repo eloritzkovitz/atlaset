@@ -32,18 +32,16 @@ export function ModalActions({
 
   const submitText = submitLabel ?? t("actions.save");
   const cancelText = cancelLabel ?? t("actions.cancel");
-  const deleteText = deleteLabel ?? t("actions.delete");  
+  const deleteText = deleteLabel ?? t("actions.delete");
 
   return (
     <>
       {onDelete && (
         <div className="flex items-start gap-2 mt-4">
           <ActionButton
-            type="button"
+            variant="danger"
             icon={<ICONS.remove className="inline" />}
-            variant="secondary"
             onClick={onDelete}
-            className="!bg-danger/70 hover:!bg-danger-hover/70"
           >
             {deleteText}
           </ActionButton>

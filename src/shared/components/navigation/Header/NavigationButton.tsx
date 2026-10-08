@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { ActionButton, DirectionalIcon } from "@components";
+import { ActionButton } from "../../inputs/Button/ActionButton";
+import { DirectionalIcon } from "../../media/icons/DirectionalIcon";
 
 export interface NavigationItem {
   label: string;

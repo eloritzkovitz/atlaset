@@ -84,10 +84,10 @@ export function GuessForm({
         </ActionButton>
         <ActionButton
           type="button"
-          variant="secondary"
+          variant="danger"
           aria-label={t("play.form.forfeit", "Forfeit")}
           onClick={handleForfeit}
-          className="px-4 py-2  !bg-danger/70 !text-2xl hover:!bg-danger-hover transition"
+          className="!text-2xl"
           rounded
         >
           {t("play.form.forfeit", "Forfeit")}

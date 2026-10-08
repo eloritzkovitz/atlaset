@@ -12,7 +12,14 @@ interface ActionButtonProps extends Omit<
 > {
   icon?: ReactNode;
   children?: ReactNode;
-  variant?: "primary" | "secondary" | "action" | "toggle" | "sort" | "custom";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "danger"
+    | "action"
+    | "toggle"
+    | "sort"
+    | "custom";
   rounded?: boolean;
   title?: string;
   titlePosition?: "top" | "bottom" | "left" | "right";
@@ -58,6 +65,8 @@ export const ActionButton = React.forwardRef<
         "px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white focus:outline-none ",
       secondary:
         "px-4 py-2 rounded-lg bg-transparent hover:bg-secondary-hover focus:outline-none",
+      danger:
+        "px-4 py-2 rounded-lg bg-danger hover:bg-danger-hover text-white focus:outline-none ",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative",
       toggle: `h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200 ${active ? "" : "text-muted bg-transparent"}`,

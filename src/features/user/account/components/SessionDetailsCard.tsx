@@ -75,11 +75,11 @@ export function SessionDetailsCard({
 
       <div className="flex justify-center mt-6 pt-4">
         <ActionButton
-          variant="secondary"
+          variant="danger"
           icon={<ICONS.poweroff className="text-lg" />}
           ariaLabel={t("security.actions.endSession")}
           onClick={() => onTerminate(session)}
-          className="!bg-danger/70 !rounded-full hover:!bg-danger-hover/70"
+          className="!rounded-full"
         >
           {t("security.actions.endSessionTitle")}
         </ActionButton>

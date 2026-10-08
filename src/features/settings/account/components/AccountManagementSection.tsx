@@ -76,11 +76,11 @@ export function AccountManagementSection() {
           descriptionClassName="text-xs text-danger/80 font-medium"
           control={
             <ActionButton
-              variant="primary"
-              className="!bg-danger !hover:bg-danger-hover w-full sm:w-fit !rounded-full"
+              variant="danger"
               disabled={hibernating || deleting}
               onClick={() => setModal("delete")}
               ariaLabel={t("account.management.delete")}
+              className="w-full sm:w-fit !rounded-full"
             >
               <ICONS.remove />
               {deleting
