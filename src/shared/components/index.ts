@@ -11,6 +11,7 @@ export { getBaseMarkdownComponents } from "./display/Markdown/getBaseMarkdownCom
 export { MarkdownFileRenderer } from "./display/Markdown/MarkdownFileRenderer";
 export { PanelListItem } from "./display/PanelListItem/PanelListItem";
 export { PieLegendCard } from "./display/PieChart/PieLegendCard";
+export { ProgressBar } from "./display/ProgressBar";
 export { RankBadge } from "./display/RankBadge";
 export { SectionHeader } from "./display/SectionHeader";
 export { SortableFilterHeader } from "./display/Table/SortableFilterHeader";

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Card } from "@components";
+import { Card, ProgressBar } from "@components";
 import { useAccessibility } from "@features/settings/accessibility";
 import { useAnimatedNumber } from "@hooks";
 import { formatPercent } from "@utils";
@@ -25,11 +25,11 @@ export function WorldExplorationCard({
   const formattedPercent = formatPercent(animatedVisited, total, {
     decimals: 1,
   });
-  const progressWidth = total > 0 ? (animatedVisited / total) * 100 : 0;
+  const title = t("progress.worldTitle", "World Exploration");
 
   return (
     <Card
-      className="flex flex-col items-center p-6 cursor-pointer md:col-span-2 hover:bg-primary/20 hover:scale-101 transition-transform duration-200"
+      className="flex cursor-pointer flex-col items-center p-6 transition-transform duration-200 hover:scale-101 hover:bg-primary/20 md:col-span-2"
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}
@@ -37,31 +37,32 @@ export function WorldExplorationCard({
     >
       {!loading && (
         <>
-          <div className="text-2xl font-semibold mb-2">
-            {t("progress.worldTitle", "World Exploration")}
-          </div>
-          <div className="text-5xl font-bold text-primary mb-2">
+          <div className="mb-2 text-2xl font-semibold">{title}</div>
+
+          <div className="mb-2 text-5xl font-bold text-primary">
             <span dir="ltr">
               {animatedVisited} / {total}
             </span>
           </div>
+
           <div className="text-lg text-muted">
             {t(
               "progress.ofCountriesVisited",
               "{{percent}} of countries visited",
-              { percent: formattedPercent },
+              {
+                percent: formattedPercent,
+              },
             )}
           </div>
-          <div className="w-full mt-4">
-            <div className="h-3 bg-surface rounded-full overflow-hidden">
-              <div
-                className="h-3 bg-primary rounded-full transition-all"
-                style={{
-                  width: `${progressWidth}%`,
-                }}
-              />
-            </div>
-          </div>
+
+          <ProgressBar
+            value={animatedVisited}
+            max={total}
+            label={title}
+            size="lg"
+            className="mt-4"
+            animated={animationsEnabled}
+          />
         </>
       )}
     </Card>
