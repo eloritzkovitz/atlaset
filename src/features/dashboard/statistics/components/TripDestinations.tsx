@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FaFlag } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
 import {
   Chip,
   DirectionalIcon,
@@ -11,16 +10,17 @@ import {
   Tooltip,
   type TableColumn,
 } from "@components";
-import { CountryWithFlag } from "@features/countries";
-import { getCountriesRoute } from "@features/explore";
+import { CountryWithFlag, useCountryData } from "@features/countries";
+import { useExploreNavigation } from "@features/explore";
 import { VISITED_COUNTRIES_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsStats } from "../hooks/useTripsStats";
 import type { VisitedCountryRankRow } from "../types";
 
 export function TripDestinations() {
-  const { t } = useTranslation("dashboard");
-  const navigate = useNavigate();
+  const { countries } = useCountryData();
+  const { navigateToCountry } = useExploreNavigation(countries);
   const { visitedCountriesRanking } = useTripsStats();
+  const { t } = useTranslation("dashboard");
 
   const tableData: VisitedCountryRankRow[] = useMemo(
     () =>
@@ -78,12 +78,10 @@ export function TripDestinations() {
 
   // Handle row click to navigate to the country details page
   const handleCountryClick = (row: VisitedCountryRankRow) => {
-    const route = getCountriesRoute(
-      row.country.region,
-      row.country.subregion,
-      row.country.isoCode,
-    );
-    navigate(`${route}?tab=visits`);
+    navigateToCountry(row.country.isoCode, {
+      scope: "all",
+      search: "?tab=visits",
+    });
   };
 
   return (

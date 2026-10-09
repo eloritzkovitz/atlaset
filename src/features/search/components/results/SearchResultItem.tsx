@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import { ICONS } from "@constants/icons";
 import { CountryFlag, RegionIcon, type Country } from "@features/countries";
-import { getCountriesRoute } from "@features/explore";
+import { getCountriesRoute, useExploreNavigation } from "@features/explore";
 import type { SerializableUser } from "@features/user/auth/types";
 import { UserAvatar } from "@features/user/core";
 import { type Friend } from "@features/user/friends/types";
@@ -24,6 +24,8 @@ export function SearchResultItem({
   countries,
   onSelect,
 }: SearchResultItemProps) {
+  const { navigateToCountry } = useExploreNavigation(countries);
+
   let url: string;
   let displayName: string;
   let label: string;
@@ -112,7 +114,13 @@ export function SearchResultItem({
       displayName={displayName}
       label={label}
       icon={icon}
-      onClick={onSelect}
+      onClick={() => {
+        onSelect();
+
+        if (item.type === "country") {
+          navigateToCountry(item.isoCode, { scope: "all" });
+        }
+      }}
     />
   );
 }

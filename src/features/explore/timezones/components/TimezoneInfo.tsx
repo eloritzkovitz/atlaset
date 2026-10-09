@@ -90,10 +90,13 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
       onBack={() => navigateBack(EXPLORE_URLS.timezones)}
       labelArgs={{ code: timezone.code }}
       onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
-        navigateToCountry(isoCode, navigationCountryIsoCodes, {
-          section: "timezones",
-          label: timezone.code,
-          key: `timezone:${timezone.code}`,
+        navigateToCountry(isoCode, {
+          countryIsoCodes: navigationCountryIsoCodes,
+          origin: {
+            section: "timezones",
+            label: timezone.code,
+            key: `timezone:${timezone.code}`,
+          },
         })
       }
       groups={[

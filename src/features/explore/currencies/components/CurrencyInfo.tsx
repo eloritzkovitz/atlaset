@@ -52,10 +52,13 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       onBack={() => navigateBack(EXPLORE_URLS.currencies)}
       labelArgs={{ code: currency.code }}
       onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
-        navigateToCountry(isoCode, navigationCountryIsoCodes, {
-          section: "currencies",
-          label: `${currency.name} (${currency.code})`,
-          key: `currency:${currency.code}`,
+        navigateToCountry(isoCode, {
+          countryIsoCodes: navigationCountryIsoCodes,
+          origin: {
+            section: "currencies",
+            label: `${currency.name} (${currency.code})`,
+            key: `currency:${currency.code}`,
+          },
         })
       }
       groups={[

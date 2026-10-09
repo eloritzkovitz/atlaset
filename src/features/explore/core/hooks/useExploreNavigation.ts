@@ -13,6 +13,13 @@ interface CountryNavigationState {
   countryNavigationOrigin?: CountryNavigationOrigin;
 }
 
+export interface NavigateToCountryOptions {
+  countryIsoCodes?: string[];
+  scope?: CountryNavigationScope;
+  origin?: CountryNavigationOrigin;
+  search?: string;
+}
+
 /**
  * Manages explore navigation state and handlers.
  * @param countries - List of countries.
@@ -42,6 +49,8 @@ export function useExploreNavigation(
 
   const countryNavigationOrigin = navigationState?.countryNavigationOrigin;
 
+  const allCountryIsoCodes = countries.map((country) => country.isoCode);
+
   const navigateToSection = (section: string) =>
     navigate(`/explore/${section}`);
 
@@ -53,8 +62,7 @@ export function useExploreNavigation(
 
   const navigateToCountry = (
     isoCode: string | null,
-    countryIsoCodes?: string[],
-    origin?: CountryNavigationOrigin,
+    options: NavigateToCountryOptions = {},
   ) => {
     if (!isoCode) {
       navigate(EXPLORE_URLS.countries);
@@ -65,15 +73,27 @@ export function useExploreNavigation(
 
     if (!country) return;
 
+    const scope = options.scope ?? countryNavigationScope;
+
+    const countryIsoCodes =
+      options.countryIsoCodes ??
+      navigationCountryIsoCodes ??
+      (scope === "all" ? allCountryIsoCodes : undefined);
+
     navigate(
-      getCountriesRoute(country.region, country.subregion, country.isoCode),
+      {
+        pathname: getCountriesRoute(
+          country.region,
+          country.subregion,
+          country.isoCode,
+        ),
+        search: options.search ?? "",
+      },
       {
         state: {
-          countryNavigationScope,
-          navigationCountryIsoCodes:
-            countryIsoCodes ?? navigationCountryIsoCodes,
-          countryNavigationOrigin:
-            origin ?? navigationState?.countryNavigationOrigin,
+          countryNavigationScope: scope,
+          navigationCountryIsoCodes: countryIsoCodes,
+          countryNavigationOrigin: options.origin ?? countryNavigationOrigin,
         } satisfies CountryNavigationState,
       },
     );

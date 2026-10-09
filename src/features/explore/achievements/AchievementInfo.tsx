@@ -130,10 +130,14 @@ export function AchievementInfo() {
             title={achievement.name}
             showHeader={false}
             onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
-              navigateToCountry(isoCode, navigationCountryIsoCodes, {
-                section: "achievements",
-                label: achievement.name,
-                key: `achievement:${achievement.id}`,
+              navigateToCountry(isoCode, {
+                countryIsoCodes: navigationCountryIsoCodes,
+                scope: "all",
+                origin: {
+                  section: "achievements",
+                  label: achievement.name,
+                  key: `achievement:${achievement.id}`,
+                },
               })
             }
             visited={isVisitedCountry}

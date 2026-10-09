@@ -3,8 +3,9 @@ import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
 import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry";
 import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreation";
+import { useCountryData } from "@features/countries";
 import type { Country, CountryInfoProps } from "@features/countries/types";
-import { getCountriesRoute } from "@features/explore";
+import { useExploreNavigation } from "@features/explore";
 import { useLanguage } from "@features/settings/account";
 import { useCountryTracking } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
@@ -37,6 +38,8 @@ export function useCountryActions({
   onCountryInfo,
   onCloseMenu,
 }: UseCountryActionsProps): Record<string, CountryActionConfig> {
+  const { countries } = useCountryData();
+  const { navigateToCountry } = useExploreNavigation(countries);
   const { current: lang } = useLanguage();
   const centerOnCountry = useCenterOnCountry();
   const { markers, openAddMarker, openEditMarker } = useMarkerCreation();
@@ -68,13 +71,6 @@ export function useCountryActions({
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {
     if (!openState && onCloseMenu) onCloseMenu();
   });
-
-  // Construct URLs
-  const exploreUrl = getCountriesRoute(
-    country.region,
-    country.subregion,
-    country.isoCode,
-  );
 
   return {
     viewDetails: {
@@ -149,7 +145,9 @@ export function useCountryActions({
       ariaLabel: wantToVisitListed
         ? "Unmark as Want to Visit"
         : "Mark as Want to Visit",
-      icon: <ICONS.bookmark className={!wantToVisitListed ? "text-muted" : ""} />,
+      icon: (
+        <ICONS.bookmark className={!wantToVisitListed ? "text-muted" : ""} />
+      ),
       disabled: visited,
       isVisited: visited,
       onClick: () => {
@@ -166,9 +164,10 @@ export function useCountryActions({
       label: tCommon("actions.explore"),
       ariaLabel: tCommon("actions.explore"),
       icon: <ICONS.explore />,
-      url: exploreUrl,
       onClick: () => {
-        if (onCloseMenu) onCloseMenu();
+        closeMenuAndCall(() => {
+          navigateToCountry(country.isoCode, { scope: "all" });
+        });
       },
     },
     wikipedia: {

@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import { Card, DirectionalIcon } from "@components";
-import { CountryDisplay } from "@features/countries";
+import { CountryDisplay, useCountryData } from "@features/countries";
 import type { Country } from "@features/countries/types";
-import { getCountriesRoute } from "../../core/utils/exploreNavigation";
+import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
 interface DiscoverCountryCardProps {
   title: string;
@@ -24,13 +23,11 @@ export function DiscoverCountryCard({
   children,
   className = "",
 }: DiscoverCountryCardProps) {
+  const { countries } = useCountryData();
+  const { navigateToCountry } = useExploreNavigation(countries);
   const { t } = useTranslation("explore");
 
   if (!country && !loading && !children) return null;
-
-  const route = country
-    ? getCountriesRoute(country.region, country.subregion, country.isoCode)
-    : undefined;
 
   return (
     <Card
@@ -42,9 +39,12 @@ export function DiscoverCountryCard({
     >
       {!loading && (
         <div className="flex flex-col items-center text-center mt-6">
-          {country && route && (
-            <Link
-              to={route}
+          {country && (
+            <button
+              type="button"
+              onClick={() =>
+                navigateToCountry(country.isoCode, { scope: "all" })
+              }
               className="group flex w-full flex-col items-center text-center"
               aria-label={t("discover.country.open", "Explore {{country}}", {
                 country: country.name,
@@ -65,7 +65,7 @@ export function DiscoverCountryCard({
                   className="transition-transform duration-200 group-hover:translate-x-1"
                 />
               </div>
-            </Link>
+            </button>
           )}
 
           {children}

@@ -62,10 +62,13 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
       onBack={() => navigateBack(EXPLORE_URLS.languages)}
       labelArgs={{ name: languageName }}
       onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
-        navigateToCountry(isoCode, navigationCountryIsoCodes, {
-          section: "languages",
-          label: languageName,
-          key: `language:${languageCode}`,
+        navigateToCountry(isoCode, {
+          countryIsoCodes: navigationCountryIsoCodes,
+          origin: {
+            section: "languages",
+            label: languageName,
+            key: `language:${languageCode}`,
+          },
         })
       }
       groups={[
