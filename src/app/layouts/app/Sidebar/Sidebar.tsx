@@ -47,7 +47,7 @@ export function Sidebar() {
 
       {/* Desktop sidebar */}
       <aside
-        className="hidden md:block fixed top-0 start-0 h-screen z-[10000] bg-sidebar px-1 overflow-hidden transition-[width] duration-200 ease-in-out"
+        className="hidden md:block fixed top-0 start-0 h-screen z-[10050] bg-sidebar px-1 overflow-hidden transition-[width] duration-200 ease-in-out"
         style={{
           width: sidebarWidth,
           minWidth: sidebarWidth,
@@ -102,7 +102,7 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile bottom navigation bar */}
-      <nav className="fixed bottom-0 start-0 end-0 z-[10000] bg-sidebar flex justify-around items-center h-16 md:hidden">
+      <nav className="fixed bottom-0 start-0 end-0 z-[10050] bg-sidebar flex justify-around items-center h-16 md:hidden">
         {PRIMARY_LINKS.map((link) => (
           <SidebarMenuLink key={link.to} {...link} expanded={false} />
         ))}
