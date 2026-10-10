@@ -24,9 +24,8 @@ export function UserOverviewCard({
 
   const content = (
     <Card
-      className={`flex items-center gap-4 p-4 sm:p-6 transition ${
-        isInteractive ? "hover:bg-primary/20 cursor-pointer" : ""
-      }`}
+      hoverEffect={isInteractive ? "highlight" : "none"}
+      className="flex items-center gap-4 p-4 sm:p-6"
     >
       {loading ? (
         <>

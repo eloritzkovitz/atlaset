@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Checklist } from "@components";
+import { Card, Checklist } from "@components";
 import {
   getDisplayFlagCountries,
   getProgress,
@@ -27,9 +27,9 @@ interface AchievementCardProps {
 }
 
 const STATUS_BG_CLASSES: Record<AchievementStatus, string> = {
-  locked: "bg-surface-alt/30 text-muted",
-  progress: "bg-surface-alt",
-  completed: "bg-success/20",
+  locked: "!bg-surface-alt/30 text-muted",
+  progress: "!bg-surface-alt",
+  completed: "!bg-success/20",
 };
 
 export function AchievementCard({
@@ -130,14 +130,10 @@ export function AchievementCard({
   );
 
   return (
-    <div
-      className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 shadow-sm hover:scale-105 hover:bg-primary/20 select-none ${statusClass}`}
-      style={{
-        minHeight: 320,
-        position: "relative",
-        cursor: onClick ? "pointer" : undefined,
-      }}
+    <Card
       onClick={onClick}
+      hoverEffect={onClick ? "scale" : "none"}
+      className={`min-h-[320px] flex flex-col items-center rounded-xl p-5 select-none ${statusClass}`}
     >
       <AchievementIcon
         type={achievement.type}
@@ -176,6 +172,6 @@ export function AchievementCard({
           />
         </>
       )}
-    </div>
+    </Card>
   );
 }

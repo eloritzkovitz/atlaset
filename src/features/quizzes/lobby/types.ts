@@ -5,6 +5,5 @@ export type LobbyCardItem = {
   icon: React.ReactNode;
   title: string;
   description: string;
-  muted: boolean;
   group?: "primary" | "secondary";
 };

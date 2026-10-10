@@ -11,7 +11,6 @@ interface DiscoverCountryCardProps {
   country?: Country;
   loading?: boolean;
   children?: ReactNode;
-  className?: string;
 }
 
 /** Displays a country as a Discover card. */
@@ -21,7 +20,6 @@ export function DiscoverCountryCard({
   country,
   loading = false,
   children,
-  className = "",
 }: DiscoverCountryCardProps) {
   const { countries } = useCountryData();
   const { navigateToCountry } = useExploreNavigation(countries);
@@ -35,7 +33,8 @@ export function DiscoverCountryCard({
       actions={actions}
       loading={loading}
       skeletonLines={4}
-      className={`p-6 hover:bg-primary/20 hover:scale-101 transition-transform duration-200 ${className}`}
+      hoverEffect="scale"
+      className="p-6"
     >
       {!loading && (
         <div className="flex flex-col items-center text-center mt-6">

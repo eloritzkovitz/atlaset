@@ -25,7 +25,7 @@ export function SessionCard({ session, isCurrent, onClick }: SessionCardProps) {
   const DeviceIcon = ICONS.device[deviceType];
 
   return (
-    <Card className="p-4 hover:bg-primary/40 hover:scale-102 animation transition">
+    <Card hoverEffect="scale" className="p-4">
       <button
         type="button"
         className="w-full text-start"

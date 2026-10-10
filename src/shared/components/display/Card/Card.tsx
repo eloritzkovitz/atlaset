@@ -1,41 +1,54 @@
-import React from "react";
+import type { ElementType, ReactNode } from "react";
+
+type CardHoverEffect = "none" | "lift" | "scale" | "highlight";
 
 interface CardProps {
-  className?: string;
   children?: React.ReactNode;
-  animationClass?: string;
   title?: string;
   subtitle?: string;
-  ariaLabel?: string;
-  icon?: React.ElementType;
+  className?: string;
+  animationClass?: string;
+  hoverEffect?: CardHoverEffect;
+  icon?: ElementType;
   iconClass?: string;
+  onClick?: () => void;
+  ariaLabel?: string;
+  actions?: ReactNode;
   loading?: boolean;
   skeletonLines?: number;
-  onClick?: () => void;
-  actions?: React.ReactNode;
 }
 
+/** Renders a card component with optional title, subtitle and actions. */
 export function Card({
-  className = "",
   children,
-  animationClass = "",
   title,
   subtitle,
-  ariaLabel,
+  className = "",
+  animationClass = "",
+  hoverEffect = "none",
   icon: Icon,
   iconClass = "",
+  onClick,
+  ariaLabel,
+  actions,
   loading = false,
   skeletonLines = 3,
-  onClick,
-  actions,
 }: CardProps) {
   const isInteractive = !!onClick && !loading;
 
+  const hoverEffectClass = {
+    none: "",
+    lift: "transition-shadow hover:shadow-lg",
+    scale:
+      "transition-[transform,background-color] hover:scale-102 hover:bg-primary/50",
+    highlight:
+      "transition-colors hover:bg-primary/20 motion-reduce:transition-none",
+  }[hoverEffect];
+
   const baseClass = [
     "bg-surface dark:bg-surface-alt rounded-2xl shadow-sm p-5 text-start w-full block",
-    isInteractive
-      ? "cursor-pointer transition hover:shadow-lg select-none"
-      : "",
+    isInteractive ? "cursor-pointer select-none" : "",
+    hoverEffectClass,
     loading ? "animate-pulse" : "",
     animationClass,
     className,

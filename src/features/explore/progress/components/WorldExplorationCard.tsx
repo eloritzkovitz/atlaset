@@ -29,11 +29,12 @@ export function WorldExplorationCard({
 
   return (
     <Card
-      className="flex cursor-pointer flex-col items-center p-6 transition-transform duration-200 hover:scale-101 hover:bg-primary/20 md:col-span-2"
       loading={loading}
       skeletonLines={3}
+      hoverEffect={onShowAllCountries ? "highlight" : "none"}
       onClick={onShowAllCountries}
       aria-label={t("countries.showAllCountries", "Show all countries")}
+      className="flex flex-col p-6 items-center md:col-span-2"
     >
       {!loading && (
         <>

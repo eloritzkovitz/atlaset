@@ -8,7 +8,8 @@ export function DocsCards() {
       {DOCS_CARDS.map((card) => (
         <Card
           key={card.title}
-          className="flex h-full min-h-[220px] min-w-0 w-full cursor-pointer flex-col items-center justify-between rounded-xl p-6 text-center font-sans shadow-lg transition hover:scale-105 hover:bg-primary/50 sm:p-8"
+          hoverEffect="scale"
+          className="flex h-full min-h-[220px] min-w-0 w-full flex-col items-center justify-between rounded-xl p-6 text-center font-sans sm:p-8"
         >
           <Link
             to={`/docs/${card.file.replace(/\.md$/, "")}`}

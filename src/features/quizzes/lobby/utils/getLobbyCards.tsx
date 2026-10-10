@@ -13,7 +13,6 @@ export function getLobbyCards(t: TFunction): LobbyCardItem[] {
         "lobby.cards.flag.description",
         "Can you identify the country by its flag?",
       ),
-      muted: false,
       group: "primary",
     },
     {
@@ -25,7 +24,6 @@ export function getLobbyCards(t: TFunction): LobbyCardItem[] {
         "lobby.cards.capital.description",
         "Test your knowledge of world capitals!",
       ),
-      muted: false,
       group: "primary",
     },
     {
@@ -37,7 +35,6 @@ export function getLobbyCards(t: TFunction): LobbyCardItem[] {
         "lobby.cards.howToPlay.description",
         "Learn game rules, scoring and tips",
       ),
-      muted: false,
       group: "secondary",
     },
     {
@@ -49,7 +46,6 @@ export function getLobbyCards(t: TFunction): LobbyCardItem[] {
         "lobby.cards.leaderboards.description",
         "See top scores and streaks!",
       ),
-      muted: false,
       group: "secondary",
     },
   ];

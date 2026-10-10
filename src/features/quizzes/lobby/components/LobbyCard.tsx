@@ -2,6 +2,7 @@ import React from "react";
 import { Card } from "@components";
 import type { LobbyCardItem } from "../types";
 
+/** Renders a single card in the quizzes lobby. */
 export const LobbyCard: React.FC<{
   card: LobbyCardItem;
   padding?: "lg" | "sm";
@@ -9,14 +10,12 @@ export const LobbyCard: React.FC<{
   onClick: (card: LobbyCardItem) => void;
 }> = ({ card, padding = "sm", animationClass, onClick }) => {
   const pad = padding === "lg" ? "p-8" : "p-6";
-  const classes = `cursor-pointer max-w-xs w-full ${pad} rounded-xl text-center font-sans ${
-    card.muted ? "opacity-80" : "shadow-lg"
-  } hover:bg-primary/40 hover:scale-102 animation transition h-full min-h-[220px] md:min-h-[260px]`;
 
   return (
     <Card
-      className={classes}
+      className={`max-w-xs w-full ${pad} rounded-xl text-center font-sans h-full min-h-[220px] md:min-h-[260px]`}
       animationClass={animationClass}
+      hoverEffect="scale"
       onClick={() => onClick(card)}
     >
       <div
